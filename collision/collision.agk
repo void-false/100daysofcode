@@ -1,3 +1,4 @@
+
 [apk_settings]
 alias=
 app_icon_path=
@@ -42,12 +43,13 @@ firebase_config_path=
 [html5_settings]
 commands_used=0
 dynamic_memory=0
-output_path=
+output_path=D:\\void-false.github.io\\html\\
 
 [projectfiles]
 FILE_0=main.agc;-1
 
 [files]
+FILE_NAME_0=1;main.agc;608;0
 
 [project]
 description=
