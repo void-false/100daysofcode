@@ -11,10 +11,10 @@ SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobi
 //SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
-SetRawMouseVisible(0)
+//SetRawMouseVisible(0)
 
-cursor = CreateSprite(LoadImage("cursor.png"))
-SetSpriteSize(cursor, 24, 24)
+//cursor = CreateSprite(LoadImage("cursor.png"))
+//SetSpriteSize(cursor, 24, 24)
 s1 = CreateSprite(CreateImageColor(255, 155, 0, 255))
 SetSpriteSize(s1, 100, 100)
 SetSpritePosition(s1, 50, 50)
@@ -31,13 +31,14 @@ isHolding as integer = 0
 
 do
 	if GetRawKeyPressed(27) then exit
-	SetSpritePosition(cursor, GetPointerX(), GetPointerY())
-	SetSpriteDepth(cursor, 0)
+	//SetSpritePosition(cursor, GetPointerX(), GetPointerY())
+	//SetSpriteDepth(cursor, 0)
 	
 	if GetPointerPressed() and GetSpriteHitTest(s1, GetPointerX(), GetPointerY())
 		isHolding = 1
 		tester = CloneSprite(s1)
-		SetSpriteVisible(tester, 0)
+		SetSpriteColor(tester, 100, 100, 100, 100)
+		SetSpriteVisible(tester, 1)
 		offsetX = GetPointerX() - GetSpriteX(tester)
 		offsetY = GetPointerY() - GetSpriteY(tester)
 	
@@ -48,6 +49,7 @@ do
 		gosub checkBounds
 		
 	elseif GetPointerReleased()
+		SetSpriteColor(s1, 255, 255, 255, 255)
 		isHolding = 0
 		DeleteSprite(tester)
 	endif
@@ -58,24 +60,59 @@ end
 
 checkCollision:	
 
-	if not GetSpriteCollision(tester, s2)
-		SetSpritePosition(s1, GetSpriteX(tester), GetSpriteY(tester))
-	else
-		oldx = GetSpriteX(s1)
-		oldy = GetSpriteY(s1)
-		
-		SetSpritePosition(s1, oldx, GetSpriteY(tester))
+	count = 0
+	speed = 1
+	currentsx = GetSpriteX(s1)
+	currentsy = GetSpriteY(s1)
+	currenttx = GetSpriteX(tester)
+	currentty = GetSpriteY(tester)
+	while currentsx-currenttx <> 0 or currentsy-currentty <> 0
+
+		if currentsx < currenttx 
+			direction = speed
+		elseif currentsx > currenttx
+			direction = -speed
+		else  
+			direction = 0
+		endif
+		SetSpritePosition(s1, currentsx+direction, currentsy)
 		if GetSpriteCollision(s1, s2)
-			SetSpritePosition(s1, oldx, oldy)
-		else 
-			oldy = GetSpriteY(s1)
+			SetSpritePosition(s1, currentsx, currentsy)
+		else
+			currentsx = currentsx + direction
+			didMove = 1
 		endif
 		
-		SetSpritePosition(s1, GetSpriteX(tester), oldy)
-		if GetSpriteCollision(s1, s2)
-			SetSpritePosition(s1, oldx, oldy)
+		
+		if currentsy < currentty
+			direction = speed
+		elseif currentsy > currentty
+			direction = -speed
+		else
+			direction = 0
 		endif
-	endif
+		SetSpritePosition(s1, currentsx, currentsy+direction)
+		if GetSpriteCollision(s1, s2)
+			SetSpritePosition(s1, currentsx, currentsy)
+		else
+			currentsy = currentsy + direction
+			didMove = 1
+		endif
+		
+		inc count
+		if count > 60
+			SetSpriteColor(s1, 255, 0, 0, 255)
+			exit
+		endif
+
+		
+	endwhile
+	Print((currentsx))
+	Print((currentsy))
+	Print((currenttx))
+	Print((currentty))
+	
+	
 return
 
 checkBounds:
