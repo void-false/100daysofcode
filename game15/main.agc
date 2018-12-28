@@ -2,11 +2,11 @@ SetErrorMode(2)
 
 // set window properties
 SetWindowTitle( "game15" )
-SetWindowSize( 625, 625, 0 )
+SetWindowSize( 603, 603, 0 )
 SetWindowAllowResize( 1 ) // allow the user to resize the window
 
 // set display properties
-SetVirtualResolution( 625, 625 ) // doesn't have to match the window
+SetVirtualResolution( 603, 603 ) // doesn't have to match the window
 SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobile devices
 //SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
@@ -15,20 +15,18 @@ UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 #constant NUMSQUARES 15
 #constant NUMROWS 4
 #constant SIZE 150
-#constant GAP 152
+#constant GAP 151
 
 squares as integer[NUMSQUARES]
 labels as integer[NUMSQUARES]
 
 sx = 50
-sy = 10
+sy = 0
 for i = 0 to NUMSQUARES-1
-	squares[i] = CreateSprite(0)
+	fileName as String
+	fileName = str(i+1) + ".png"
+	squares[i] = CreateSprite(LoadImage(fileName))
 	SetSpriteSize(squares[i], SIZE, SIZE)
-	sx = GAP * mod(i, NUMROWS) + 10
-	if mod(i, NUMROWS) = 0 and i <> 0 then sy = sy + GAP
-	SetSpritePosition(squares[i], sx, sy)
-	inc sx
 next i
 
 temp as integer[NUMSQUARES]
@@ -42,10 +40,10 @@ next i
 squares = temp
 
 for i = 0 to NUMSQUARES-1
-	labels[i] = CreateText(str(i + 1))
-	SetTextSize(labels[i], 72)
-	SetTextColor(labels[i], 200, 0, 0, 255)
-	SetTextPosition(labels[i], GetSpriteX(squares[i]), GetSpriteY(squares[i]))
+	sx = GAP * mod(i, NUMROWS)
+	if mod(i, NUMROWS) = 0 and i <> 0 then sy = sy + GAP
+	SetSpritePosition(squares[i], sx, sy)
+	inc sx
 next i
 
 offsetX as integer = 0
@@ -65,49 +63,61 @@ do
 	
 	elseif GetPointerState() and isHolding
 		SetSpritePosition(tester, GetPointerX() - offsetX, GetPointerY() - offsetY)
+		
 		gosub updatePosition
 		gosub checkBounds
-		gosub updateLabels
 	elseif GetPointerReleased()
 		isHolding = 0
 		DeleteSprite(tester)
 	endif
-	//PrintC(str(GetPointerX()) + ":" + str(GetPointerY()))
 	sync()
 loop
 
 updatePosition:
+	count = 0
+	speed = 1
 	didCollide = 0
-	for i = 0 to NUMSQUARES-1
-		if squares[i] = clickedSprite then continue
-		if GetSpriteCollision(tester, squares[i])
-			didCollide = 1
-			exit
+	currentsx = GetSpriteX(clickedSprite)
+	currentsy = GetSpriteY(clickedSprite)
+	currenttx = GetSpriteX(tester)
+	currentty = GetSpriteY(tester)
+	while currentsx-currenttx <> 0 or currentsy-currentty <> 0
+
+		if currentsx < currenttx 
+			direction = speed
+		elseif currentsx > currenttx
+			direction = -speed
+		else  
+			direction = 0
 		endif
-	next i
-	if not didCollide
-		SetSpritePosition(clickedSprite, GetSpriteX(tester), GetSpriteY(tester))
-	else
-		oldx = GetSpriteX(clickedSprite)
-		oldy = GetSpriteY(clickedSprite)
-		
-		SetSpritePosition(clickedSprite, oldx, GetSpriteY(tester))
+		SetSpritePosition(clickedSprite, currentsx+direction, currentsy)
 		didCollide = 0
 		gosub checkCollision
 		if didCollide
-			SetSpritePosition(clickedSprite, oldx, oldy)
-		else 
-			oldy = GetSpriteY(clickedSprite)
+			SetSpritePosition(clickedSprite, currentsx, currentsy)
+		else
+			currentsx = currentsx + direction
 		endif
-		
-		SetSpritePosition(clickedSprite, GetSpriteX(tester), oldy)
+			
+		if currentsy < currentty
+			direction = speed
+		elseif currentsy > currentty
+			direction = -speed
+		else
+			direction = 0
+		endif
+		SetSpritePosition(clickedSprite, currentsx, currentsy+direction)
 		didCollide = 0
 		gosub checkCollision
 		if didCollide
-			SetSpritePosition(clickedSprite, oldx, oldy)
+			SetSpritePosition(clickedSprite, currentsx, currentsy)
+		else
+			currentsy = currentsy + direction
 		endif
-	endif
 		
+		inc count
+		if count > 60 then exit
+	endwhile	
 return
 
 checkCollision:
@@ -132,12 +142,6 @@ checkBounds:
 	elseif GetSpriteY(clickedSprite) > GetVirtualHeight()-GetSpriteHeight(clickedSprite) 
 		SetSpritePosition(clickedSprite, GetSpriteX(clickedSprite), GetVirtualHeight()-GetSpriteHeight(clickedSprite))
 	endif
-return
-
-updateLabels:
-	for i = 0 to NUMSQUARES-1
-		SetTextPosition(labels[i], GetSpriteX(squares[i]), GetSpriteY(squares[i]))
-	next i
 return
 
 end
