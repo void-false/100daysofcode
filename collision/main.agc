@@ -12,16 +12,15 @@ SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobi
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 //SetRawMouseVisible(0)
+SetClearColor(66, 66, 66)
 
-//cursor = CreateSprite(LoadImage("cursor.png"))
-//SetSpriteSize(cursor, 24, 24)
 s1 = CreateSprite(CreateImageColor(255, 155, 0, 255))
 SetSpriteSize(s1, 100, 100)
 SetSpritePosition(s1, 50, 50)
 
 s2 = CreateSprite(0)
-SetSpriteSize(s2, 300, 300)
-SetSpritePosition(s2, 250, 150)
+SetSpriteSize(s2, 0, GetVirtualHeight())
+SetSpritePosition(s2, 0, 0)
 SetSpriteColor(s2, 200, 0, 0, 255)
 
 
@@ -31,8 +30,7 @@ isHolding as integer = 0
 
 do
 	if GetRawKeyPressed(27) then exit
-	//SetSpritePosition(cursor, GetPointerX(), GetPointerY())
-	//SetSpriteDepth(cursor, 0)
+
 	
 	if GetPointerPressed() and GetSpriteHitTest(s1, GetPointerX(), GetPointerY())
 		isHolding = 1
@@ -46,7 +44,7 @@ do
 		SetSpritePosition(tester, GetPointerX() - offsetX, GetPointerY() - offsetY)
 		
 		gosub checkCollision
-		gosub checkBounds
+		//gosub checkBounds
 		
 	elseif GetPointerReleased()
 		SetSpriteColor(s1, 255, 255, 255, 255)
@@ -116,6 +114,7 @@ checkCollision:
 return
 
 checkBounds:
+
 	if GetSpriteX(s1) < 0 then SetSpritePosition(s1, 0, GetSpriteY(s1))
 	if GetSpriteY(s1) < 0 then SetSpritePosition(s1, GetSpriteX(s1), 0)
 	if GetSpriteX(s1) > GetVirtualWidth()-GetSpriteWidth(s1) then SetSpritePosition(s1, GetVirtualWidth()-GetSpriteWidth(s1), GetSpriteY(s1))

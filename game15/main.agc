@@ -13,12 +13,13 @@ SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black border
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
 #constant NUMSQUARES 15
+#constant ALLOBJECTCOUNT 19
 #constant NUMROWS 4
 #constant SIZE 150
 #constant GAP 151
 
 squares as integer[NUMSQUARES]
-labels as integer[NUMSQUARES]
+
 
 sx = 50
 sy = 0
@@ -46,6 +47,22 @@ for i = 0 to NUMSQUARES-1
 	inc sx
 next i
 
+allObjects as integer[0]
+allObjects = squares
+allObjects.length = ALLOBJECTCOUNT
+allObjects[15] = CreateSprite(0)
+SetSpriteSize(allObjects[15], GetVirtualWidth(), 0)
+SetSpritePosition(allObjects[15], 0, -1)
+allObjects[16] = CreateSprite(0)
+SetSpriteSize(allObjects[16], GetVirtualWidth(), 0)
+SetSpritePosition(allObjects[16], 0, GetVirtualHeight()+1)
+allObjects[17] = CreateSprite(0)
+SetSpriteSize(allObjects[17], 0, GetVirtualHeight())
+SetSpritePosition(allObjects[17], -1, 0)
+allObjects[18] = CreateSprite(0)
+SetSpriteSize(allObjects[18], 0, GetVirtualHeight())
+SetSpritePosition(allObjects[18], GetVirtualWidth()+1, 0)
+
 offsetX as integer = 0
 offsetY as integer = 0
 isHolding as integer = 0
@@ -62,10 +79,8 @@ do
 		offsetY = GetPointerY() - GetSpriteY(tester)
 	
 	elseif GetPointerState() and isHolding
-		SetSpritePosition(tester, GetPointerX() - offsetX, GetPointerY() - offsetY)
-		
+		SetSpritePosition(tester, GetPointerX() - offsetX, GetPointerY() - offsetY)		
 		gosub updatePosition
-		gosub checkBounds
 	elseif GetPointerReleased()
 		isHolding = 0
 		DeleteSprite(tester)
@@ -121,27 +136,13 @@ updatePosition:
 return
 
 checkCollision:
-	for i = 0 to NUMSQUARES-1
-		if squares[i] = clickedSprite then continue
-		if GetSpriteCollision(clickedSprite, squares[i])
+	for i = 0 to ALLOBJECTCOUNT - 1
+		if allObjects[i] = clickedSprite then continue
+		if GetSpriteCollision(clickedSprite, allObjects[i])
 			didCollide = 1
 			exit
 		endif
 	next i
-return
-
-checkBounds:
-	if GetSpriteX(clickedSprite) < 0 
-		SetSpritePosition(clickedSprite, 0, GetSpriteY(clickedSprite))
-	elseif GetSpriteX(clickedSprite) > GetVirtualWidth()-GetSpriteWidth(clickedSprite) 
-		SetSpritePosition(clickedSprite, GetVirtualWidth()-GetSpriteWidth(clickedSprite), GetSpriteY(clickedSprite))
-	endif
-	
-	if GetSpriteY(clickedSprite) < 0 
-		SetSpritePosition(clickedSprite, GetSpriteX(clickedSprite), 0)
-	elseif GetSpriteY(clickedSprite) > GetVirtualHeight()-GetSpriteHeight(clickedSprite) 
-		SetSpritePosition(clickedSprite, GetSpriteX(clickedSprite), GetVirtualHeight()-GetSpriteHeight(clickedSprite))
-	endif
 return
 
 end
