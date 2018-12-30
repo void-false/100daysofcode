@@ -5,8 +5,7 @@ app_icon_path=
 notif_icon_path=
 app_name=
 app_type=0
-url_scheme=
-deep_link=
+game_circle_api_key=
 keystore_path=
 orientation=0
 output_path=
@@ -19,7 +18,6 @@ arcore=0
 version_name=
 version_number=0
 firebase_config_path=
-game_circle_api_key=
 
 [ipa_settings]
 app_icon_path=
@@ -27,8 +25,6 @@ app_name=
 build_number=
 device_type=0
 facebook_id=
-url_scheme=
-deep_link=
 orientation=0
 output_path=
 prov_profile_path=
@@ -43,13 +39,10 @@ firebase_config_path=
 [html5_settings]
 commands_used=0
 dynamic_memory=0
-output_path=D:\\void-false.github.io
+output_path=
 
 [projectfiles]
 FILE_0=main.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;3121;0
-
-[project]
-description=
+FILE_NAME_0=1;main.agc;851;0
