@@ -11,27 +11,33 @@ SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black border
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
 texture = LoadImage("cup.jpg")
-box1 = CreateObjectBox(3, 3, 3)
-box2 = CreateObjectBox(3, 3, 3)
-SetObjectImage(box1, texture, 0)
-SetObjectImage(box2, texture, 0)
 
-SetObjectPosition(box1, -5, 1, 1)
-SetObjectPosition(box2, 5, 1, 1)
 
-i as float = 0.01
+for i = 0 to 1500
+	b = CreateObjectBox(Random(1,15), Random(1,15), Random(1,15))
+	SetObjectImage(b, texture, 0)
+	RotateObjectLocalX(b, Random(1, 180))
+    RotateObjectLocalY(b, Random(1, 180))
+    RotateObjectLocalZ(b, Random(1, 180))
+    SetObjectPosition(b, Random(-1000, 1000), Random(-1000, 1000), Random(-1000, 1000))
+next i
 
 do
     if GetRawKeyPressed(27) then exit
 
-    RotateObjectLocalX(box1, 0.5)
-    RotateObjectLocalY(box1, 0.5)
-    RotateObjectLocalX(box2, -0.5)
-    RotateObjectLocalY(box2, -0.5)
-	SetObjectPosition(box1, GetObjectX(box1)+i, 1, 1)
-	SetObjectPosition(box2, GetObjectX(box2)-i, 2, 2)
-	i = i + 0.0001
 
+    if GetRawKeyState(asc("W")) then MoveCameraLocalZ(1, 1)
+    if GetRawKeyState(asc("S")) then MoveCameraLocalZ(1, -1)
+    if GetRawKeyState(asc("A")) then MoveCameraLocalX(1, -1)
+    if GetRawKeyState(asc("D")) then MoveCameraLocalX(1, 1)
+    if GetRawKeyState(asc("Q")) then MoveCameraLocalY(1, 1)
+    if GetRawKeyState(asc("Z")) then MoveCameraLocalY(1, -1)
+    if GetRawKeyState(asc("X")) then RotateCameraLocalY(1, -1)
+    if GetRawKeyState(asc("C")) then RotateCameraLocalY(1, 1)
+    if GetRawKeyState(asc("E")) then RotateCameraLocalZ(1, 1)
+    if GetRawKeyState(asc("R")) then RotateCameraLocalZ(1, -1)
+
+    
     Sync()
 loop
 
