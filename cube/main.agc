@@ -8,7 +8,7 @@ SetWindowAllowResize( 1 ) // allow the user to resize the window
 // set display properties
 SetVirtualResolution( 1024, 768 ) // doesn't have to match the window
 SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobile devices
-SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
+//SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 //SetAntialiasMode(1)
@@ -46,7 +46,7 @@ SetObjectPosition(plane, 0, -2, 0)
 
 cone = CreateObjectSphere(10, 20, 20)
 SetObjectImage(cone, LoadImage("fire.jpg"), 0)
-SetObjectPosition(cone, 40, 30, 0)
+SetObjectPosition(cone, 40, 10, 0)
 
 isJumping as integer = 0
 isFalling as integer = 0
@@ -58,10 +58,10 @@ SetCameraPosition(1, 25, 30, -70)
 SetCameraRotation(1, 0, -10, 0)
 SetCameraLookAt(1, 0, 0, 0, 0)
 
-Create3DPhysicskinematicBody(r1)
-Create3DPhysicskinematicBody(r2)
-Create3DPhysicskinematicBody(r3)
-Create3DPhysicskinematicBody(r4)
+Create3DPhysicsStaticBody(r1)
+Create3DPhysicsStaticBody(r2)
+Create3DPhysicsStaticBody(r3)
+Create3DPhysicsStaticBody(r4)
 SetObjectShapeBox(r1)
 SetObjectShapeBox(r2)
 SetObjectShapeBox(r3)
@@ -75,9 +75,6 @@ do
 	//gosub checkJump
 	gosub checkMove
 
-	print(GetObject3DPhysicsLinearVelocityX(cone))
-	print(GetObject3DPhysicsLinearVelocityY(cone))
-	print(GetObject3DPhysicsLinearVelocityZ(cone))
 	Step3DPhysicsWorld()
     Sync()
 loop
@@ -90,21 +87,15 @@ checkMove:
 	vy = GetObject3DPhysicsLinearVelocityY(cone)
 	vz = GetObject3DPhysicsLinearVelocityZ(cone)
 	
+	vector = CreateVector3()
 	
 	if GetRawKeyState(asc("A")) then SetObject3DPhysicsLinearVelocity(cone, -1, 0, 0, 10)
 	if GetRawKeyState(asc("D")) then SetObject3DPhysicsLinearVelocity(cone,  1, 0, 0, 10)
-	if GetRawKeyState(asc(" ")) then SetObject3DPhysicsLinearVelocity(cone, 0, 1, 0, 10)
+	if GetRawKeyPressed(asc(" ")) then SetObject3DPhysicsLinearVelocity(cone, vx, 5, 0, 30)
 	
-	/*newX = GetObjectX(cone) : newY = GetObjectY(cone) : newZ = GetObjectZ(cone)
-	objectHit = ObjectSphereSlide(0, oldX, oldY, oldZ, newX, newY, newZ, 5)
-	if objectHit <> 0
-		//isFalling = 0
-		//isJumping = 0
-		SetObjectPosition(cone, GetObjectRayCastSlideX(0), GetObjectRayCastSlideY(0), newZ )	
-	endif 
+	contact = GetObjects3DPhysicsContactPositionVector(cone, r4, vector)
+	Print(contact)
 	
-	Print(objectHit)
-	*/
 return
 
 checkJump:
