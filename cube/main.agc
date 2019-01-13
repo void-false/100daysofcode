@@ -69,7 +69,6 @@ SetObjectShapeBox(r4)
 Create3DPhysicsDynamicBody(cone)
 SetObjectShapeSphere(cone)
 
-
 do
 	if GetRawKeyPressed(27) then exit
 	//gosub checkJump
@@ -83,18 +82,17 @@ end
 
 checkMove:
 	//oldX = GetObjectX(cone) : oldY = GetObjectY(cone) : oldZ = GetObjectZ(cone)
-	vx = GetObject3DPhysicsLinearVelocityX(cone)
-	vy = GetObject3DPhysicsLinearVelocityY(cone)
-	vz = GetObject3DPhysicsLinearVelocityZ(cone)
+	vx = GetObject3DPhysicsAngularVelocityX(cone)
+	vy = GetObject3DPhysicsAngularVelocityY(cone)
+	vz = GetObject3DPhysicsAngularVelocityZ(cone)
 	
-	vector = CreateVector3()
+	if GetRawKeyPressed(asc("A")) then SetObject3DPhysicsLinearVelocity(cone, -1, 0, 0, 20)
+	if GetRawKeyPressed(asc("D")) then SetObject3DPhysicsLinearVelocity(cone,  1, 0, 0, 20)
+	if GetRawKeyPressed(asc(" ")) then SetObject3DPhysicsLinearVelocity(cone,  0, 1, 0, 20)
 	
-	if GetRawKeyState(asc("A")) then SetObject3DPhysicsLinearVelocity(cone, -1, 0, 0, 10)
-	if GetRawKeyState(asc("D")) then SetObject3DPhysicsLinearVelocity(cone,  1, 0, 0, 10)
-	if GetRawKeyPressed(asc(" ")) then SetObject3DPhysicsLinearVelocity(cone, vx, 5, 0, 30)
-	
-	contact = GetObjects3DPhysicsContactPositionVector(cone, r4, vector)
-	Print(contact)
+	Print(vx)
+	Print(vy)
+	Print(vz)
 	
 return
 
