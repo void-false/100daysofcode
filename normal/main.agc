@@ -18,7 +18,8 @@ SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black border
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
 
-
+SetSkyBoxVisible(1)
+//SetSkyBoxHorizonSize(1,1)
 // set a radius for the sphere which will also be used for the sphere cast
 radius# = 5.0
 
@@ -26,7 +27,7 @@ radius# = 5.0
 CreateObjectSphere(1,radius#*2,12,12)
 SetObjectCollisionMode(1,0) // this is to stop it interfering with the collision with the map
 SetObjectColor(1, 255, 191, 17, 255)
-SetObjectPosition(1,0,radius#+20,-50)
+SetObjectPosition(1,0,radius#+40,-50)
 
 // make three blocks to act as a map
 for i = 2 to 4
@@ -38,22 +39,22 @@ next i
 
 // create a plane, turn its collision off, rotate it and position it under the middle box to act as a ground
 // this is purely cosmetic
-CreateObjectPlane(5,200,200)
+CreateObjectPlane(5,2000,2000)
 SetObjectColor(5, 109, 224, 222, 255)
-//SetObjectCollisionMode(5,0) // this is to stop it interfering with the collision with the map
+SetObjectCollisionMode(5,1) // this is to stop it interfering with the collision with the map
 SetObjectRotation(5,90,0,0)
 SetObjectPosition(5,GetObjectX(3),0,GetObjectY(3))
-
 
 
 // position and orientate camera
 SetCameraPosition(1,50,50,-150)
 SetCameraLookAt(1,50,0,0,0)
 
-i as float = 0.01
-factor as float = 0.05
+fallSpeed as float = 0.1
+factor as float = 0.3
 isJumping as integer = 0
-jumpHeight as float = 1
+jumpHeight as float = 0
+jumpHeight = resetJumpHeight()
 do
 	if GetRawKeyPressed(27) then exit
 	
@@ -69,7 +70,21 @@ do
 	// move the green sphere based on the player input
 	MoveObjectLocalX(1,joystick_x#)
 	MoveObjectLocalZ(1,joystick_y#)
+	MoveObjectLocalY(1, -fallSpeed)
 	
+	if GetRawKeyPressed(asc(" " ))		
+		isJumping = 1
+	endif
+	
+	if isJumping
+		MoveObjectLocalY(1, jumpHeight)
+		jumpHeight = jumpHeight - factor
+	endif
+	
+	/*if jumpHeight <= 0
+		isJumping = 0
+		jumpHeight = resetJumpHeight()
+	endif*/
 	
 
 	// get the new position of the sphere
@@ -81,35 +96,22 @@ do
 	object_hit = ObjectSphereSlide(0,old_x#,old_y#,old_z#,new_x#,new_y#,new_z#,radius#)
 
 	// the sphere has collide with a box then calculate sphere new position to give sliding collision
-	// we do not need to know the Y component of the collision as the sphere only moves on the xz plane
 	if object_hit <> 0	
 		SetObjectPosition(1, GetObjectRayCastSlideX(0), GetObjectRayCastSlideY(0), GetObjectRayCastSlideZ(0) )
 		if GetObjectRayCastNormalY(0) > 0.9
-			i = factor
+			jumpHeight = resetJumpHeight()
 			isJumping = 0
 		endif
 	endif
-	
-	if GetRawKeyPressed(asc(" "))
-		isJumping = 1
-	endif
-		
-	if isJumping
-		MoveObjectLocalY(1, jumpHeight)
-		jumpHeight = jumpHeight - factor
-		if jumpHeight <= 0
-			isJumping = 0
-			jumpHeight = 1
-		endif
-	else  
-		MoveObjectLocalY(1, -i)
-		i = i + factor
-	endif
 
-	if GetObjectY(1)-radius# < 0 then SetObjectPosition(1, GetObjectX(1), radius#, GetObjectZ(1))
-
+	Print(jumpHeight)
+	Print(isJumping)
 	sync()
 
 loop
 
 end
+
+function resetJumpHeight()
+	jumpHeight = 4
+endfunction jumpHeight
