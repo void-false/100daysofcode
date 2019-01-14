@@ -108,7 +108,6 @@ do
 			fallSpeed = resetFallSpeed()
 		endif
 	endif
-	Print(object_hit)
 	sync()
 
 loop
