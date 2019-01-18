@@ -9,11 +9,14 @@ SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobi
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
+SetSkyBoxVisible(1)
+
 Create3DPhysicsWorld(1)
 
 SetCameraPosition(1, 0,  15, -30)
+SetCameraLookAt(1, 0, 0, 50, 0)
 
-ground = CreateObjectBox(100, 1, 20)
+ground = CreateObjectBox(1000, 1, 1000)
 SetObjectColor(ground, 0, 200, 0, 255)
 SetObjectPosition(ground, 0, -0.5, 0)
 Create3DPhysicsStaticBody(ground)
@@ -209,23 +212,47 @@ next i
 
 
 
-box = CreateObjectBox(1, 1, 1)
-SetObjectColor(box, 100, 0, 0, 255)
+box = CreateObjectBox(5, 5, 1)
+SetObjectColor(box, 100, 50, 75, 255)
 SetObjectPosition(box, 11, 0.5, -8)
-Create3DPhysicsDynamicBody(box)
-SetObjectShapeBox(box)
-SetObject3DPhysicsCanSleep(box, 0) 
+Create3DPhysicsKinematicBody(box)
+//SetObjectShapeBox(box)
+//SetObject3DPhysicsCanSleep(box, 0) 
 SetObject3DPhysicsMass(box, 100)
+
 
 SetObjectVisible(vi1, 0)
 SetObjectVisible(vi2, 0)
 
-
 do
     if GetRawKeyPressed(27) then exit
+    
+    
 	if GetRawKeyPressed(asc(" "))
 		SetObject3DPhysicsLinearVelocity(box, 0, 0, 1, 10)
 	endif
+	if GetRawKeyState(asc("Q")) then MoveCameraLocalY(1, 1)
+	if GetRawKeyState(asc("Z")) then MoveCameraLocalY(1, -1)
+	if GetRawKeyState(asc("W")) then MoveCameraLocalZ(1, 1)
+	if GetRawKeyState(asc("S")) then MoveCameraLocalZ(1, -1)
+	if GetRawKeyState(asc("A")) then MoveCameraLocalX(1, -1)
+	if GetRawKeyState(asc("D")) then MoveCameraLocalX(1, 1)
+	if GetPointerPressed() 
+		startx# = GetPointerX()
+		starty# = GetPointerY()
+		angx# = GetCameraAngleX(1)
+		angy# = GetCameraAngleY(1)
+	endif
+
+	if GetPointerState()
+		fDiffX# = (GetPointerX() - startx#)/5.0
+		fDiffY# = (GetPointerY() - starty#)/5.0
+		if ( newX# > 89 ) then newX# = 89
+		if ( newX# < -89 ) then newX# = -89
+		SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
+	endif
+	MoveObjectLocalX(box, GetDirectionX()/2)
+	MoveObjectLocalZ(box, -GetDirectionY()/2)
 
 	Step3DPhysicsWorld()
     Sync()

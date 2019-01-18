@@ -35,7 +35,7 @@ SetObjectPosition(ObjectOne,0,3,0)
 ObjectTwo = CreateObjectBox(6,1,1)
 SetObjectPosition(ObjectTwo,-3,0,0)
 FixObjectPivot(ObjectTwo)
-SetObjectPosition(ObjectTwo, 17, -3, 3)
+SetObjectPosition(ObjectTwo, 5, 6, 3)
 
 do  
         // rotate each object around its local center
