@@ -1,13 +1,44 @@
 SetErrorMode(2)
-
+#import_plugin AGKVR
 SetWindowTitle( "helloworldvr" )
 SetWindowSize( 1024, 768, 0 )
 SetWindowAllowResize( 1 ) // allow the user to resize the window
-SetVirtualResolution( 1024, 768 ) // doesn't have to match the window
-SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobile devices
-//SetSyncRate( 0, 0 ) // 30fps instead of 60 to save battery
-SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
+//SetVirtualResolution( 1024, 768 ) // doesn't have to match the window
+SetSyncRate( 0, 0 ) // 30fps instead of 60 to save battery
+
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
+
+AGKVR.SetCameraRange(0.01, 1000.0)
+InitError as integer
+RightEyeImage as integer = 501
+LeftEyeImage as integer = 502
+InitError = AGKVR.Init(RightEyeImage, LeftEyeImage)
+AGKVR.LockPlayerTurn(1)
+AGKVR.LockPlayerPitch(0)
+AGKVR.SetPlayerPosition(0, 0, -20)
+
+//Right Hand
+RightHandModel = LoadObjectWithChildren("RHand.FBX")
+SetObjectScale(RightHandModel,1.15,1.15,1.15)
+SetObjectPosition(RightHandModel,0.0,0.0,-0.07)
+SetObjectRotation(RightHandModel,0.0,180.0,90.0)
+FixObjectPivot(RightHandModel)
+SetObjectAnimationSpeed(RightHandModel,20)
+HandModelImg = LoadImage("Hand.png")
+SetObjectImage(RightHandModel,HandModelImg,0)
+SetObjectVisible(RightHandModel,0)
+SetObjectCollisionMode(RightHandModel,0)
+
+//Left Hand
+LeftHandModel = LoadObjectWithChildren("LHand.FBX")
+SetObjectScale(LeftHandModel,1.15,1.15,1.15)
+SetObjectPosition(LeftHandModel,0.0,0.0,-0.07)
+SetObjectRotation(LeftHandModel,0.0,180.0,270.0)
+FixObjectPivot(LeftHandModel)
+SetObjectAnimationSpeed(LeftHandModel,20)
+SetObjectImage(LeftHandModel,HandModelImg,0)
+SetObjectVisible(LeftHandModel,0)
+SetObjectCollisionMode(LeftHandModel,0)
 
 SetSkyBoxVisible(1)
 
@@ -224,24 +255,76 @@ SetObject3DPhysicsMass(box, 100)
 SetObjectVisible(vi1, 0)
 SetObjectVisible(vi2, 0)
 
+playerPosX as float
+playerPosY as float
+playerPosZ as float
+newPlayerPosX as float
+newPlayerPosY as float
+newPlayerPosZ as float
+Rvalue as float
+Lvalue as float
+
+s1 = CreateObjectSphere(0.15, 5, 5)
+SetObjectColor(s1, 200, 0, 0, 255)
+Create3DPhysicsKinematicBody(s1)
+SetObjectVisible(s1, 0)
+s2 = CreateObjectSphere(0.15, 5, 5)
+SetObjectColor(s2, 0, 0, 200, 255)
+Create3DPhysicsKinematicBody(s2)
+SetObjectVisible(s2, 0)
+
 do
     if GetRawKeyPressed(27) then exit
     
+    playerPosX = AGKVR.GetPlayerX()
+	playerPosY = AGKVR.GetPlayerY()
+	playerPosZ = AGKVR.GetPlayerZ()
     
 	if GetRawKeyPressed(asc(" "))
 		SetObject3DPhysicsLinearVelocity(box, 0, 0, 1, 10)
 	endif
 	if GetRawKeyState(asc("Q")) then MoveCameraLocalY(1, 1)
 	if GetRawKeyState(asc("Z")) then MoveCameraLocalY(1, -1)
-	if GetRawKeyState(asc("W")) then MoveCameraLocalZ(1, 1)
+	/*if GetRawKeyState(asc("W")) then MoveCameraLocalZ(1, 1)
 	if GetRawKeyState(asc("S")) then MoveCameraLocalZ(1, -1)
 	if GetRawKeyState(asc("A")) then MoveCameraLocalX(1, -1)
-	if GetRawKeyState(asc("D")) then MoveCameraLocalX(1, 1)
+	if GetRawKeyState(asc("D")) then MoveCameraLocalX(1, 1)*/
+	if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.1)
+	if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.1)
+	if GetRawKeyState(asc("A")) then AGKVR.MovePlayerLocalX(-0.1)
+	if GetRawKeyState(asc("D")) then AGKVR.MovePlayerLocalX(0.1)
 	if GetPointerPressed() 
 		startx# = GetPointerX()
 		starty# = GetPointerY()
 		angx# = GetCameraAngleX(1)
 		angy# = GetCameraAngleY(1)
+	endif
+	
+	AGKVR.MovePlayerLocalX(AGKVR.LeftController_JoyX() * 0.06)
+	AGKVR.MovePlayerLocalZ(AGKVR.LeftController_JoyY() * 0.06)
+	
+	Rvalue = AGKVR.RightController_Trigger( )
+	Lvalue = AGKVR.LeftController_Trigger( )
+	SetObjectAnimationFrame(RightHandModel, GetObjectAnimationName( RightHandModel, 1 ), GetObjectAnimationDuration(RightHandModel,GetObjectAnimationName( RightHandModel, 1 ))*Rvalue,0)
+	SetObjectAnimationFrame(LeftHandModel, GetObjectAnimationName( LeftHandModel, 1 ), GetObjectAnimationDuration(LeftHandModel,GetObjectAnimationName( LeftHandModel, 1 ))*Lvalue,0)
+	
+	//Position Hand Objects
+	if  AGKVR.RightControllerFound( ) = 1
+		SetObjectPosition( RightHandModel, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
+		SetObjectRotation( RightHandModel, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
+		SetObjectVisible( RightHandModel, 1 )
+		SetObjectPosition(s1, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
+	else
+		SetObjectVisible( RightHandModel, 0 )
+	endif
+	
+	if  AGKVR.LeftControllerFound( ) = 1
+		SetObjectPosition( LeftHandModel, AGKVR.GetLeftHandX(), AGKVR.GetLeftHandY(), AGKVR.GetLeftHandZ())
+		SetObjectRotation( LeftHandModel, AGKVR.GetLeftHandAngleX(), AGKVR.GetLeftHandAngleY(), AGKVR.GetLeftHandAngleZ())
+		SetObjectVisible( LeftHandModel, 1 )
+		SetObjectPosition(s2, AGKVR.GetLeftHandX(), AGKVR.GetLeftHandY(), AGKVR.GetLeftHandZ())
+	else
+		SetObjectVisible( LeftHandModel, 0 )
 	endif
 
 	if GetPointerState()
@@ -253,8 +336,24 @@ do
 	endif
 	MoveObjectLocalX(box, GetDirectionX()/2)
 	MoveObjectLocalZ(box, -GetDirectionY()/2)
+	newPlayerPosX = AGKVR.GetPlayerX()
+	newPlayerPosY = AGKVR.GetPlayerY()
+	newPlayerPosZ = AGKVR.GetPlayerZ()
+	if ObjectSphereSlide(0, playerPosX, playerPosY+0.1, playerPosZ, newPlayerPosX, newPlayerPosY+0.1, newPlayerPosZ, 0.1) > 0
+		newPlayerPosX = GetObjectRayCastSlideX(0)
+		newPlayerPosY = GetObjectRayCastSlideY(0)-0.1
+		newPlayerPosZ = GetObjectRayCastSlideZ(0)
+		AGKVR.SetPlayerPosition(newPlayerPosX, newPlayerPosY, newPlayerPosZ)
+	endif
+	
+	
+
+	SetCameraPosition(1, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
+	SetCameraRotation(1, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
 
 	Step3DPhysicsWorld()
+	AGKVR.UpdatePlayer()
+	AGKVR.Render()
     Sync()
 loop
 
