@@ -1,9 +1,9 @@
 SetErrorMode(2)
 #import_plugin AGKVR
 SetWindowTitle( "helloworldvr" )
-SetWindowSize( 1024, 768, 0 )
+//SetWindowSize( 1024, 768, 0 )
 SetWindowAllowResize( 1 ) // allow the user to resize the window
-//SetVirtualResolution( 1024, 768 ) // doesn't have to match the window
+//SetVirtualResolution( 1920, 1080 ) // doesn't have to match the window
 SetSyncRate( 0, 0 ) // 30fps instead of 60 to save battery
 
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
@@ -43,9 +43,6 @@ SetObjectCollisionMode(LeftHandModel,0)
 SetSkyBoxVisible(1)
 
 Create3DPhysicsWorld(1)
-
-SetCameraPosition(1, 0,  15, -30)
-SetCameraLookAt(1, 0, 0, 50, 0)
 
 ground = CreateObjectBox(1000, 1, 1000)
 SetObjectColor(ground, 0, 200, 0, 255)
@@ -238,10 +235,6 @@ joints[19] = Create3DPhysicsFixedJoint(r3, shelf, v)
 for i = 0 to 19
 	Set3DPhysicsJointBreakingThreshold(joints[i], 1)
 next i
-
-
-
-
 
 box = CreateObjectBox(5, 5, 1)
 SetObjectColor(box, 100, 50, 75, 255)
