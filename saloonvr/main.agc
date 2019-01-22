@@ -38,8 +38,8 @@ do
 	endif
 	
 	if isBulletMoving
-		MoveObjectLocalX(bullet, cos(AGKVR.GetRightHandX())/100.0)
-		MoveObjectLocalZ(bullet, sin(AGKVR.GetRightHandZ())/100.0)
+		MoveObjectLocalX(bullet, cos(AGKVR.GetRightHandAngleX())/100.0)
+		MoveObjectLocalZ(bullet, sin(AGKVR.GetRightHandAngleZ())/100.0)
 	endif
 	
 	if isFired = 1 and AGKVR.RightController_Trigger() = 0
