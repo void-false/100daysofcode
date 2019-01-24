@@ -52,8 +52,6 @@ do
     if GetPointerState()
         fDiffX# = (GetPointerX() - startx#)/2.0
         fDiffY# = (GetPointerY() - starty#)/2.0
-        if ( newX# > 89 ) then newX# = 89
-        if ( newX# < -89 ) then newX# = -89
         SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
     endif
 	
