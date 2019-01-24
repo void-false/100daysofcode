@@ -31,6 +31,8 @@ do
 	if GetRawKeyState(asc("S")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, -0.01)
 	if GetRawKeyState(asc("A")) and not GetRawKeyState(16) then MoveCameraLocalX(1, -0.01)
 	if GetRawKeyState(asc("D")) and not GetRawKeyState(16) then MoveCameraLocalX(1, 0.01)
+	if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, 0.01)
+	if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -0.01)
 	
 	if GetRawKeyState(16) and GetRawKeyState(asc("W")) then RotateObjectLocalX(gun, -1)
 	if GetRawKeyState(16) and GetRawKeyState(asc("S")) then RotateObjectLocalX(gun, 1)
@@ -38,10 +40,14 @@ do
 	if GetRawKeyState(16) and GetRawKeyState(asc("D")) then RotateObjectLocalY(gun, 1)
 	
 	if GetRawKeyState(asc(" ")) 
-		MoveObjectLocalX(bullet, sin(GetObjectAngleY(gun))/1000.0)
-		MoveObjectLocalZ(bullet, cos(GetObjectAngleY(gun))/1000.0) // COOL
+		MoveObjectLocalX(bullet, sin(GetObjectAngleY(gun))/100.0)
+		MoveObjectLocalZ(bullet, cos(GetObjectAngleY(gun))/100.0) // COOL
+		MoveObjectLocalY(bullet, sin(GetObjectAngleX(gun))/-100.0)
+	elseif GetRawKeyReleased(asc(" "))
+		SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
 	endif
 	
+	if GetRawKeyPressed(asc("R")) then SetObjectRotation(gun, 0, 0, 0)
 	
 	if GetPointerPressed()
         startx# = GetPointerX()
