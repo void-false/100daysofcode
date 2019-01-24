@@ -1,4 +1,4 @@
-SetErrorMode(2)
+SetErrorMode(0)
 
 //#import_plugin AGKVR
 
