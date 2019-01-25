@@ -1,29 +1,32 @@
 SetErrorMode(0)
 
-//#import_plugin AGKVR
+#import_plugin AGKVR
 
 SetWindowTitle("Saloon VR")
 SetWindowSize(1024, 768, 0)
 SetVirtualResolution(1024, 768)
 SetWindowAllowResize(1)
-//SetSyncRate(3, 0)
 
-/*AGKVR.SetCameraRange(0.1, 1000)
-initError as integer
-initError = AGKVR.Init(500, 501)*/
+if AGKVR.IsHmdPresent()
+	AGKVR.SetCameraRange(0.01, 1000.0)
+	initError as integer
+	initError = AGKVR.Init(500, 501)
+	AGKVR.SetPlayerPosition(2, 0, 0)
+	SetSyncRate(0, 0)
+endif
 
 SetSkyBoxVisible(1)
-
 gosub makeObjects
 
-//AGKVR.SetPlayerPosition(2, 0, 0)
+
 
 isFired as integer = 0
 isBulletMoving as integer = 0
+speed as float = 5.0
 
 SetCameraPosition(1, 1, 1, 1)
 SetCameraRange(1, 0.01, 1000)
-SetCameraLookAt(1, 0, 1.2, 0, 0)
+SetCameraLookAt(1, 0, 2.5, 10, 0)
 do
 	if GetRawKeyPressed(27) then exit
 	
@@ -38,11 +41,14 @@ do
 	if GetRawKeyState(16) and GetRawKeyState(asc("S")) then RotateObjectLocalX(gun, 1)
 	if GetRawKeyState(16) and GetRawKeyState(asc("A")) then RotateObjectLocalY(gun, -1)
 	if GetRawKeyState(16) and GetRawKeyState(asc("D")) then RotateObjectLocalY(gun, 1)
+	if GetRawKeyState(16) and GetRawKeyState(asc("Q")) then RotateObjectLocalZ(gun, 1)
+	if GetRawKeyState(16) and GetRawKeyState(asc("Z")) then RotateObjectLocalZ(gun, -1)
+	
+	//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
+	//RotateObjectLocalY(bullet, -90)
 	
 	if GetRawKeyState(asc(" ")) 
-		MoveObjectLocalX(bullet, sin(GetObjectAngleY(gun))/100.0)
-		MoveObjectLocalZ(bullet, cos(GetObjectAngleY(gun))/100.0) // COOL
-		MoveObjectLocalY(bullet, sin(GetObjectAngleX(gun))/-100.0)
+		MoveObjectLocalX(bullet, 0.01)
 	elseif GetRawKeyReleased(asc(" "))
 		SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
 	endif
@@ -61,22 +67,38 @@ do
         SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
     endif
 	
-	/*if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.06)
-	if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.06)
-	
-	SetCameraPosition(1, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
-	SetCameraRotation(1, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
-	
-	if AGKVR.RightControllerFound()
-		SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
-		SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
-		if not isFired and not isBulletMoving
-			SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun)+0.1, GetObjectZ(gun))
+	if AGKVR.IsHMDPresent()
+		
+		if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.06)
+		if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.06)
+		
+		SetCameraPosition(1, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
+		SetCameraRotation(1, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
+		
+		if AGKVR.RightControllerFound()
+			SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
+			SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
+				
+			if AGKVR.RightController_Trigger() < 0.5
+				isFired = 0
+			elseif AGKVR.RightController_Trigger() = 1.0
+				isFired = 1
+			endif
+			
+			if isFired
+				MoveObjectLocalZ(bullet, 0.1)			
+			else
+				SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
+				SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
+			endif
 		endif
+	
+		AGKVR.UpdatePlayer()
+		AGKVR.Render()	
 	endif
 	
 	
-	if isBulletMoving
+	/*if isBulletMoving
 		MoveObjectLocalX(bullet, cos(AGKVR.GetRightHandAngleX())/100.0)
 		MoveObjectLocalZ(bullet, sin(AGKVR.GetRightHandAngleZ())/100.0)
 	endif
@@ -90,14 +112,9 @@ do
 		isFired = 1
 		isBulletMoving = 1
 		RotateObjectLocalX(gun, -15)
-	endif
+	endif*/
 
-	
-	
-	AGKVR.UpdatePlayer()
-	AGKVR.Render()*/
-	//SetCameraLookAt(1, getobjectx(bullet), GetObjectY(bullet), GetObjectZ(bullet), 0)
-	SYNC()
+	Sync()
 loop
 
 end
@@ -111,8 +128,46 @@ makeObjects:
 	SetObjectPosition(gun, 0, 1.2, 0)
 	
 	bullet = CreateObjectBox(0.022, 0.022, 0.022)
-	SetObjectColor(bullet, 219, 112, 50, 255)
+	//SetObjectColor(bullet, 119, 27, 12, 255)
 	SetObjectPosition(bullet, 0, 1.2, 0)
+	
+
+	
+	saloonFloor = CreateObjectBox(10, 0.3, 1)
+	SetObjectColor(saloonFloor,76,0,11, 255)
+	SetObjectPosition(saloonFloor, 0, 0.15, 10)
+	
+	saloonLeftBottom = CreateObjectBox(4.0, 0.7, 1)
+	SetObjectColor(saloonLeftBottom,136,0,21, 255)
+	SetObjectPosition(saloonLeftBottom, GetObjectX(saloonFloor)-3, GetObjectY(saloonFloor)+0.45, GetObjectZ(saloonFloor)+0.01)
+	
+	saloonRightBottom = CreateObjectBox(4.0, 0.7, 1)
+	SetObjectColor(saloonRightBottom,136,0,21, 255)
+	SetObjectPosition(saloonRightBottom, GetObjectX(saloonFloor)+3, GetObjectY(saloonFloor)+0.45, GetObjectZ(saloonFloor)+0.01)
+	
+	saloonMiddle = CreateObjectBox(10, 0.3, 1)
+	SetObjectColor(saloonMiddle,136,0,21, 255)
+	SetObjectPosition(saloonMiddle,  GetObjectX(saloonFloor), GetObjectY(saloonFloor)+2.3, GetObjectZ(saloonFloor))
+	
+	saloonTop = CreateObjectBox(10, 0.3, 1)
+	SetObjectColor(saloonTop,136,0,21, 255)
+	SetObjectPosition(saloonTop,  GetObjectX(saloonFloor), GetObjectY(saloonFloor)+4, GetObjectZ(saloonFloor))
+	
+	saloonLeft = CreateObjectBox(1, 4, 1)
+	SetObjectColor(saloonLeft,255,165,79, 255)
+	SetObjectPosition(saloonLeft,  GetObjectX(saloonFloor)-4.5, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
+	
+	saloonRight = CreateObjectBox(1, 4, 1)
+	SetObjectColor(saloonRight,255,165,79, 255)
+	SetObjectPosition(saloonRight,  GetObjectX(saloonFloor)+4.5, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
+	
+	saloonColumnLeft = CreateObjectBox(1, 4, 1)
+	SetObjectColor(saloonColumnLeft,255,165,79, 255)
+	SetObjectPosition(saloonColumnLeft,  GetObjectX(saloonFloor)-1.51, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
+	
+	saloonColumnRight = CreateObjectBox(1, 4, 1)
+	SetObjectColor(saloonColumnRight,255,165,79, 255)
+	SetObjectPosition(saloonColumnRight,  GetObjectX(saloonFloor)+1.51, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
 
 return
 
