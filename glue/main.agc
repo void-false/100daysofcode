@@ -13,12 +13,16 @@ SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black border
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
 gun = CreateObjectBox(0.02, 0.1, 0.05)
-SetObjectPosition(gun, 0, 0, 0)
+SetObjectPosition(gun, 0, -0.03, -0.01)
 RotateObjectLocalX(gun, 15)
 FixObjectPivot(gun)
 
-body = CreateObjectBox(0.02, 0.05, 0.1)
-SetObjectPosition(body, 0, 0.03, 0.04)
+handle = CreateObjectBox(0.02, 0.02, 0.05)
+SetObjectPosition(handle, 0, 0.015, 0)
+FixObjectToObject(handle, gun)
+
+body = CreateObjectBox(0.02, 0.05, 0.08)
+SetObjectPosition(body, 0, 0.03, 0.06)
 FixObjectToObject(body, gun)
 
 drum = CreateObjectCylinder(0.06, 0.06, 6)
