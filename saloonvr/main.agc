@@ -122,13 +122,37 @@ end
 makeObjects:
 	ground = CreateObjectBox(100, 0, 100)
 	SetObjectColor(ground, 244, 194, 44, 255)
+		
+	gun = CreateObjectBox(0.02, 0.1, 0.05)
+	SetObjectPosition(gun, 0, 0, 0)
+	RotateObjectLocalX(gun, 15)
+	FixObjectPivot(gun)
+
+	body = CreateObjectBox(0.02, 0.05, 0.1)
+	SetObjectPosition(body, 0, 0.03, 0.04)
+	FixObjectToObject(body, gun)
+
+	drum = CreateObjectCylinder(0.06, 0.06, 6)
+	RotateObjectLocalX(drum, 90)
+	SetObjectPosition(drum, 0, 0.024, 0.06)
+	FixObjectToObject(drum, gun)
+
+	barrel = CreateObjectCylinder(0.2, 0.02, 10)
+	RotateObjectLocalX(barrel, 90)
+	SetObjectPosition(barrel, 0, 0.043, 0.19)
+	FixObjectToObject(barrel, gun)
+
+	sight = CreateObjectCone(0.01, 0.01, 3)
+	SetObjectPosition(sight, 0, 0.057, 0.28)
+	FixObjectToObject(sight, gun)
 	
-	gun = CreateObjectBox(0.02, 0.15, 0.2)
+	
+	/*gun = CreateObjectBox(0.02, 0.15, 0.2)
 	SetObjectColor(gun, 224, 221, 210, 255)
-	SetObjectPosition(gun, 0, 1.2, 0)
+	SetObjectPosition(gun, 0, 1.2, 0)*/
 	
 	bullet = CreateObjectBox(0.022, 0.022, 0.022)
-	//SetObjectColor(bullet, 119, 27, 12, 255)
+	SetObjectColor(bullet, 119, 27, 12, 255)
 	SetObjectPosition(bullet, 0, 1.2, 0)
 	
 
