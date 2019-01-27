@@ -12,28 +12,28 @@ SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobi
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
-handle = CreateObjectBox(0.02, 0.1, 0.05)
-SetObjectPosition(handle, 0, 0, 0)
-RotateObjectLocalX(handle, 15)
-FixObjectPivot(handle)
+gun = CreateObjectBox(0.02, 0.1, 0.05)
+SetObjectPosition(gun, 0, 0, 0)
+RotateObjectLocalX(gun, 15)
+FixObjectPivot(gun)
 
 body = CreateObjectBox(0.02, 0.05, 0.1)
 SetObjectPosition(body, 0, 0.03, 0.04)
-FixObjectToObject(body, handle)
+FixObjectToObject(body, gun)
 
 drum = CreateObjectCylinder(0.06, 0.06, 6)
 RotateObjectLocalX(drum, 90)
 SetObjectPosition(drum, 0, 0.024, 0.06)
-FixObjectToObject(drum, handle)
+FixObjectToObject(drum, gun)
 
 barrel = CreateObjectCylinder(0.2, 0.02, 10)
 RotateObjectLocalX(barrel, 90)
 SetObjectPosition(barrel, 0, 0.043, 0.19)
-FixObjectToObject(barrel, handle)
+FixObjectToObject(barrel, gun)
 
 sight = CreateObjectCone(0.01, 0.01, 3)
 SetObjectPosition(sight, 0, 0.057, 0.28)
-FixObjectToObject(sight, handle)
+FixObjectToObject(sight, gun)
 
 SetCameraPosition(1, 0.5, 0, 0)
 SetCameraRange(1, 0.01, 1000)
@@ -49,10 +49,10 @@ do
 	if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, 0.01)
 	if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -0.01)
 	
-	if GetRawKeyState(asc("W")) and GetRawKeyState(16) then MoveObjectLocalZ(handle, 0.01)
-	if GetRawKeyState(asc("S")) and GetRawKeyState(16) then MoveObjectLocalZ(handle, -0.01)
-	if GetRawKeyState(asc("A")) and GetRawKeyState(16) then RotateObjectLocalX(handle, 1)
-	if GetRawKeyState(asc("D")) and GetRawKeyState(16) then RotateObjectLocalX(handle, -1)
+	if GetRawKeyState(asc("W")) and GetRawKeyState(16) then MoveObjectLocalZ(gun, 0.01)
+	if GetRawKeyState(asc("S")) and GetRawKeyState(16) then MoveObjectLocalZ(gun, -0.01)
+	if GetRawKeyState(asc("A")) and GetRawKeyState(16) then RotateObjectLocalX(gun, 1)
+	if GetRawKeyState(asc("D")) and GetRawKeyState(16) then RotateObjectLocalX(gun, -1)
 
 
 	if GetPointerPressed()
