@@ -39,6 +39,19 @@ sight = CreateObjectCone(0.01, 0.01, 3)
 SetObjectPosition(sight, 0, 0.057, 0.28)
 FixObjectToObject(sight, gun)
 
+hammer = CreateObjectBox(0.02, 0.01, 0.04)
+SetObjectPosition(hammer, 0, 0.005, -0.02)
+FixObjectPivot(hammer)
+SetObjectPosition(hammer, 0, 0.025, 0.01)
+FixObjectToObject(hammer, gun)
+
+trigger = CreateObjectBox(0.02, 0.01, 0.04)
+SetObjectPosition(trigger, 0, 0.005, 0.02)
+FixObjectPivot(trigger)
+RotateObjectLocalX(trigger, 45)
+SetObjectPosition(trigger, 0, -0.015, 0.015)
+FixObjectToObject(trigger, gun)
+
 SetCameraPosition(1, 0.5, 0, 0)
 SetCameraRange(1, 0.01, 1000)
 SetCameraLookAt(1, 0, 0, 0, 0)
@@ -58,6 +71,8 @@ do
 	if GetRawKeyState(asc("A")) and GetRawKeyState(16) then RotateObjectLocalX(gun, 1)
 	if GetRawKeyState(asc("D")) and GetRawKeyState(16) then RotateObjectLocalX(gun, -1)
 
+	if GetRawKeyState(asc("V")) then RotateObjectLocalX(hammer, 1)
+	if GetRawKeyState(asc("R")) then RotateObjectLocalX(trigger, 1)
 
 	if GetPointerPressed()
 		
