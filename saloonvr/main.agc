@@ -23,10 +23,12 @@ gosub makeObjects
 isFired as integer = 0
 isBulletMoving as integer = 0
 speed as float = 5.0
+dragHammerStart as integer = 0
+dragHammerFinish as integer = 0
 
-SetCameraPosition(1, 1, 1, 1)
-SetCameraRange(1, 0.01, 1000)
-SetCameraLookAt(1, 0, 2.5, 10, 0)
+//SetCameraPosition(1, 1, 1, 1)
+//SetCameraRange(1, 0.01, 1000)
+//SetCameraLookAt(1, 0, 2.5, 10, 0)
 do
 	if GetRawKeyPressed(27) then exit
 	
@@ -78,19 +80,44 @@ do
 		if AGKVR.RightControllerFound()
 			SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 			SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
-				
-			if AGKVR.RightController_Trigger() < 0.5
+			
+			SetObjectRotation(trigger, 45+AGKVR.RightController_Trigger()*45, GetObjectAngleY(trigger), GetObjectAngleZ(trigger))
+			
+			if isFired and not dragHammerStart and AGKVR.RightController_JoyY() > 0.9
+				dragHammerStart = 1
+			endif
+			
+			if dragHammerStart and not dragHammerFinish
+				SetObjectRotation(hammer, (AGKVR.RightController_JoyY()+1)*45, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
+			endif
+			
+			if dragHammerStart and AGKVR.RightController_JoyY() = 0
+				dragHammerStart = 0
+				SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))		
+			endif
+			
+			if dragHammerStart and AGKVR.RightController_JoyY() < -0.9
+				SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
 				isFired = 0
-			elseif AGKVR.RightController_Trigger() = 1.0
+				dragHammerFinish = 1
+				dragHammerStart = 0
+			endif
+
+			if AGKVR.RightController_Trigger() = 1.0
 				isFired = 1
+				dragHammerStart = 0
+				dragHammerFinish = 0
+				SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))		
 			endif
 			
 			if isFired
-				MoveObjectLocalZ(bullet, 0.1)			
+				MoveObjectLocalZ(bullet, 0.1)
+					
 			else
 				SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
 				SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 			endif
+			
 		endif
 	
 		AGKVR.UpdatePlayer()
@@ -113,6 +140,8 @@ do
 		isBulletMoving = 1
 		RotateObjectLocalX(gun, -15)
 	endif*/
+	
+	Print(dragHammerStart)
 
 	Sync()
 loop
@@ -124,12 +153,16 @@ makeObjects:
 	SetObjectColor(ground, 244, 194, 44, 255)
 		
 	gun = CreateObjectBox(0.02, 0.1, 0.05)
-	SetObjectPosition(gun, 0, 0, 0)
+	SetObjectPosition(gun, 0, -0.03, -0.01)
 	RotateObjectLocalX(gun, 15)
 	FixObjectPivot(gun)
 
-	body = CreateObjectBox(0.02, 0.05, 0.1)
-	SetObjectPosition(body, 0, 0.03, 0.04)
+	handle = CreateObjectBox(0.02, 0.02, 0.05)
+	SetObjectPosition(handle, 0, 0.015, 0)
+	FixObjectToObject(handle, gun)
+
+	body = CreateObjectBox(0.02, 0.05, 0.08)
+	SetObjectPosition(body, 0, 0.03, 0.06)
 	FixObjectToObject(body, gun)
 
 	drum = CreateObjectCylinder(0.06, 0.06, 6)
@@ -145,6 +178,19 @@ makeObjects:
 	sight = CreateObjectCone(0.01, 0.01, 3)
 	SetObjectPosition(sight, 0, 0.057, 0.28)
 	FixObjectToObject(sight, gun)
+
+	hammer = CreateObjectBox(0.02, 0.01, 0.04)
+	SetObjectPosition(hammer, 0, 0.005, -0.02)
+	FixObjectPivot(hammer)
+	SetObjectPosition(hammer, 0, 0.025, 0.01)
+	FixObjectToObject(hammer, gun)
+
+	trigger = CreateObjectBox(0.02, 0.01, 0.04)
+	SetObjectPosition(trigger, 0, 0.005, 0.02)
+	FixObjectPivot(trigger)
+	RotateObjectLocalX(trigger, 45)
+	SetObjectPosition(trigger, 0, -0.015, 0.015)
+	FixObjectToObject(trigger, gun)
 	
 	
 	/*gun = CreateObjectBox(0.02, 0.15, 0.2)
