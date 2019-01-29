@@ -157,7 +157,7 @@ makeObjects:
 	RotateObjectLocalX(gun, 15)
 	FixObjectPivot(gun)
 
-	handle = CreateObjectBox(0.02, 0.02, 0.05)
+	handle = CreateObjectBox(0.025, 0.02, 0.05)
 	SetObjectPosition(handle, 0, 0.015, 0)
 	FixObjectToObject(handle, gun)
 
@@ -179,18 +179,29 @@ makeObjects:
 	SetObjectPosition(sight, 0, 0.057, 0.28)
 	FixObjectToObject(sight, gun)
 
-	hammer = CreateObjectBox(0.02, 0.01, 0.04)
+	hammer = CreateObjectBox(0.01, 0.01, 0.04)
 	SetObjectPosition(hammer, 0, 0.005, -0.02)
 	FixObjectPivot(hammer)
 	SetObjectPosition(hammer, 0, 0.025, 0.01)
 	FixObjectToObject(hammer, gun)
 
-	trigger = CreateObjectBox(0.02, 0.01, 0.04)
+	hammerAxis = CreateObjectCylinder(0.018, 0.015, 10)
+	SetObjectPosition(hammerAxis, 0, 0.03, 0.015)
+	RotateObjectLocalZ(hammerAxis, 90)
+	FixObjectToObject(hammerAxis, gun)
+
+
+	trigger = CreateObjectBox(0.01, 0.01, 0.04)
 	SetObjectPosition(trigger, 0, 0.005, 0.02)
 	FixObjectPivot(trigger)
 	RotateObjectLocalX(trigger, 45)
 	SetObjectPosition(trigger, 0, -0.015, 0.015)
 	FixObjectToObject(trigger, gun)
+
+	triggerAxis = CreateObjectCylinder(0.018, 0.01, 10)
+	SetObjectPosition(triggerAxis, 0, -0.012, 0.023)
+	RotateObjectLocalZ(triggerAxis, 90)
+	FixObjectToObject(triggerAxis, gun)
 	
 	
 	/*gun = CreateObjectBox(0.02, 0.15, 0.2)

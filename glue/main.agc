@@ -17,7 +17,7 @@ SetObjectPosition(gun, 0, -0.03, -0.01)
 RotateObjectLocalX(gun, 15)
 FixObjectPivot(gun)
 
-handle = CreateObjectBox(0.02, 0.02, 0.05)
+handle = CreateObjectBox(0.025, 0.02, 0.05)
 SetObjectPosition(handle, 0, 0.015, 0)
 FixObjectToObject(handle, gun)
 
@@ -39,18 +39,31 @@ sight = CreateObjectCone(0.01, 0.01, 3)
 SetObjectPosition(sight, 0, 0.057, 0.28)
 FixObjectToObject(sight, gun)
 
-hammer = CreateObjectBox(0.02, 0.01, 0.04)
+hammer = CreateObjectBox(0.01, 0.01, 0.04)
 SetObjectPosition(hammer, 0, 0.005, -0.02)
 FixObjectPivot(hammer)
 SetObjectPosition(hammer, 0, 0.025, 0.01)
 FixObjectToObject(hammer, gun)
 
-trigger = CreateObjectBox(0.02, 0.01, 0.04)
+hammerAxis = CreateObjectCylinder(0.018, 0.015, 10)
+SetObjectPosition(hammerAxis, 0, 0.03, 0.015)
+RotateObjectLocalZ(hammerAxis, 90)
+FixObjectToObject(hammerAxis, gun)
+
+
+trigger = CreateObjectBox(0.01, 0.01, 0.04)
 SetObjectPosition(trigger, 0, 0.005, 0.02)
 FixObjectPivot(trigger)
 RotateObjectLocalX(trigger, 45)
 SetObjectPosition(trigger, 0, -0.015, 0.015)
 FixObjectToObject(trigger, gun)
+
+triggerAxis = CreateObjectCylinder(0.018, 0.01, 10)
+SetObjectPosition(triggerAxis, 0, -0.012, 0.023)
+RotateObjectLocalZ(triggerAxis, 90)
+FixObjectToObject(triggerAxis, gun)
+
+
 
 SetCameraPosition(1, 0.5, 0, 0)
 SetCameraRange(1, 0.01, 1000)
@@ -72,7 +85,9 @@ do
 	if GetRawKeyState(asc("D")) and GetRawKeyState(16) then RotateObjectLocalX(gun, -1)
 
 	if GetRawKeyState(asc("V")) then RotateObjectLocalX(hammer, 1)
+	if GetRawKeyState(asc("V")) and GetRawKeyState(16) then RotateObjectLocalX(hammer, -2)
 	if GetRawKeyState(asc("R")) then RotateObjectLocalX(trigger, 1)
+	if GetRawKeyState(asc("R")) and GetRawKeyState(16) then RotateObjectLocalX(trigger, -2)
 
 	if GetPointerPressed()
 		
