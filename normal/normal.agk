@@ -1,4 +1,3 @@
-
 [apk_settings]
 alias=
 app_icon_path=
@@ -49,7 +48,7 @@ output_path=
 FILE_0=main.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;3377;0
+FILE_NAME_0=1;main.agc;1787;0
 
 [project]
 description=
