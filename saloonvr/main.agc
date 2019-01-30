@@ -202,6 +202,10 @@ makeObjects:
 	SetObjectPosition(triggerAxis, 0, -0.012, 0.023)
 	RotateObjectLocalZ(triggerAxis, 90)
 	FixObjectToObject(triggerAxis, gun)
+
+
+	RotateObjectLocalX(gun, 45)
+	FixObjectPivot(gun)
 	
 	
 	/*gun = CreateObjectBox(0.02, 0.15, 0.2)
