@@ -63,7 +63,8 @@ SetObjectPosition(triggerAxis, 0, -0.012, 0.023)
 RotateObjectLocalZ(triggerAxis, 90)
 FixObjectToObject(triggerAxis, gun)
 
-
+RotateObjectLocalX(gun, 45)
+FixObjectPivot(gun)
 
 SetCameraPosition(1, 0.5, 0, 0)
 SetCameraRange(1, 0.01, 1000)
