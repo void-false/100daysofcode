@@ -7,6 +7,8 @@ SetWindowSize(1024, 768, 0)
 SetVirtualResolution(1024, 768)
 SetWindowAllowResize(1)
 
+Create3DPhysicsWorld(1)
+
 if AGKVR.IsHmdPresent()
 	AGKVR.SetCameraRange(0.01, 1000.0)
 	initError as integer
@@ -26,9 +28,23 @@ speed as float = 5.0
 dragHammerStart as integer = 0
 dragHammerFinish as integer = 0
 
+bulletStartX as float
+bulletStartY as float
+bulletStartZ as float
+bulletEndX as float
+bulletEndY as float
+bulletEndZ as float
+
+dw as float
+dh as float
+dl as float
+
+cactiParts as integer = 6
+
 //SetCameraPosition(1, 1, 1, 1)
 //SetCameraRange(1, 0.01, 1000)
 //SetCameraLookAt(1, 0, 2.5, 10, 0)
+
 do
 	if GetRawKeyPressed(27) then exit
 	
@@ -80,10 +96,11 @@ do
 		if AGKVR.RightControllerFound()
 			SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 			SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
+			RotateObjectLocalX(gun, 60)
 			
 			SetObjectRotation(trigger, 45+AGKVR.RightController_Trigger()*45, GetObjectAngleY(trigger), GetObjectAngleZ(trigger))
 			
-			if isFired and not dragHammerStart and AGKVR.RightController_JoyY() > 0.9
+			if isFired and not dragHammerStart and AGKVR.RightController_JoyY() > 0.8
 				dragHammerStart = 1
 			endif
 			
@@ -96,7 +113,7 @@ do
 				SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))		
 			endif
 			
-			if dragHammerStart and AGKVR.RightController_JoyY() < -0.9
+			if dragHammerStart and AGKVR.RightController_JoyY() < -0.8
 				SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
 				isFired = 0
 				dragHammerFinish = 1
@@ -107,8 +124,12 @@ do
 				isFired = 1
 				dragHammerStart = 0
 				dragHammerFinish = 0
-				SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))		
+				SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))	
 			endif
+			
+			bulletStartX = GetObjectX(bullet)
+			bulletStartY = GetObjectY(bullet)
+			bulletStartZ = GetObjectZ(bullet)
 			
 			if isFired
 				MoveObjectLocalZ(bullet, 0.1)
@@ -116,6 +137,31 @@ do
 			else
 				SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
 				SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
+			endif
+			
+			bulletEndX = GetObjectX(bullet)
+			bulletEndY = GetObjectY(bullet)
+			bulletEndZ = GetObjectZ(bullet)
+			
+			objHit = ObjectSphereSlide(0, bulletStartX, bulletStartY, bulletStartZ, bulletEndX, bulletEndY, bulletEndZ, 0.011)
+			if objHit >= cacti1a and objHit <= cacti1f
+				if objHit = cacti1a or objHit = cacti1c or objHit = cacti1d
+					DeleteObject(cacti1a)
+					DeleteObject(cacti1b)
+					DeleteObject(cacti1c)
+					DeleteObject(cacti1d)
+					DeleteObject(cacti1e)
+					DeleteObject(cacti1f)
+					gosub explodeCacti
+					if cactiParts > 3 then gosub explodeCacti
+				endif
+				if objHit = cacti1b or objHit = cacti1e or objHit = cacti1f 
+					cactiParts = cactiParts - 3
+					DeleteObject(cacti1b)
+					DeleteObject(cacti1e)
+					DeleteObject(cacti1f)
+					gosub explodeCacti
+				endif
 			endif
 			
 		endif
@@ -140,56 +186,77 @@ do
 		isBulletMoving = 1
 		RotateObjectLocalX(gun, -15)
 	endif*/
-	
-	Print(dragHammerStart)
-
+	Print(Get3DPhysicsTotalObjects())
+	Step3DPhysicsWorld()
 	Sync()
 loop
 
 end
 
+explodeCacti:
+	for i = 0 to 4		
+		dw = Random(10, 20) / 100.0
+		dh = Random(30, 50) / 100.0
+		dl = Random(10, 20) / 100.0
+		debris = CreateObjectBox(dw, dh, dl)
+		SetObjectColor(debris, 58, 224, 49, 255)
+		SetObjectPosition(debris, bulletEndX, bulletEndY, bulletEndZ)
+		Create3DPhysicsDynamicBody(debris)
+		SetObject3DPhysicsAngularVelocity(debris, Random(0,2)-1, Random(0,2)-1, Random(0,2)-1, Random(20,50))
+		SetObject3DPhysicsLinearVelocity(debris, Random(0,2)-1, Random(2,3), Random(0,2)-1, Random(1,4))
+	next i	
+return
+
 makeObjects:
 	ground = CreateObjectBox(100, 0, 100)
 	SetObjectColor(ground, 244, 194, 44, 255)
+	Create3DPhysicsKinematicBody(ground)
 		
 	gun = CreateObjectBox(0.02, 0.1, 0.05)
 	SetObjectPosition(gun, 0, -0.03, -0.01)
 	RotateObjectLocalX(gun, 15)
 	FixObjectPivot(gun)
+	SetObjectCollisionMode(gun, 0)
 
 	handle = CreateObjectBox(0.025, 0.02, 0.05)
 	SetObjectPosition(handle, 0, 0.015, 0)
 	FixObjectToObject(handle, gun)
-
+	SetObjectCollisionMode(handle, 0)
+	
 	body = CreateObjectBox(0.02, 0.05, 0.08)
 	SetObjectPosition(body, 0, 0.03, 0.06)
 	FixObjectToObject(body, gun)
+	SetObjectCollisionMode(body, 0)
 
 	drum = CreateObjectCylinder(0.06, 0.06, 6)
 	RotateObjectLocalX(drum, 90)
 	SetObjectPosition(drum, 0, 0.024, 0.06)
 	FixObjectToObject(drum, gun)
+	SetObjectCollisionMode(drum, 0)
 
 	barrel = CreateObjectCylinder(0.2, 0.02, 10)
 	RotateObjectLocalX(barrel, 90)
 	SetObjectPosition(barrel, 0, 0.043, 0.19)
 	FixObjectToObject(barrel, gun)
+	SetObjectCollisionMode(barrel, 0)
 
 	sight = CreateObjectCone(0.01, 0.01, 3)
 	SetObjectPosition(sight, 0, 0.057, 0.28)
 	FixObjectToObject(sight, gun)
+	SetObjectCollisionMode(sight, 0)
 
 	hammer = CreateObjectBox(0.01, 0.01, 0.04)
 	SetObjectPosition(hammer, 0, 0.005, -0.02)
 	FixObjectPivot(hammer)
 	SetObjectPosition(hammer, 0, 0.025, 0.01)
 	FixObjectToObject(hammer, gun)
+	SetObjectCollisionMode(hammer, 0)
 
 	hammerAxis = CreateObjectCylinder(0.018, 0.015, 10)
 	SetObjectPosition(hammerAxis, 0, 0.03, 0.015)
 	RotateObjectLocalZ(hammerAxis, 90)
 	FixObjectToObject(hammerAxis, gun)
-
+	SetObjectCollisionMode(hammerAxis, 0)
 
 	trigger = CreateObjectBox(0.01, 0.01, 0.04)
 	SetObjectPosition(trigger, 0, 0.005, 0.02)
@@ -197,15 +264,16 @@ makeObjects:
 	RotateObjectLocalX(trigger, 45)
 	SetObjectPosition(trigger, 0, -0.015, 0.015)
 	FixObjectToObject(trigger, gun)
+	SetObjectCollisionMode(trigger, 0)
 
 	triggerAxis = CreateObjectCylinder(0.018, 0.01, 10)
 	SetObjectPosition(triggerAxis, 0, -0.012, 0.023)
 	RotateObjectLocalZ(triggerAxis, 90)
 	FixObjectToObject(triggerAxis, gun)
+	SetObjectCollisionMode(triggerAxis, 0)
 
-
-	RotateObjectLocalX(gun, 45)
-	FixObjectPivot(gun)
+	//RotateObjectLocalX(gun, 45)
+	//FixObjectPivot(gun)
 	
 	
 	/*gun = CreateObjectBox(0.02, 0.15, 0.2)
@@ -215,6 +283,7 @@ makeObjects:
 	bullet = CreateObjectBox(0.022, 0.022, 0.022)
 	SetObjectColor(bullet, 119, 27, 12, 255)
 	SetObjectPosition(bullet, 0, 1.2, 0)
+	SetObjectCollisionMode(bullet, 0)
 	
 
 	
@@ -254,6 +323,30 @@ makeObjects:
 	SetObjectColor(saloonColumnRight,255,165,79, 255)
 	SetObjectPosition(saloonColumnRight,  GetObjectX(saloonFloor)+1.51, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
 
+
+	cacti1a = CreateObjectCapsule(0.5, 1.2, 1)
+	SetObjectColor(cacti1a, 58, 224, 49, 255)
+	SetObjectPosition(cacti1a, -6, 0.6, 7)
+
+	cacti1b = CreateObjectCapsule(0.5, 1.2, 1)
+	SetObjectColor(cacti1b, 58, 224, 49, 255)
+	SetObjectPosition(cacti1b, GetObjectX(cacti1a), GetObjectY(cacti1a)+1, GetObjectZ(cacti1a))
+
+	cacti1c = CreateObjectCapsule(0.3, 0.7, 0)
+	SetObjectColor(cacti1c, 58, 224, 49, 255)
+	SetObjectPosition(cacti1c, GetObjectX(cacti1a)+0.4, GetObjectY(cacti1a), GetObjectZ(cacti1a))
+
+	cacti1d = CreateObjectCapsule(0.3, 1.1, 1)
+	SetObjectColor(cacti1d, 58, 224, 49, 255)
+	SetObjectPosition(cacti1d, GetObjectX(cacti1c)+0.25, GetObjectY(cacti1c)+0.45, GetObjectZ(cacti1c))
+
+	cacti1e = CreateObjectCapsule(0.2, 0.7, 0)
+	SetObjectColor(cacti1e, 58, 224, 49, 255)
+	SetObjectPosition(cacti1e, GetObjectX(cacti1b)-0.25, GetObjectY(cacti1b), GetObjectZ(cacti1b))
+
+	cacti1f = CreateObjectCapsule(0.2, 0.9, 1)
+	SetObjectColor(cacti1f, 58, 224, 49, 255)
+	SetObjectPosition(cacti1f, GetObjectX(cacti1e)-0.25, GetObjectY(cacti1e)+0.35, GetObjectZ(cacti1e))
 return
 
 end
