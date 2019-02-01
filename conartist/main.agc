@@ -2,7 +2,7 @@ SetErrorMode(2)
 
 // set window properties
 SetWindowTitle( "conartist" )
-SetWindowSize( 1024, 768, 0 )
+SetWindowSize( 1000, 500, 0 )
 SetWindowAllowResize( 1 ) // allow the user to resize the window
 
 // set display properties
@@ -11,19 +11,45 @@ SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobi
 //SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
+SetAntialiasMode(1)
 
+//SetCameraPosition(1, -10, 10, -10)
 SetCameraPosition(1, 0, 10, -10)
 SetCameraLookAt(1, 0, 0, 0, 0)
 
 water = CreateObjectBox(100, 0, 100)
 SetObjectColor(water, 59, 209, 158, 255)
 
-rock = CreateObjectBox(1.61, 1.61, 1.61)
-SetObjectColor(rock, 161, 173, 150, 0)
-SetObjectPosition(rock, 0, 0.75, 0)
-RotateObjectLocalY(rock, 65)
+rock1 = CreateObjectBox(1.61, 1.61, 1.61)
+SetObjectColor(rock1, 161, 173, 150, 0)
+SetObjectPosition(rock1, 0, 0.75, 0)
+//RotateObjectLocalY(rock, 65)
 
-camSpeed as float = 0.02
+rock2 = CreateObjectBox(1.0, 1.31, 1.21)
+SetObjectColor(rock2, 161, 173, 150, 0)
+SetObjectPosition(rock2, 0, 0.65, -0.5)
+
+rock3 = CreateObjectBox(1.0, 0.9, 0.7)
+SetObjectColor(rock3, 161, 173, 150, 0)
+SetObjectPosition(rock3, 0.5, 0.45, -1.15)
+
+rock4 = CreateObjectBox(1.0, 1.0, 1.1)
+SetObjectColor(rock4, 161, 173, 150, 0)
+SetObjectPosition(rock4, -1.2, 0.5, 0)
+
+rock5 = CreateObjectBox(1.61, 1.2, 1.61)
+SetObjectColor(rock5, 161, 173, 150, 0)
+SetObjectPosition(rock5, -0.3, 0.6, 0.6)
+
+grass1 = CreateObjectBox(10, 0.3, 20)
+SetObjectPosition(grass1, 5.3, 0.15, 3)
+SetObjectColor(grass1, 135, 228, 0, 255)
+
+grass2 = CreateObjectBox(10, 0.3, 3)
+SetObjectPosition(grass2, 4.2, 0.15, -3.5)
+SetObjectColor(grass2, 135, 228, 0, 255)
+
+camSpeed as float = 0.1
 
 
 do
@@ -36,8 +62,8 @@ do
 	if GetRawKeyState(asc("D")) and not GetRawKeyState(16) then MoveCameraLocalX(1, camSpeed)
 	if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, camSpeed)
 	if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -camSpeed)
-	if GetRawKeyState(asc("R")) and not GetRawKeyState(16) then RotateObjectLocalY(rock, 1)
-	if GetRawKeyState(asc("R")) and GetRawKeyState(16) then RotateObjectLocalY(rock, -1)
+	if GetRawKeyState(asc("R")) and not GetRawKeyState(16) then RotateObjectLocalY(rock1, 1)
+	if GetRawKeyState(asc("R")) and GetRawKeyState(16) then RotateObjectLocalY(rock1, -1)
 
 
 	if GetPointerPressed()
@@ -51,9 +77,7 @@ do
         fDiffY# = (GetPointerY() - starty#)/2.0
         SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
     endif
-    
-    Print(GetObjectAngleY(rock))
-    Print(GetCameraY(1))
+   
     
     Sync()
 loop

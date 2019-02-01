@@ -11,6 +11,8 @@ SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobi
 SetSyncRate( 0, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
+SetAntialiasMode(1)
+
 
 Create3DPhysicsWorld(1)
 
@@ -54,7 +56,7 @@ SetObjectPosition(cacti1f, GetObjectX(cacti1e)-0.25, GetObjectY(cacti1e)+0.35, G
 SetObjectCastShadow(cacti1f, 1)
 
 ground = CreateObjectBox(100, 0.01, 100)
-SetObjectColor(ground, 100, 100, 100, 255)
+SetObjectColor(ground, 244, 194, 44, 255)
 SetObjectCastShadow(ground, 1)
 SetObjectReceiveShadow(ground, 1)
 SetObjectLightMode(ground, 1)
@@ -101,9 +103,9 @@ end
 
 explodeCacti:
 	i as float
-	/*SetObjectVisible(cacti1b, 0)
+	SetObjectVisible(cacti1b, 0)
 	SetObjectVisible(cacti1e, 0)
-	SetObjectVisible(cacti1f, 0)*/
+	SetObjectVisible(cacti1f, 0)
 	
 	for i = -0.2 to 0.2 step 0.1		
 		dw = Random(10, 20) / 100.0
@@ -113,7 +115,7 @@ explodeCacti:
 		SetObjectColor(debris, 58, 224, 49, 255)
 		SetObjectPosition(debris, GetObjectX(cacti1b)+i, GetObjectY(cacti1b)+i, GetObjectZ(cacti1b)+i)
 		Create3DPhysicsDynamicBody(debris)
-		SetObject3DPhysicsAngularVelocity(debris, Random(0,2)-1, Random(0,2)-1, Random(0,2)-1, Random(10,20))
+		//SetObject3DPhysicsAngularVelocity(debris, Random(0,2)-1, Random(0,2)-1, Random(0,2)-1, Random(10,20))
 		//SetObject3DPhysicsLinearVelocity(debris, Random(0,2)-1, Random(2,3), Random(0,2)-1, Random(1,4))
 		SetObjectCastShadow(debris, 1)
 	next i	
