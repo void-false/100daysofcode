@@ -2,6 +2,8 @@ SetErrorMode(0)
 
 #import_plugin AGKVR
 
+#include "createCacti.agc"
+
 SetWindowTitle("Saloon VR")
 SetWindowSize(1024, 768, 0)
 SetVirtualResolution(1024, 768)
@@ -47,9 +49,9 @@ dl as float
 
 cactiParts as integer = 6
 
-SetCameraPosition(1, 0, 1.8, 0)
+SetCameraPosition(1, -5, 1.86, 0.25)
 SetCameraRange(1, 0.01, 1000)
-SetCameraLookAt(1, -6, 0.6, 7, 0)
+SetCameraLookAt(1, -12, -5, 24, 0)
 
 camSpeed as float = 0.1
 
@@ -72,6 +74,42 @@ do
 	
 	if GetRawKeyPressed(asc(" "))
 		gosub alternativeKillCacti
+		debrisX = GetObjectX(cacti2a)
+		debrisY = GetObjectY(cacti2a)
+		debrisZ = GetObjectZ(cacti2a)
+		gosub explodeCacti
+		debrisX = GetObjectX(cacti2b)
+		debrisY = GetObjectY(cacti2b)
+		debrisZ = GetObjectZ(cacti2b)
+		gosub explodeCacti
+		DeleteObject(cacti2a)
+		DeleteObject(cacti2b)
+		DeleteObject(cacti2c)
+		DeleteObject(cacti2d)
+		DeleteObject(cacti2e)
+		DeleteObject(cacti2f)
+	endif
+	
+	if GetRawKeyPressed(asc("O"))
+		gosub alternativeKillCacti1
+		debrisX = GetObjectX(cacti2b)
+		debrisY = GetObjectY(cacti2b)
+		debrisZ = GetObjectZ(cacti2b)
+		gosub explodeCacti
+		DeleteObject(cacti2b)
+		DeleteObject(cacti2e)
+		DeleteObject(cacti2f)
+	endif
+	
+		if GetRawKeyPressed(asc("P"))
+		gosub alternativeKillCacti2
+		debrisX = GetObjectX(cacti2a)
+		debrisY = GetObjectY(cacti2a)
+		debrisZ = GetObjectZ(cacti2a)
+		gosub explodeCacti
+		DeleteObject(cacti2a)
+		DeleteObject(cacti2c)
+		DeleteObject(cacti2d)
 	endif
 
 	
@@ -245,6 +283,36 @@ alternativeKillCacti:
 	SetObject3DPhysicsAngularVelocity(cacti1f, Random(1,10), 1, Random(1,10), 5)
 return
 
+alternativeKillCacti1:
+	SetObjectShapeCapsule(cacti1b, 1)
+	SetObjectShapeCapsule(cacti1e, 0)
+	SetObjectShapeCapsule(cacti1f, 1)
+	Create3DPhysicsDynamicBody(cacti1b)
+	Create3DPhysicsDynamicBody(cacti1e)
+	Create3DPhysicsDynamicBody(cacti1f)
+	SetObject3DPhysicsLinearVelocity(cacti1b, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1e, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1f, -1, 0, 1, 2)
+	SetObject3DPhysicsAngularVelocity(cacti1b, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1e, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1f, Random(1,10), 1, Random(1,10), 5)
+return
+
+alternativeKillCacti2:
+	SetObjectShapeCapsule(cacti1a, 1)
+	SetObjectShapeCapsule(cacti1c, 0)
+	SetObjectShapeCapsule(cacti1d, 1)
+	Create3DPhysicsDynamicBody(cacti1a)
+	Create3DPhysicsDynamicBody(cacti1c)
+	Create3DPhysicsDynamicBody(cacti1d)
+	SetObject3DPhysicsLinearVelocity(cacti1a, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1c, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1d, -1, 0, 1, 2)
+	SetObject3DPhysicsAngularVelocity(cacti1a, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1c, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1d, Random(1,10), 1, Random(1,10), 5)
+return
+
 explodeCacti:
 	i as float
 	for i = -0.2 to 0.2 step 0.1		
@@ -380,36 +448,8 @@ makeObjects:
 	SetObjectColor(saloonColumnRight,255,165,79, 255)
 	SetObjectPosition(saloonColumnRight,  GetObjectX(saloonFloor)+1.51, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
 
+	gosub createCacti
 
-	cacti1a = CreateObjectCapsule(0.5, 1.2, 1)
-	SetObjectColor(cacti1a, 58, 224, 49, 255)
-	SetObjectPosition(cacti1a, -6, 0.6, 7)
-	SetObjectCastShadow(cacti1a, 1)
-
-	cacti1b = CreateObjectCapsule(0.5, 1.2, 1)
-	SetObjectColor(cacti1b, 58, 224, 49, 255)
-	SetObjectPosition(cacti1b, GetObjectX(cacti1a), GetObjectY(cacti1a)+1, GetObjectZ(cacti1a))
-	SetObjectCastShadow(cacti1b, 1)
-	
-	cacti1c = CreateObjectCapsule(0.3, 0.7, 0)
-	SetObjectColor(cacti1c, 58, 224, 49, 255)
-	SetObjectPosition(cacti1c, GetObjectX(cacti1a)+0.4, GetObjectY(cacti1a), GetObjectZ(cacti1a))
-	SetObjectCastShadow(cacti1c, 1)
-	
-	cacti1d = CreateObjectCapsule(0.3, 1.1, 1)
-	SetObjectColor(cacti1d, 58, 224, 49, 255)
-	SetObjectPosition(cacti1d, GetObjectX(cacti1c)+0.25, GetObjectY(cacti1c)+0.45, GetObjectZ(cacti1c))
-	SetObjectCastShadow(cacti1d, 1)
-	
-	cacti1e = CreateObjectCapsule(0.2, 0.7, 0)
-	SetObjectColor(cacti1e, 58, 224, 49, 255)
-	SetObjectPosition(cacti1e, GetObjectX(cacti1b)-0.25, GetObjectY(cacti1b), GetObjectZ(cacti1b))
-	SetObjectCastShadow(cacti1e, 1)
-	
-	cacti1f = CreateObjectCapsule(0.2, 0.9, 1)
-	SetObjectColor(cacti1f, 58, 224, 49, 255)
-	SetObjectPosition(cacti1f, GetObjectX(cacti1e)-0.25, GetObjectY(cacti1e)+0.35, GetObjectZ(cacti1e))
-	SetObjectCastShadow(cacti1f, 1)
 return
 
 end
