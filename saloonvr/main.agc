@@ -71,20 +71,7 @@ do
 	if GetRawKeyState(16) and GetRawKeyState(asc("Z")) then RotateObjectLocalZ(gun, -1)
 	
 	if GetRawKeyPressed(asc(" "))
-		debrisX = GetObjectX(cacti1b)
-		debrisY = GetObjectY(cacti1b)
-		debrisZ = GetObjectZ(cacti1b)
-		gosub explodeCacti
-		/*debrisX = GetObjectX(cacti1a)
-		debrisY = GetObjectY(cacti1a)
-		debrisZ = GetObjectZ(cacti1a)
-		gosub explodeCacti
-		DeleteObject(cacti1a)*/
-		DeleteObject(cacti1b)
-		/*DeleteObject(cacti1c)
-		DeleteObject(cacti1d)*/
-		DeleteObject(cacti1e)
-		DeleteObject(cacti1f)
+		gosub alternativeKillCacti
 	endif
 
 	
@@ -225,12 +212,38 @@ do
 		RotateObjectLocalX(gun, -15)
 	endif*/
 
-	Print(ScreenFPS())
 	Step3DPhysicsWorld()
 	Sync()
 loop
 
 end
+
+alternativeKillCacti:
+	SetObjectShapeCapsule(cacti1a, 1)
+	SetObjectShapeCapsule(cacti1b, 1)
+	SetObjectShapeCapsule(cacti1c, 0)
+	SetObjectShapeCapsule(cacti1d, 1)
+	SetObjectShapeCapsule(cacti1e, 0)
+	SetObjectShapeCapsule(cacti1f, 1)
+	Create3DPhysicsDynamicBody(cacti1a)
+	Create3DPhysicsDynamicBody(cacti1b)
+	Create3DPhysicsDynamicBody(cacti1c)
+	Create3DPhysicsDynamicBody(cacti1d)
+	Create3DPhysicsDynamicBody(cacti1e)
+	Create3DPhysicsDynamicBody(cacti1f)
+	SetObject3DPhysicsLinearVelocity(cacti1a, 0, 0, 1, 5)
+	SetObject3DPhysicsLinearVelocity(cacti1b, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1c, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1d, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1e, -1, 0, 1, 2)
+	SetObject3DPhysicsLinearVelocity(cacti1f, -1, 0, 1, 2)
+	SetObject3DPhysicsAngularVelocity(cacti1a, 0, 0, 10, 15)
+	SetObject3DPhysicsAngularVelocity(cacti1b, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1c, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1d, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1e, Random(1,10), 1, Random(1,10), 5)
+	SetObject3DPhysicsAngularVelocity(cacti1f, Random(1,10), 1, Random(1,10), 5)
+return
 
 explodeCacti:
 	i as float
