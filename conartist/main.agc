@@ -13,12 +13,21 @@ SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black border
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 SetAntialiasMode(1)
 
-//SetCameraPosition(1, -10, 10, -10)
-SetCameraPosition(1, 0, 10, -10)
+// shadows
+SetShadowMappingMode( 3 )
+SetShadowSmoothing(0) // random sampling
+SetShadowMapSize( 4096, 4096 )
+SetShadowRange( -1 ) // use the full camera range
+SetShadowBias( 0.0012 ) // offset shadows slightly to avoid shadow artifacts
+
+SetCameraPosition(1, -10, 10, -10)
+//SetCameraPosition(1, 0, 10, -10)
 SetCameraLookAt(1, 0, 0, 0, 0)
 
 water = CreateObjectBox(100, 0, 100)
 SetObjectColor(water, 59, 209, 158, 255)
+
+
 
 rock1 = CreateObjectBox(1.61, 1.61, 1.61)
 SetObjectColor(rock1, 161, 173, 150, 0)
@@ -48,6 +57,18 @@ SetObjectColor(grass1, 135, 228, 0, 255)
 grass2 = CreateObjectBox(10, 0.3, 3)
 SetObjectPosition(grass2, 4.2, 0.15, -3.5)
 SetObjectColor(grass2, 135, 228, 0, 255)
+
+
+SetObjectCastShadow(rock1, 1)
+SetObjectCastShadow(rock2, 1)
+SetObjectCastShadow(rock3, 1)
+SetObjectCastShadow(rock4, 1)
+SetObjectCastShadow(rock5, 1)
+SetObjectCastShadow(grass1, 1)
+SetObjectCastShadow(grass2, 1)
+
+//SetObjectReceiveShadow(water, 1)
+//SetObjectLightMode(water, 1)
 
 camSpeed as float = 0.1
 

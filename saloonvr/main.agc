@@ -6,6 +6,7 @@ SetWindowTitle("Saloon VR")
 SetWindowSize(1024, 768, 0)
 SetVirtualResolution(1024, 768)
 SetWindowAllowResize(1)
+SetAntialiasMode(1)
 
 Create3DPhysicsWorld(1)
 
@@ -20,7 +21,12 @@ endif
 SetSkyBoxVisible(1)
 gosub makeObjects
 
-
+// shadows 
+SetShadowMappingMode( 3 )
+SetShadowSmoothing( 0 ) // random sampling
+SetShadowMapSize( 1024, 1024 )
+SetShadowRange( -1 ) // use the full camera range
+SetShadowBias( 0.0012 ) // offset shadows slightly to avoid shadow artifacts
 
 isFired as integer = 0
 isBulletMoving as integer = 0
@@ -41,19 +47,21 @@ dl as float
 
 cactiParts as integer = 6
 
-//SetCameraPosition(1, 1, 1, 1)
-//SetCameraRange(1, 0.01, 1000)
-//SetCameraLookAt(1, 0, 2.5, 10, 0)
+SetCameraPosition(1, 0, 1.8, 0)
+SetCameraRange(1, 0.01, 1000)
+SetCameraLookAt(1, -6, 0.6, 7, 0)
+
+camSpeed as float = 0.1
 
 do
 	if GetRawKeyPressed(27) then exit
 	
-	if GetRawKeyState(asc("W")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, 0.01)
-	if GetRawKeyState(asc("S")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, -0.01)
-	if GetRawKeyState(asc("A")) and not GetRawKeyState(16) then MoveCameraLocalX(1, -0.01)
-	if GetRawKeyState(asc("D")) and not GetRawKeyState(16) then MoveCameraLocalX(1, 0.01)
-	if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, 0.01)
-	if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -0.01)
+	if GetRawKeyState(asc("W")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, camSpeed)
+	if GetRawKeyState(asc("S")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, -camSpeed)
+	if GetRawKeyState(asc("A")) and not GetRawKeyState(16) then MoveCameraLocalX(1, -camSpeed)
+	if GetRawKeyState(asc("D")) and not GetRawKeyState(16) then MoveCameraLocalX(1, camSpeed)
+	if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, camSpeed)
+	if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -camSpeed)
 	
 	if GetRawKeyState(16) and GetRawKeyState(asc("W")) then RotateObjectLocalX(gun, -1)
 	if GetRawKeyState(16) and GetRawKeyState(asc("S")) then RotateObjectLocalX(gun, 1)
@@ -62,6 +70,25 @@ do
 	if GetRawKeyState(16) and GetRawKeyState(asc("Q")) then RotateObjectLocalZ(gun, 1)
 	if GetRawKeyState(16) and GetRawKeyState(asc("Z")) then RotateObjectLocalZ(gun, -1)
 	
+	if GetRawKeyPressed(asc(" "))
+		debrisX = GetObjectX(cacti1b)
+		debrisY = GetObjectY(cacti1b)
+		debrisZ = GetObjectZ(cacti1b)
+		gosub explodeCacti
+		/*debrisX = GetObjectX(cacti1a)
+		debrisY = GetObjectY(cacti1a)
+		debrisZ = GetObjectZ(cacti1a)
+		gosub explodeCacti
+		DeleteObject(cacti1a)*/
+		DeleteObject(cacti1b)
+		/*DeleteObject(cacti1c)
+		DeleteObject(cacti1d)*/
+		DeleteObject(cacti1e)
+		DeleteObject(cacti1f)
+	endif
+
+	
+
 	//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 	//RotateObjectLocalY(bullet, -90)
 	
@@ -146,16 +173,27 @@ do
 			objHit = ObjectSphereSlide(0, bulletStartX, bulletStartY, bulletStartZ, bulletEndX, bulletEndY, bulletEndZ, 0.011)
 			if objHit >= cacti1a and objHit <= cacti1f
 				if objHit = cacti1a or objHit = cacti1c or objHit = cacti1d
+					debrisX = GetObjectX(cacti1a)
+					debrisY = GetObjectY(cacti1a)
+					debrisZ = GetObjectZ(cacti1a)
 					DeleteObject(cacti1a)
-					DeleteObject(cacti1b)
 					DeleteObject(cacti1c)
 					DeleteObject(cacti1d)
-					DeleteObject(cacti1e)
-					DeleteObject(cacti1f)
 					gosub explodeCacti
-					if cactiParts > 3 then gosub explodeCacti
+					if cactiParts > 3 
+						debrisX = GetObjectX(cacti1b)
+						debrisY = GetObjectY(cacti1b)
+						debrisZ = GetObjectZ(cacti1b)
+						DeleteObject(cacti1b)
+						DeleteObject(cacti1e)
+						DeleteObject(cacti1f)
+						gosub explodeCacti
+					endif
 				endif
 				if objHit = cacti1b or objHit = cacti1e or objHit = cacti1f 
+					debrisX = GetObjectX(cacti1b)
+					debrisY = GetObjectY(cacti1b)
+					debrisZ = GetObjectZ(cacti1b)
 					cactiParts = cactiParts - 3
 					DeleteObject(cacti1b)
 					DeleteObject(cacti1e)
@@ -186,7 +224,8 @@ do
 		isBulletMoving = 1
 		RotateObjectLocalX(gun, -15)
 	endif*/
-	Print(Get3DPhysicsTotalObjects())
+
+	Print(ScreenFPS())
 	Step3DPhysicsWorld()
 	Sync()
 loop
@@ -194,16 +233,18 @@ loop
 end
 
 explodeCacti:
-	for i = 0 to 4		
+	i as float
+	for i = -0.2 to 0.2 step 0.1		
 		dw = Random(10, 20) / 100.0
-		dh = Random(30, 50) / 100.0
-		dl = Random(10, 20) / 100.0
+		dh = Random(30, 60) / 100.0
+		dl = Random(5, 10) / 100.0
 		debris = CreateObjectBox(dw, dh, dl)
 		SetObjectColor(debris, 58, 224, 49, 255)
-		SetObjectPosition(debris, bulletEndX, bulletEndY, bulletEndZ)
+		SetObjectPosition(debris, debrisX+i, debrisY+i, debrisZ+i)
 		Create3DPhysicsDynamicBody(debris)
-		SetObject3DPhysicsAngularVelocity(debris, Random(0,2)-1, Random(0,2)-1, Random(0,2)-1, Random(20,50))
+		SetObject3DPhysicsAngularVelocity(debris, Random(0,2)-1, Random(0,2)-1, Random(0,2)-1, Random(10,20))
 		SetObject3DPhysicsLinearVelocity(debris, Random(0,2)-1, Random(2,3), Random(0,2)-1, Random(1,4))
+		SetObjectCastShadow(debris, 1)
 	next i	
 return
 
@@ -211,6 +252,9 @@ makeObjects:
 	ground = CreateObjectBox(100, 0, 100)
 	SetObjectColor(ground, 244, 194, 44, 255)
 	Create3DPhysicsKinematicBody(ground)
+	SetObjectCastShadow(ground, 1)
+	SetObjectReceiveShadow(ground, 1)
+	SetObjectLightMode(ground, 1)
 		
 	gun = CreateObjectBox(0.02, 0.1, 0.05)
 	SetObjectPosition(gun, 0, -0.03, -0.01)
@@ -327,26 +371,32 @@ makeObjects:
 	cacti1a = CreateObjectCapsule(0.5, 1.2, 1)
 	SetObjectColor(cacti1a, 58, 224, 49, 255)
 	SetObjectPosition(cacti1a, -6, 0.6, 7)
+	SetObjectCastShadow(cacti1a, 1)
 
 	cacti1b = CreateObjectCapsule(0.5, 1.2, 1)
 	SetObjectColor(cacti1b, 58, 224, 49, 255)
 	SetObjectPosition(cacti1b, GetObjectX(cacti1a), GetObjectY(cacti1a)+1, GetObjectZ(cacti1a))
-
+	SetObjectCastShadow(cacti1b, 1)
+	
 	cacti1c = CreateObjectCapsule(0.3, 0.7, 0)
 	SetObjectColor(cacti1c, 58, 224, 49, 255)
 	SetObjectPosition(cacti1c, GetObjectX(cacti1a)+0.4, GetObjectY(cacti1a), GetObjectZ(cacti1a))
-
+	SetObjectCastShadow(cacti1c, 1)
+	
 	cacti1d = CreateObjectCapsule(0.3, 1.1, 1)
 	SetObjectColor(cacti1d, 58, 224, 49, 255)
 	SetObjectPosition(cacti1d, GetObjectX(cacti1c)+0.25, GetObjectY(cacti1c)+0.45, GetObjectZ(cacti1c))
-
+	SetObjectCastShadow(cacti1d, 1)
+	
 	cacti1e = CreateObjectCapsule(0.2, 0.7, 0)
 	SetObjectColor(cacti1e, 58, 224, 49, 255)
 	SetObjectPosition(cacti1e, GetObjectX(cacti1b)-0.25, GetObjectY(cacti1b), GetObjectZ(cacti1b))
-
+	SetObjectCastShadow(cacti1e, 1)
+	
 	cacti1f = CreateObjectCapsule(0.2, 0.9, 1)
 	SetObjectColor(cacti1f, 58, 224, 49, 255)
 	SetObjectPosition(cacti1f, GetObjectX(cacti1e)-0.25, GetObjectY(cacti1e)+0.35, GetObjectZ(cacti1e))
+	SetObjectCastShadow(cacti1f, 1)
 return
 
 end
