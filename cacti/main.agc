@@ -47,7 +47,11 @@ function main()
 		
 		if GetRawKeyPressed(asc(" ")) then c1.cactiState = killCacti(c1)
 		
-		Print(c1.cactiState)
+		if c1.cactiState = 1
+			for i = 0 to 5
+				Print(GetObject3DPhysicsAngularVelocityX(c1.cactiBranches[i].branchId))
+			next i
+		endif
 		Step3DPhysicsWorld()
 		Sync()
 	loop
@@ -88,15 +92,18 @@ function killCacti(c as Cacti)
 	if c.cactiState = 0
 		branches as CactiBranch[5]
 		branches = c.cactiBranches
-		for i = 0 to 5
+		for i = 0 to 5	
 			Create3DPhysicsDynamicBody(branches[i].branchId)
-			SetObject3DPhysicsLinearVelocity(branches[i].branchId, 0, 1, 1, 1)
+			SetObjectShapeCapsule(branches[i].branchId, 0)
+			SetObject3DPhysicsFriction(branches[i].branchId, 1)
+			SetObject3DPhysicsLinearVelocity(branches[i].branchId, -1, 1, RandomSign(1), 2)
+			SetObject3DPhysicsAngularVelocity(branches[i].branchId, Random(-180, 180), Random(-180, 180), Random(-180, 180), 20)
 		next i
 		c.cactiState = 1
 	endif
 endfunction (c.cactiState)
 
-function killCacti1(cacti as Cacti)
+/*function killCacti(cacti as Cacti)
 	i as float
 	j as integer = 0
 	debrisPieces as integer[5]
@@ -113,7 +120,7 @@ function killCacti1(cacti as Cacti)
 		
 	next i
 	//DeleteObject(cacti)
-endfunction (debrisPieces)
+endfunction (debrisPieces)*/
 
 
 main()
