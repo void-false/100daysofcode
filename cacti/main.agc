@@ -1,3 +1,4 @@
+#include "checkinput.agc"
 SetErrorMode(2)
 
 // set window properties
@@ -13,6 +14,7 @@ SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black border
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
 Create3DPhysicsWorld(1)
+SetSkyBoxVisible(1)
 
 type Cacti
 	cactiState as integer
@@ -23,40 +25,51 @@ type CactiBranch
 	branchId as integer
 endtype
 
+camSpeed as float = 0.1
+
 function main()
 	
 	SetCameraPosition(1, -4, 1.8, -1)
-	SetCameraLookAt(1, -5, 1.3, 10, 0)
+	SetCameraLookAt(1, -6, 1.3, 10, 0)
 	
-	ground = CreateObjectBox(100, 0, 100)
+	ground = CreateObjectBox(100, 1, 100)
 	SetObjectColor(ground, 244, 191, 66, 255)
-	SetObjectPosition(ground, 0, 0, 0)
+	SetObjectPosition(ground, 0, -0.5, 0)
 	Create3DPhysicsKinematicBody(ground)
 
 	c1 as Cacti
 	c1 = makeCacti(-6, 0.6, 7)
-	
-	c2 as Cacti
-	c2 = makeCacti(-3, 0.6, 7)
-
-	debris as integer[5]
-	killed as integer = 0
 
 	do
 		if GetRawKeyPressed(27) then exit
-		
 		if GetRawKeyPressed(asc(" ")) then c1.cactiState = killCacti(c1)
 		
-		if c1.cactiState = 1
-			for i = 0 to 5
-				Print(GetObject3DPhysicsAngularVelocityX(c1.cactiBranches[i].branchId))
-			next i
-		endif
+		gosub checkInput
+		
+		Print(c1.cactiState)
 		Step3DPhysicsWorld()
 		Sync()
 	loop
 	
 endfunction
+
+function killCacti(c as Cacti)
+	branches as CactiBranch[5]
+	branches = c.cactiBranches
+	if c.cactiState = 0
+		for i = 0 to 5	
+			Create3DPhysicsDynamicBody(branches[i].branchId)
+			SetObject3DPhysicsLinearVelocity(branches[i].branchId, -1, 1, RandomSign(1), 1)
+			SetObject3DPhysicsAngularVelocity(branches[i].branchId, Random(-180, 180), Random(-180, 180), Random(-180, 180), 20)
+		next i
+		c.cactiState = 1
+	elseif c.cactiState = 1
+		for i = 0 to 5
+			killCactiBranch(branches[i].branchId)
+		next i
+		c.cactiState = 2
+	endif
+endfunction (c.cactiState)
 
 function makeCacti(x as float, y as float, z as float)
 	c as Cacti
@@ -88,29 +101,19 @@ function makeCacti(x as float, y as float, z as float)
 	c.cactiBranches = branches
 endfunction (c)
 
-function killCacti(c as Cacti)
-	if c.cactiState = 0
-		branches as CactiBranch[5]
-		branches = c.cactiBranches
-		for i = 0 to 5	
-			Create3DPhysicsDynamicBody(branches[i].branchId)
-			SetObjectShapeCapsule(branches[i].branchId, 0)
-			SetObject3DPhysicsFriction(branches[i].branchId, 1)
-			SetObject3DPhysicsLinearVelocity(branches[i].branchId, -1, 1, RandomSign(1), 2)
-			SetObject3DPhysicsAngularVelocity(branches[i].branchId, Random(-180, 180), Random(-180, 180), Random(-180, 180), 20)
-		next i
-		c.cactiState = 1
-	endif
-endfunction (c.cactiState)
-
-/*function killCacti(cacti as Cacti)
+function killCactiBranch(b as integer)
 	i as float
 	j as integer = 0
+	dw as float : dh as float : dl as float
+
 	debrisPieces as integer[5]
 	for i = -0.2 to 0.2 step 0.1
-		debris = CreateObjectBox(0.2, 2.5, 0.2)
+		dw = Random(10, 20) / 100.0
+		dh = Random(30, 60) / 100.0
+		dl = Random(5, 10) / 100.0
+		debris = CreateObjectBox(dw, dh, dl)
 		SetObjectColor(debris, 0, 255, 0, 255)
-		SetObjectPosition(debris, GetObjectX(cacti.cactiBranches[0].branchId)+i, GetObjectY(cacti.cactiBranches[0].branchId)+i, GetObjectZ(cacti.cactiBranches[0].branchId)+i)
+		SetObjectPosition(debris, GetObjectX(b)+i, GetObjectY(b)+i, GetObjectZ(b)+i)
 		Create3DPhysicsDynamicBody(debris)
 		SetObject3DPhysicsAngularVelocity(debris, Random(-180, 180), Random(-180, 180), Random(-180, 180), 10)
 		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)
@@ -119,9 +122,8 @@ endfunction (c.cactiState)
 		inc j
 		
 	next i
-	//DeleteObject(cacti)
-endfunction (debrisPieces)*/
-
+	DeleteObject(b)
+endfunction (debrisPieces)
 
 main()
 

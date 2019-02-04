@@ -257,18 +257,19 @@ loop
 end
 
 alternativeKillCacti:
-	SetObjectShapeCapsule(cacti1a, 1)
-	SetObjectShapeCapsule(cacti1b, 1)
-	SetObjectShapeCapsule(cacti1c, 0)
-	SetObjectShapeCapsule(cacti1d, 1)
-	SetObjectShapeCapsule(cacti1e, 0)
-	SetObjectShapeCapsule(cacti1f, 1)
+	
 	Create3DPhysicsDynamicBody(cacti1a)
 	Create3DPhysicsDynamicBody(cacti1b)
 	Create3DPhysicsDynamicBody(cacti1c)
 	Create3DPhysicsDynamicBody(cacti1d)
 	Create3DPhysicsDynamicBody(cacti1e)
 	Create3DPhysicsDynamicBody(cacti1f)
+	SetObjectShapeCapsule(cacti1a, 1)
+	SetObjectShapeCapsule(cacti1b, 1)
+	SetObjectShapeCapsule(cacti1c, 0)
+	SetObjectShapeCapsule(cacti1d, 1)
+	SetObjectShapeCapsule(cacti1e, 0)
+	SetObjectShapeCapsule(cacti1f, 1)
 	SetObject3DPhysicsLinearVelocity(cacti1a, 0, 0, 1, 5)
 	SetObject3DPhysicsLinearVelocity(cacti1b, -1, 0, 1, 2)
 	SetObject3DPhysicsLinearVelocity(cacti1c, -1, 0, 1, 2)
