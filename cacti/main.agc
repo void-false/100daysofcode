@@ -14,17 +14,30 @@ UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
 Create3DPhysicsWorld(1)
 
+type Cacti
+	cactiState as integer
+	cactiBranches as cactiBranch[6]
+endtype
+
+type CactiBranch
+	branchId as integer
+endtype
+
 function main()
+	
+	SetCameraPosition(1, -4, 1.8, -1)
+	SetCameraLookAt(1, -5, 1.3, 10, 0)
 	
 	ground = CreateObjectBox(100, 0, 100)
 	SetObjectColor(ground, 244, 191, 66, 255)
 	SetObjectPosition(ground, 0, 0, 0)
 	Create3DPhysicsKinematicBody(ground)
+
+	c1 as Cacti
+	c1 = makeCacti(-6, 0.6, 7)
 	
-	cacti = CreateObjectBox(1,5,1)
-	SetObjectColor(cacti, 0, 255, 0, 255)
-	SetObjectPosition(cacti, 0, 2.5, 0)
-	RotateObjectLocalY(cacti, 42)
+	c2 as Cacti
+	c2 = makeCacti(-3, 0.6, 7)
 
 	debris as integer[5]
 	killed as integer = 0
@@ -32,36 +45,65 @@ function main()
 	do
 		if GetRawKeyPressed(27) then exit
 		
-		if GetRawKeyPressed(asc(" ")) and killed = 0
-			debris = killCacti(cacti)
-			killed = 1
-		elseif GetRawKeyPressed(asc(" ")) and killed = 1
-			for i = 0 to 4
-				DeleteObject(debris[i])
-			next i
-			killed = 2
-		endif
+		if GetRawKeyPressed(asc(" ")) then c1.cactiState = killCacti(c1)
 		
-		 
-		
-		for i = 0 to 4
-			Print(debris[i])
-		next i
-	
+		Print(c1.cactiState)
 		Step3DPhysicsWorld()
 		Sync()
 	loop
 	
 endfunction
 
-function killCacti(cacti as integer)
+function makeCacti(x as float, y as float, z as float)
+	c as Cacti
+	branches as CactiBranch[6]
+	
+	branches[0].branchId = CreateObjectCapsule(0.5, 1.2, 1)
+	SetObjectPosition(branches[0].branchId, x, y, z)
+	
+	branches[1].branchId = CreateObjectCapsule(0.5, 1.2, 1)
+	SetObjectPosition(branches[1].branchId, GetObjectX(branches[0].branchId), GetObjectY(branches[0].branchId)+1, GetObjectZ(branches[0].branchId))
+	
+	branches[2].branchId = CreateObjectCapsule(0.3, 0.7, 0)
+	SetObjectPosition(branches[2].branchId, GetObjectX(branches[0].branchId)+0.4, GetObjectY(branches[0].branchId), GetObjectZ(branches[0].branchId))
+	
+	branches[3].branchId = CreateObjectCapsule(0.3, 1.1, 1)
+	SetObjectPosition(branches[3].branchId, GetObjectX(branches[2].branchId)+0.25, GetObjectY(branches[2].branchId)+0.45, GetObjectZ(branches[2].branchId))
+	
+	branches[4].branchId = CreateObjectCapsule(0.2, 0.7, 0)
+	SetObjectPosition(branches[4].branchId, GetObjectX(branches[1].branchId)-0.25, GetObjectY(branches[1].branchId), GetObjectZ(branches[1].branchId))
+	
+	branches[5].branchId = CreateObjectCapsule(0.2, 0.9, 1)
+	SetObjectPosition(branches[5].branchId, GetObjectX(branches[4].branchId)-0.25, GetObjectY(branches[4].branchId)+0.35, GetObjectZ(branches[4].branchId))
+	
+	for i = 0 to 5
+		SetObjectColor(branches[i].branchId, 58, 224, 49, 255)
+		SetObjectCastShadow(branches[i].branchId, 1)
+	next i
+	
+	c.cactiBranches = branches
+endfunction (c)
+
+function killCacti(c as Cacti)
+	if c.cactiState = 0
+		branches as CactiBranch[5]
+		branches = c.cactiBranches
+		for i = 0 to 5
+			Create3DPhysicsDynamicBody(branches[i].branchId)
+			SetObject3DPhysicsLinearVelocity(branches[i].branchId, 0, 1, 1, 1)
+		next i
+		c.cactiState = 1
+	endif
+endfunction (c.cactiState)
+
+function killCacti1(cacti as Cacti)
 	i as float
 	j as integer = 0
 	debrisPieces as integer[5]
 	for i = -0.2 to 0.2 step 0.1
 		debris = CreateObjectBox(0.2, 2.5, 0.2)
 		SetObjectColor(debris, 0, 255, 0, 255)
-		SetObjectPosition(debris, GetObjectX(cacti)+i, GetObjectY(cacti)+i, GetObjectZ(cacti)+i)
+		SetObjectPosition(debris, GetObjectX(cacti.cactiBranches[0].branchId)+i, GetObjectY(cacti.cactiBranches[0].branchId)+i, GetObjectZ(cacti.cactiBranches[0].branchId)+i)
 		Create3DPhysicsDynamicBody(debris)
 		SetObject3DPhysicsAngularVelocity(debris, Random(-180, 180), Random(-180, 180), Random(-180, 180), 10)
 		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)
@@ -70,13 +112,8 @@ function killCacti(cacti as integer)
 		inc j
 		
 	next i
-	DeleteObject(cacti)
+	//DeleteObject(cacti)
 endfunction (debrisPieces)
-
-function moveCacti(cacti as integer, dir as float)
-	MoveObjectLocalX(cacti, dir)
-	MoveObjectLocalZ(cacti, dir)
-endfunction
 
 
 main()
