@@ -36,16 +36,17 @@ function main()
 	SetObjectColor(ground, 244, 191, 66, 255)
 	SetObjectPosition(ground, 0, -0.5, 0)
 	Create3DPhysicsKinematicBody(ground)
+	SetObject3DPhysicsFriction(ground, 1)
+	SetObject3DPhysicsRollingFriction(ground, 1)
 
 	c1 as Cacti
 	c1 = makeCacti(-6, 0.6, 7)
-
+	objId as integer = 100007    
 	do
 		if GetRawKeyPressed(27) then exit
-		if GetRawKeyPressed(asc(" ")) then c1.cactiState = killCacti(c1)
+		if GetRawKeyPressed(asc(" ")) then c1.cactiState = killCacti(c1, objId)
 		
 		gosub checkInput
-		
 		Print(c1.cactiState)
 		Step3DPhysicsWorld()
 		Sync()
@@ -53,16 +54,25 @@ function main()
 	
 endfunction
 
-function killCacti(c as Cacti)
+function killCacti(c as Cacti, objId as integer)
 	branches as CactiBranch[5]
 	branches = c.cactiBranches
-	if c.cactiState = 0
+	if (c.cactiState = 0) and (objId = branches[0].branchId or objId = branches[2].branchId or objId = branches[3].branchId)
 		for i = 0 to 5	
 			Create3DPhysicsDynamicBody(branches[i].branchId)
-			SetObject3DPhysicsLinearVelocity(branches[i].branchId, -1, 1, RandomSign(1), 1)
-			SetObject3DPhysicsAngularVelocity(branches[i].branchId, Random(-180, 180), Random(-180, 180), Random(-180, 180), 20)
+			SetObjectShapeCapsule(branches[i].branchId, 1)
+			if i = 2 or i = 4 then SetObjectShapeCapsule(branches[i].branchId, 0)
+			setFrictionAndVelocity(branches[i].branchId)
 		next i
 		c.cactiState = 1
+	elseif (c.cactiState = 0) and (objId = branches[1].branchId or objId = branches[4].branchId or objId = branches[5].branchId)
+		indexi as integer[3] = [1, 4, 5]
+		for i = 0 to 2
+			Create3DPhysicsDynamicBody(branches[indexi[i]].branchId)
+			SetObjectShapeCapsule(branches[indexi[i]].branchId, 1)
+			if i = 1 then SetObjectShapeCapsule(branches[indexi[i]].branchId, 0)
+			setFrictionAndVelocity(branches[indexi[i]].branchId)
+		next i
 	elseif c.cactiState = 1
 		for i = 0 to 5
 			killCactiBranch(branches[i].branchId)
@@ -70,6 +80,13 @@ function killCacti(c as Cacti)
 		c.cactiState = 2
 	endif
 endfunction (c.cactiState)
+
+function setFrictionAndVelocity(obj as integer)
+	SetObject3DPhysicsLinearVelocity(obj, -1, 1, RandomSign(1), 1)
+	SetObject3DPhysicsAngularVelocity(obj, Random(-180, 180), Random(-180, 180), Random(-180, 180), 20)
+	SetObject3DPhysicsFriction(obj, 0.2)
+	SetObject3DPhysicsRollingFriction(obj, 0.1)
+endfunction
 
 function makeCacti(x as float, y as float, z as float)
 	c as Cacti
