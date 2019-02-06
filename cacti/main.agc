@@ -40,18 +40,28 @@ function main()
 	SetObject3DPhysicsFriction(ground, 1)
 	SetObject3DPhysicsRollingFriction(ground, 1)
 
+	vecX as float
+    vecY as float
+    vecZ as float
+    camX as float
+    camY as float
+    camZ as float
 	c1 as Cacti
-	c1 = makeCacti(-6, 0.6, 7)
-	objId as integer = 100006              
+	c1 = makeCacti(-6, 0.6, 7)    
 	do
 		if GetRawKeyPressed(27) then exit
 		//if GetRawKeyPressed(asc(" ")) then c1 = killCacti(c1, objId)
-		if GetRawKeyPressed(asc("0")) then c1 = killCacti(c1, 100002)
-		if GetRawKeyPressed(asc("1")) then c1 = killCacti(c1, 100003)
-		if GetRawKeyPressed(asc("2")) then c1 = killCacti(c1, 100004)
-		if GetRawKeyPressed(asc("3")) then c1 = killCacti(c1, 100005)
-		if GetRawKeyPressed(asc("4")) then c1 = killCacti(c1, 100006)
-		if GetRawKeyPressed(asc("5")) then c1 = killCacti(c1, 100007)
+		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
+        vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
+        vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
+        camX = GetCameraX(1)
+        camY = GetCameraY(1)
+        camZ = GetCameraZ(1)
+
+        if GetPointerPressed()
+            objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
+            if objHit >= c1.cactiBranches[0].branchId and objHit <= c1.cactiBranches[5].branchId then c1 = killCacti(c1, objHit)
+        endif
 		
 		gosub checkInput
 		Step3DPhysicsWorld()
