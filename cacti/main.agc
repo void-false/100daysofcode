@@ -46,11 +46,14 @@ function main()
     camX as float
     camY as float
     camZ as float
-	c1 as Cacti
-	c1 = makeCacti(-6, 0.6, 7)    
+    forest as Cacti[]
+    forest.insert(makeCacti(-6, 0.6, 7))
+	for i = 0 to 100
+		forest.insert(makeCacti(Random(0, 10)*-1, 0.6, Random(7, 30)))
+    next i
+    
 	do
 		if GetRawKeyPressed(27) then exit
-		//if GetRawKeyPressed(asc(" ")) then c1 = killCacti(c1, objId)
 		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
         vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
         vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
@@ -60,9 +63,10 @@ function main()
 
         if GetPointerPressed()
             objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
-            if objHit >= c1.cactiBranches[0].branchId and objHit <= c1.cactiBranches[5].branchId then c1 = killCacti(c1, objHit)
+            cactiIndex = findCacti(forest, objHit)
+            if cactiIndex <> -1 then forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
         endif
-		
+		Print(Get3DPhysicsTotalObjects())
 		gosub checkInput
 		Step3DPhysicsWorld()
 		Sync()
@@ -70,9 +74,15 @@ function main()
 	
 endfunction
 
+function findCacti(forest as Cacti[], objHit as integer)
+	cactiIndex = -1
+	for i = 0 to forest.length
+		if objHit >= forest[i].cactiBranches[0].branchId and objHit <= forest[i].cactiBranches[5].branchId then cactiIndex = i
+	next i
+endfunction (cactiIndex)
+
 function killCacti(c as Cacti, objId as integer)
 	currentBranchIndex = c.cactiBranches.find(objId)
-	Print(currentBranchIndex)
 	if c.cactiBranches[currentBranchIndex].branchState = 1
 		killCactiBranch(objId)
 		exitfunction (c)

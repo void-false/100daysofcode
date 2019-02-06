@@ -6,13 +6,13 @@ checkInput:
 	if GetRawKeyState(asc("D")) and not GetRawKeyState(16) then MoveCameraLocalX(1, camSpeed)
 	if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, camSpeed)
 	if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -camSpeed)
-	if GetPointerPressed()
+	if GetRawMouseRightPressed()
 		startx# = GetPointerX()
 		starty# = GetPointerY()
 		angx# = GetCameraAngleX(1)
 		angy# = GetCameraAngleY(1)
 	endif
-	if GetPointerState()
+	if GetRawMouseRightState()
 		fDiffX# = (GetPointerX() - startx#)/2.0
 		fDiffY# = (GetPointerY() - starty#)/2.0
 		SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
