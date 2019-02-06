@@ -23,6 +23,7 @@ endtype
 
 type CactiBranch
 	branchId as integer
+	branchState as integer
 endtype
 
 camSpeed as float = 0.1
@@ -41,13 +42,18 @@ function main()
 
 	c1 as Cacti
 	c1 = makeCacti(-6, 0.6, 7)
-	objId as integer = 100007    
+	objId as integer = 100006              
 	do
 		if GetRawKeyPressed(27) then exit
-		if GetRawKeyPressed(asc(" ")) then c1.cactiState = killCacti(c1, objId)
+		//if GetRawKeyPressed(asc(" ")) then c1 = killCacti(c1, objId)
+		if GetRawKeyPressed(asc("0")) then c1 = killCacti(c1, 100002)
+		if GetRawKeyPressed(asc("1")) then c1 = killCacti(c1, 100003)
+		if GetRawKeyPressed(asc("2")) then c1 = killCacti(c1, 100004)
+		if GetRawKeyPressed(asc("3")) then c1 = killCacti(c1, 100005)
+		if GetRawKeyPressed(asc("4")) then c1 = killCacti(c1, 100006)
+		if GetRawKeyPressed(asc("5")) then c1 = killCacti(c1, 100007)
 		
 		gosub checkInput
-		Print(c1.cactiState)
 		Step3DPhysicsWorld()
 		Sync()
 	loop
@@ -55,6 +61,12 @@ function main()
 endfunction
 
 function killCacti(c as Cacti, objId as integer)
+	currentBranchIndex = c.cactiBranches.find(objId)
+	Print(currentBranchIndex)
+	if c.cactiBranches[currentBranchIndex].branchState = 1
+		killCactiBranch(objId)
+		exitfunction (c)
+	endif
 	branches as CactiBranch[5]
 	branches = c.cactiBranches
 	if (c.cactiState = 0) and (objId = branches[0].branchId or objId = branches[2].branchId or objId = branches[3].branchId)
@@ -63,8 +75,9 @@ function killCacti(c as Cacti, objId as integer)
 			SetObjectShapeCapsule(branches[i].branchId, 1)
 			if i = 2 or i = 4 then SetObjectShapeCapsule(branches[i].branchId, 0)
 			setFrictionAndVelocity(branches[i].branchId)
+			branches[i].branchState = 1
 		next i
-		c.cactiState = 1
+		c.cactiState = 2
 	elseif (c.cactiState = 0) and (objId = branches[1].branchId or objId = branches[4].branchId or objId = branches[5].branchId)
 		indexi as integer[3] = [1, 4, 5]
 		for i = 0 to 2
@@ -72,20 +85,46 @@ function killCacti(c as Cacti, objId as integer)
 			SetObjectShapeCapsule(branches[indexi[i]].branchId, 1)
 			if i = 1 then SetObjectShapeCapsule(branches[indexi[i]].branchId, 0)
 			setFrictionAndVelocity(branches[indexi[i]].branchId)
+			branches[indexi[i]].branchState = 1
 		next i
+		c.cactiState = 1
 	elseif c.cactiState = 1
-		for i = 0 to 5
-			killCactiBranch(branches[i].branchId)
+		indexi = [0, 2, 3]
+		for i = 0 to 2
+			Create3DPhysicsDynamicBody(branches[indexi[i]].branchId)
+			SetObjectShapeCapsule(branches[indexi[i]].branchId, 1)
+			if i = 1 then SetObjectShapeCapsule(branches[indexi[i]].branchId, 0)
+			setFrictionAndVelocity(branches[indexi[i]].branchId)
+			branches[indexi[i]].branchState = 1
 		next i
 		c.cactiState = 2
 	endif
-endfunction (c.cactiState)
+	c.cactiBranches = branches
+endfunction (c)
 
 function setFrictionAndVelocity(obj as integer)
 	SetObject3DPhysicsLinearVelocity(obj, -1, 1, RandomSign(1), 1)
 	SetObject3DPhysicsAngularVelocity(obj, Random(-180, 180), Random(-180, 180), Random(-180, 180), 20)
 	SetObject3DPhysicsFriction(obj, 0.2)
 	SetObject3DPhysicsRollingFriction(obj, 0.1)
+endfunction
+
+function killCactiBranch(b as integer)
+	i as float
+	dw as float : dh as float : dl as float
+
+	for i = -0.2 to 0.2 step 0.1
+		dw = Random(10, 20) / 100.0
+		dh = Random(30, 60) / 100.0
+		dl = Random(5, 10) / 100.0
+		debris = CreateObjectBox(dw, dh, dl)
+		SetObjectColor(debris, 0, 255, 0, 255)
+		SetObjectPosition(debris, GetObjectX(b)+i, GetObjectY(b)+i, GetObjectZ(b)+i)
+		Create3DPhysicsDynamicBody(debris)
+		SetObject3DPhysicsAngularVelocity(debris, Random(-180, 180), Random(-180, 180), Random(-180, 180), 10)
+		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)		
+	next i
+	DeleteObject(b)
 endfunction
 
 function makeCacti(x as float, y as float, z as float)
@@ -118,29 +157,7 @@ function makeCacti(x as float, y as float, z as float)
 	c.cactiBranches = branches
 endfunction (c)
 
-function killCactiBranch(b as integer)
-	i as float
-	j as integer = 0
-	dw as float : dh as float : dl as float
 
-	debrisPieces as integer[5]
-	for i = -0.2 to 0.2 step 0.1
-		dw = Random(10, 20) / 100.0
-		dh = Random(30, 60) / 100.0
-		dl = Random(5, 10) / 100.0
-		debris = CreateObjectBox(dw, dh, dl)
-		SetObjectColor(debris, 0, 255, 0, 255)
-		SetObjectPosition(debris, GetObjectX(b)+i, GetObjectY(b)+i, GetObjectZ(b)+i)
-		Create3DPhysicsDynamicBody(debris)
-		SetObject3DPhysicsAngularVelocity(debris, Random(-180, 180), Random(-180, 180), Random(-180, 180), 10)
-		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)
-		
-		debrisPieces[j] = debris
-		inc j
-		
-	next i
-	DeleteObject(b)
-endfunction (debrisPieces)
 
 main()
 
