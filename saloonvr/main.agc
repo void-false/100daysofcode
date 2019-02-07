@@ -70,7 +70,7 @@ function main()
     forest as Cacti[]
     forest.insert(makeCacti(-6, 0.6, 7))
     for i = 0 to 10
-        forest.insert(makeCacti(Random(0, 10-5), 0.6, Random(0, 10)))
+        forest.insert(makeCacti(Random(0, 10-5), 0.6, Random(7, 10)))
     next i
 
 	camSpeed as float = 0.1

@@ -92,32 +92,40 @@ Create3DPhysicsStaticBody(saloonFloor)
 saloonLeftBottom = CreateObjectBox(4.0, 0.7, 1)
 SetObjectColor(saloonLeftBottom,136,0,21, 255)
 SetObjectPosition(saloonLeftBottom, GetObjectX(saloonFloor)-3, GetObjectY(saloonFloor)+0.45, GetObjectZ(saloonFloor)+0.01)
+Create3DPhysicsStaticBody(saloonLeftBottom)
 
 saloonRightBottom = CreateObjectBox(4.0, 0.7, 1)
 SetObjectColor(saloonRightBottom,136,0,21, 255)
 SetObjectPosition(saloonRightBottom, GetObjectX(saloonFloor)+3, GetObjectY(saloonFloor)+0.45, GetObjectZ(saloonFloor)+0.01)
+Create3DPhysicsStaticBody(saloonRightBottom)
 
 saloonMiddle = CreateObjectBox(10, 0.3, 1)
 SetObjectColor(saloonMiddle,136,0,21, 255)
 SetObjectPosition(saloonMiddle,  GetObjectX(saloonFloor), GetObjectY(saloonFloor)+2.3, GetObjectZ(saloonFloor))
+Create3DPhysicsStaticBody(saloonMiddle)
 
 saloonTop = CreateObjectBox(10, 0.3, 1)
 SetObjectColor(saloonTop,136,0,21, 255)
 SetObjectPosition(saloonTop,  GetObjectX(saloonFloor), GetObjectY(saloonFloor)+4, GetObjectZ(saloonFloor))
+Create3DPhysicsStaticBody(saloonTop)
 
 saloonLeft = CreateObjectBox(1, 4, 1)
 SetObjectColor(saloonLeft,255,165,79, 255)
 SetObjectPosition(saloonLeft,  GetObjectX(saloonFloor)-4.5, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
+Create3DPhysicsStaticBody(saloonLeft)
 
 saloonRight = CreateObjectBox(1, 4, 1)
 SetObjectColor(saloonRight,255,165,79, 255)
 SetObjectPosition(saloonRight,  GetObjectX(saloonFloor)+4.5, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
+Create3DPhysicsStaticBody(saloonRight)
 
 saloonColumnLeft = CreateObjectBox(1, 4, 1)
 SetObjectColor(saloonColumnLeft,255,165,79, 255)
 SetObjectPosition(saloonColumnLeft,  GetObjectX(saloonFloor)-1.51, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
+Create3DPhysicsStaticBody(saloonColumnLeft)
 
 saloonColumnRight = CreateObjectBox(1, 4, 1)
 SetObjectColor(saloonColumnRight,255,165,79, 255)
 SetObjectPosition(saloonColumnRight,  GetObjectX(saloonFloor)+1.51, GetObjectY(saloonFloor)+2, GetObjectZ(saloonFloor)+0.1)
+Create3DPhysicsStaticBody(saloonColumnRight)
 
