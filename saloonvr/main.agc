@@ -1,6 +1,6 @@
-SetErrorMode(0)
+SetErrorMode(2)
 
-//#import_plugin AGKVR
+#import_plugin AGKVR
 
 SetWindowTitle("Saloon VR")
 SetWindowSize(1024, 768, 0)
@@ -8,18 +8,16 @@ SetVirtualResolution(1024, 768)
 SetWindowAllowResize(1)
 SetAntialiasMode(1)
 
-Create3DPhysicsWorld(1)
-
-/*if AGKVR.IsHmdPresent()
+if AGKVR.IsHmdPresent()
+	SetSyncRate(0, 0)
 	AGKVR.SetCameraRange(0.01, 1000.0)
 	initError as integer
-	initError = AGKVR.Init(500, 501)
-	AGKVR.SetPlayerPosition(2, 0, 0)
-	SetSyncRate(0, 0)
-endif*/
-
+	initError = AGKVR.Init(551, 552)
+	AGKVR.SetPlayerPosition(2, 0, 0)	
+endif
+	
+Create3DPhysicsWorld(1)
 SetSkyBoxVisible(1)
-
 
 // shadows 
 SetShadowMappingMode( 3 )
@@ -69,10 +67,11 @@ function main()
     camZ as float
     forest as Cacti[]
     forest.insert(makeCacti(-6, 0.6, 7))
-    for i = 0 to 10
-        forest.insert(makeCacti(Random(0, 10-5), 0.6, Random(7, 10)))
-    next i
-
+    forest.insert(makeCacti(0.15, 0.7, 10.15))
+    forest.insert(makeCacti(4.8, 0.6, 7.32))
+    forest.insert(makeCacti(3.47, 4.9, 9.99))
+    forest.insert(makeCacti(-3.16, 4.9, 10.09))
+    
 	camSpeed as float = 0.1
 
 	do
@@ -129,7 +128,7 @@ function main()
 			SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
 		endif
 		
-		/*if AGKVR.IsHMDPresent()
+		if AGKVR.IsHMDPresent()
 			
 			if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.06)
 			if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.06)
@@ -176,7 +175,7 @@ function main()
 				bulletStartZ = GetObjectZ(bullet)
 				
 				if isFired
-					MoveObjectLocalZ(bullet, 0.1)
+					MoveObjectLocalZ(bullet, 0.2)
 						
 				else
 					SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
@@ -196,7 +195,7 @@ function main()
 		
 			AGKVR.UpdatePlayer()
 			AGKVR.Render()	
-		endif*/
+		endif
 		
 		
 		/*if isBulletMoving
