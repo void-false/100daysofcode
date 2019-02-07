@@ -3,17 +3,22 @@ SetErrorMode(2)
 #import_plugin AGKVR
 
 SetWindowTitle("Saloon VR")
-SetWindowSize(1024, 768, 0)
-SetVirtualResolution(1024, 768)
-SetWindowAllowResize(1)
+SetVirtualResolution( 1024, 768 )
+SetClearColor( 101, 120, 154 )
+SetScissor( 0,0,0,0 )
+SetGenerateMipmaps( 1 )
+SetCameraRange( 1, 0.1, 100 )
+SetWindowAllowResize( 1 )
 SetAntialiasMode(1)
 
 if AGKVR.IsHmdPresent()
 	SetSyncRate(0, 0)
 	AGKVR.SetCameraRange(0.01, 1000.0)
 	initError as integer
-	initError = AGKVR.Init(551, 552)
+	initError = AGKVR.Init(500, 501)
 	AGKVR.SetPlayerPosition(2, 0, 0)	
+	AGKVR.LockPlayerTurn( 1 )
+	AGKVR.LockPlayerPitch( 0 )
 endif
 	
 Create3DPhysicsWorld(1)
@@ -21,9 +26,9 @@ SetSkyBoxVisible(1)
 
 // shadows 
 SetShadowMappingMode( 3 )
-SetShadowSmoothing( 0 ) // random sampling
-SetShadowMapSize( 1024, 1024 )
-SetShadowRange( -1 ) // use the full camera range
+SetShadowSmoothing( 1 ) // random sampling
+SetShadowMapSize( 2048, 2048 )
+SetShadowRange( 30 ) // use the full camera range
 SetShadowBias( 0.0012 ) // offset shadows slightly to avoid shadow artifacts
 
 type Cacti
