@@ -32,6 +32,7 @@ SetShadowRange( 30 ) // use the full camera range
 SetShadowBias( 0.0012 ) // offset shadows slightly to avoid shadow artifacts
 
 type Cacti
+	cactiId as integer
     cactiState as integer
     cactiBranches as cactiBranch[6]
 endtype
@@ -47,6 +48,7 @@ function main()
 	
 	#insert "makeObjects.agc"
 
+	killedIndex as integer = 0
 	isFired as integer = 0
 	isBulletMoving as integer = 0
 	speed as float = 5.0
@@ -60,9 +62,9 @@ function main()
 	bulletEndY as float
 	bulletEndZ as float
 
-	SetCameraPosition(1, -5, 1.86, 0.25)
+	SetCameraPosition(1, 0, 1.86, -5)
 	SetCameraRange(1, 0.01, 1000)
-	SetCameraLookAt(1, -12, -5, 24, 0)
+	SetCameraLookAt(1, 0.15, 2.8, 10.15, 0)
 
     vecX as float
     vecY as float
@@ -70,26 +72,26 @@ function main()
     camX as float
     camY as float
     camZ as float
-    cactiCoords as float[7,2]
 
+    cactiCoords as float[7,2]
 	cactiCoords[0] = [-6, 0.6, 7]
 	cactiCoords[1] = [0.15, 0.8, 10.15]
 	cactiCoords[2] = [4.8, 0.6, 7.32]
 	cactiCoords[3] = [3.0, 0.6, 11]
 	cactiCoords[4] = [-3.16, 0.6, 11]
-	cactiCoords[5] = [3.0, 4.7, 9.99]
-	cactiCoords[6] = [-3.16, 4.7, 10.09]
+	cactiCoords[5] = [3.0, 4.6, 9.99]
+	cactiCoords[6] = [-3.16, 4.6, 10.09]
 	cactiCoords[7] = [0.15, 7.8, 9.75]
 
     forest as Cacti[]
-    forest.insert(makeCacti(-6, 0.6, 7))
-    forest.insert(makeCacti(0.15, 0.8, 10.15))
+    forest.insert(makeCacti(cactiCoords[killedIndex]))
+    /*forest.insert(makeCacti(0.15, 0.8, 10.15))
     forest.insert(makeCacti(4.8, 0.6, 7.32))
     forest.insert(makeCacti(3.0, 0.6, 11))
     forest.insert(makeCacti(-3.16, 0.6, 11))
     forest.insert(makeCacti(3.0, 4.7, 9.99))
     forest.insert(makeCacti(-3.16, 4.7, 10.09))
-    forest.insert(makeCacti(0.15, 7.8, 9.75))
+    forest.insert(makeCacti(0.15, 7.8, 9.75))*/
     
 	camSpeed as float = 0.1
 
@@ -120,7 +122,15 @@ function main()
         if GetPointerPressed()
             objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
             cactiIndex = findCacti(forest, objHit)
-            if cactiIndex <> -1 then forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
+            if cactiIndex <> -1
+				oldCactiStatus = forest[cactiIndex].cactiState
+				forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
+				newCactiStatus = forest[cactiIndex].cactiState
+				if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
+					killedIndex = mod(killedIndex+1, 8)
+					forest.insert(makeCacti(cactiCoords[killedIndex]))
+				endif
+			endif
         endif
 		
 
@@ -211,7 +221,15 @@ function main()
 				objHit = ObjectSphereSlide(0, bulletStartX, bulletStartY, bulletStartZ, bulletEndX, bulletEndY, bulletEndZ, 0.011)
 				if objHit <> 0
 					cactiIndex = findCacti(forest, objHit)
-					if cactiIndex <> -1 then forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
+					if cactiIndex <> -1
+						oldCactiStatus = forest[cactiIndex].cactiState
+						forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
+						newCactiStatus = forest[cactiIndex].cactiState
+						if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
+							killedIndex = mod(killedIndex+1, 8)
+							forest.insert(makeCacti(cactiCoords[killedIndex]))
+						endif
+					endif
 				endif
 			endif
 		
@@ -235,7 +253,6 @@ function main()
 			isBulletMoving = 1
 			RotateObjectLocalX(gun, -15)
 		endif*/
-
 		Step3DPhysicsWorld()
 		Sync()
 	loop
@@ -315,7 +332,9 @@ function killCactiBranch(b as integer)
     DeleteObject(b)
 endfunction
 
-function makeCacti(x as float, y as float, z as float)
+function makeCacti(coords as float[])
+    x as float, y as float, z as float
+    x = coords[0] : y = coords[1] : z = coords[2]
     c as Cacti
     branches as CactiBranch[6]
 
