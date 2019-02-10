@@ -70,12 +70,26 @@ function main()
     camX as float
     camY as float
     camZ as float
+    cactiCoords as float[7,2]
+
+	cactiCoords[0] = [-6, 0.6, 7]
+	cactiCoords[1] = [0.15, 0.8, 10.15]
+	cactiCoords[2] = [4.8, 0.6, 7.32]
+	cactiCoords[3] = [3.0, 0.6, 11]
+	cactiCoords[4] = [-3.16, 0.6, 11]
+	cactiCoords[5] = [3.0, 4.7, 9.99]
+	cactiCoords[6] = [-3.16, 4.7, 10.09]
+	cactiCoords[7] = [0.15, 7.8, 9.75]
+
     forest as Cacti[]
     forest.insert(makeCacti(-6, 0.6, 7))
-    forest.insert(makeCacti(0.15, 0.7, 10.15))
+    forest.insert(makeCacti(0.15, 0.8, 10.15))
     forest.insert(makeCacti(4.8, 0.6, 7.32))
-    forest.insert(makeCacti(3.47, 4.9, 9.99))
-    forest.insert(makeCacti(-3.16, 4.9, 10.09))
+    forest.insert(makeCacti(3.0, 0.6, 11))
+    forest.insert(makeCacti(-3.16, 0.6, 11))
+    forest.insert(makeCacti(3.0, 4.7, 9.99))
+    forest.insert(makeCacti(-3.16, 4.7, 10.09))
+    forest.insert(makeCacti(0.15, 7.8, 9.75))
     
 	camSpeed as float = 0.1
 
@@ -137,6 +151,8 @@ function main()
 			
 			if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.06)
 			if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.06)
+			if GetRawKeyState(asc("A")) then AGKVR.MovePlayerLocalX(-0.06)
+			if GetRawKeyState(asc("D")) then AGKVR.MovePlayerLocalX(0.06)
 			
 			SetCameraPosition(1, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
 			SetCameraRotation(1, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
@@ -153,7 +169,8 @@ function main()
 				endif
 				
 				if dragHammerStart and not dragHammerFinish
-					SetObjectRotation(hammer, (AGKVR.RightController_JoyY()+1)*45, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
+					//SetObjectRotation(hammer, (AGKVR.RightController_JoyY()+1)*45, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
+					SetObjectRotation(hammer, AGKVR.RightController_JoyY()*90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
 				endif
 				
 				if dragHammerStart and AGKVR.RightController_JoyY() = 0
@@ -161,7 +178,7 @@ function main()
 					SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))		
 				endif
 				
-				if dragHammerStart and AGKVR.RightController_JoyY() < -0.8
+				if dragHammerStart and AGKVR.RightController_JoyY() < 0.0
 					SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
 					isFired = 0
 					dragHammerFinish = 1
@@ -180,7 +197,7 @@ function main()
 				bulletStartZ = GetObjectZ(bullet)
 				
 				if isFired
-					MoveObjectLocalZ(bullet, 0.2)
+					MoveObjectLocalZ(bullet, 1.1)
 						
 				else
 					SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
