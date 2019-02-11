@@ -145,7 +145,7 @@ function killCactiBranch(b as integer)
 		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)		
 	next i
 	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
-	Set3DParticlesImage(p, CreateImageColor(13, 200, 30, 255))
+	Set3DParticlesImage(p, LoadImage("splatter.png"))
 	Set3DParticlesLife(p, 1)
 	Set3DParticlesSize(p, 0.05)
 	Set3DParticlesDirectionRange(p, 360, 180)
