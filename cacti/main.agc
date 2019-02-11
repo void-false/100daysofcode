@@ -148,10 +148,10 @@ function killCactiBranch(b as integer)
 	Set3DParticlesImage(p, LoadImage("splatter.png"))
 	Set3DParticlesLife(p, 1)
 	Set3DParticlesSize(p, 0.05)
-	Set3DParticlesDirectionRange(p, 360, 180)
+	Set3DParticlesDirectionRange(p, 90, 180)
 	Set3DParticlesMax(p, 150)
 	Set3DParticlesFrequency(p, 10000)
-	Add3DParticlesForce(p, 0.2, 1, 0, -100, 0)
+	Add3DParticlesForce(p, 0.1, 1, 0, -100, 0)
 	DeleteObject(b)
 endfunction
 

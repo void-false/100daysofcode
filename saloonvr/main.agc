@@ -266,6 +266,7 @@ function findCacti(forest as Cacti[], objHit as integer)
 endfunction (cactiIndex)
 
 function killCacti(c as Cacti, objId as integer)
+	makeSplatter(objId)
     currentBranchIndex = c.cactiBranches.find(objId)
     if c.cactiBranches[currentBranchIndex].branchState = 1
         killCactiBranch(objId)
@@ -329,7 +330,20 @@ function killCactiBranch(b as integer)
         SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)
         SetObjectCastShadow(debris, 1)
     next i
+    makeSplatter(b)
     DeleteObject(b)
+endfunction
+
+function makeSplatter(b as integer)
+	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+	//Set3DParticlesImage(p, LoadImage("splatter.png"))
+	Set3DParticlesImage(p, CreateImageColor(28, 165, 113, 255))
+	Set3DParticlesLife(p, 0.5)
+	Set3DParticlesSize(p, 0.03)
+	Set3DParticlesDirectionRange(p, 360, 180)
+	Set3DParticlesMax(p, 100)
+	Set3DParticlesFrequency(p, 100000)
+	Add3DParticlesForce(p, 0.1, 1, 0, -70, 0)
 endfunction
 
 function makeCacti(coords as float[])
