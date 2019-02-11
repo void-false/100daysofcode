@@ -48,7 +48,7 @@ function main()
     camZ as float
     forest as Cacti[]
     forest.insert(makeCacti(-6, 0.6, 7))
-	for i = 0 to 100
+	for i = 0 to 10
 		forest.insert(makeCacti(Random(0, 10)*-1, 0.6, Random(7, 30)))
     next i
     
@@ -144,6 +144,14 @@ function killCactiBranch(b as integer)
 		SetObject3DPhysicsAngularVelocity(debris, Random(-180, 180), Random(-180, 180), Random(-180, 180), 10)
 		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)		
 	next i
+	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+	Set3DParticlesImage(p, CreateImageColor(13, 200, 30, 255))
+	Set3DParticlesLife(p, 1)
+	Set3DParticlesSize(p, 0.05)
+	Set3DParticlesDirectionRange(p, 360, 180)
+	Set3DParticlesMax(p, 150)
+	Set3DParticlesFrequency(p, 10000)
+	Add3DParticlesForce(p, 0.2, 1, 0, -100, 0)
 	DeleteObject(b)
 endfunction
 
