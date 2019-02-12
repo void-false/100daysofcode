@@ -1,4 +1,3 @@
-
 [apk_settings]
 alias=
 app_icon_path=
@@ -50,7 +49,7 @@ FILE_0=main.agc;-1
 FILE_1=checkinput.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;5379;0
+FILE_NAME_0=1;main.agc;5330;0
 
 [project]
 description=

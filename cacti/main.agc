@@ -83,6 +83,7 @@ endfunction (cactiIndex)
 
 function killCacti(c as Cacti, objId as integer)
 	currentBranchIndex = c.cactiBranches.find(objId)
+	makeSplatter(objId)
 	if c.cactiBranches[currentBranchIndex].branchState = 1
 		killCactiBranch(objId)
 		exitfunction (c)
@@ -144,15 +145,24 @@ function killCactiBranch(b as integer)
 		SetObject3DPhysicsAngularVelocity(debris, Random(-180, 180), Random(-180, 180), Random(-180, 180), 10)
 		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)		
 	next i
-	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
-	Set3DParticlesImage(p, LoadImage("splatter.png"))
-	Set3DParticlesLife(p, 1)
-	Set3DParticlesSize(p, 0.05)
-	Set3DParticlesDirectionRange(p, 90, 180)
-	Set3DParticlesMax(p, 150)
-	Set3DParticlesFrequency(p, 10000)
-	Add3DParticlesForce(p, 0.1, 1, 0, -100, 0)
+	makeSplatter(b)
 	DeleteObject(b)
+endfunction
+
+function makeSplatter(b as integer)
+	for i = 0 to 1
+		p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+		//Set3DParticlesImage(p, LoadImage("splatter.png"))
+		//Set3DParticlesImage(p, CreateImageColor(28, 165, 113, 255))	
+		Set3DParticlesImage(p, CreateImageColor(220,20,60, 255))	
+		Set3DParticlesLife(p, 0.5)
+		Set3DParticlesSize(p, 0.04)
+		Set3DParticlesDirection(p, 0, 7, 0, 0)
+		Set3DParticlesDirectionRange(p, 360, 180)
+		Set3DParticlesMax(p, 100)
+		Set3DParticlesFrequency(p, 100000)
+		Add3DParticlesForce(p, 0.1, 1, 0, -70, 0)
+	next i
 endfunction
 
 function makeCacti(x as float, y as float, z as float)
