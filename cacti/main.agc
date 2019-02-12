@@ -9,7 +9,7 @@ SetWindowAllowResize( 1 ) // allow the user to resize the window
 // set display properties
 SetVirtualResolution( 1024, 768 ) // doesn't have to match the window
 SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobile devices
-SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
+//SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
 
@@ -54,6 +54,7 @@ function main()
     
 	do
 		if GetRawKeyPressed(27) then exit
+		if GetRawKeyPressed(asc(" ")) then muzzleFlash()
 		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
         vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
         vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
@@ -72,6 +73,19 @@ function main()
 		Sync()
 	loop
 	
+endfunction
+
+function muzzleFlash()
+	p = Create3DParticles(-4, 1.8, 2)
+	Set3DParticlesImage(p, CreateImageColor(255, 255, 255, 255))	
+	Set3DParticlesLife(p, 0.1)
+	Set3DParticlesSize(p, 0.02)
+	Set3DParticlesDirection(p, 0, 0.7, 0, 0)
+	Set3DParticlesDirectionRange(p, 360, 0)
+	Set3DParticlesMax(p, 50)
+	Set3DParticlesFrequency(p, 10000)
+	Add3DParticlesColorKeyFrame(p, 0.0, 252, 254, 253, 255)
+	Add3DParticlesColorKeyFrame(p, 0.1, 247, 111, 5, 255)
 endfunction
 
 function findCacti(forest as Cacti[], objHit as integer)

@@ -1,3 +1,4 @@
+
 [apk_settings]
 alias=
 app_icon_path=
@@ -50,8 +51,7 @@ FILE_1=createCacti.agc;-1
 FILE_2=makeObjects.agc;-1
 
 [files]
-FILE_NAME_0=0;main.agc;12155;1
-FILE_NAME_1=0;makeObjects.agc;3469;2
+FILE_NAME_0=1;main.agc;12608;0
 
 [project]
 description=

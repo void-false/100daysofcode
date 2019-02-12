@@ -81,7 +81,7 @@ bullet = CreateObjectBox(0.022, 0.022, 0.022)
 SetObjectColor(bullet, 119, 27, 12, 255)
 SetObjectPosition(bullet, 0, 1.2, 0)
 SetObjectCollisionMode(bullet, 0)
-
+SetObjectVisible(bullet, 0)
 
 
 saloonFloor = CreateObjectBox(10, 0.3, 1)

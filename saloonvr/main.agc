@@ -200,6 +200,7 @@ function main()
 					dragHammerStart = 0
 					dragHammerFinish = 0
 					SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))	
+					muzzleFlash(bullet)
 				endif
 				
 				bulletStartX = GetObjectX(bullet)
@@ -210,8 +211,10 @@ function main()
 					MoveObjectLocalZ(bullet, 1.1)
 						
 				else
-					SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
 					SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
+					SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
+					MoveObjectLocalZ(bullet, 0.3)
+					MoveObjectLocalY(bullet, 0.04)
 				endif
 				
 				bulletEndX = GetObjectX(bullet)
@@ -256,6 +259,20 @@ function main()
 		Step3DPhysicsWorld()
 		Sync()
 	loop
+endfunction
+
+function muzzleFlash(b as integer)
+	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+	Set3DParticlesPosition(p, GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+	Set3DParticlesImage(p, CreateImageColor(255, 255, 255, 255))	
+	Set3DParticlesLife(p, 0.1)
+	Set3DParticlesSize(p, 0.02)
+	Set3DParticlesDirection(p, 0, 0.7, 0, 0)
+	Set3DParticlesDirectionRange(p, 360, 0)
+	Set3DParticlesMax(p, 50)
+	Set3DParticlesFrequency(p, 10000)
+	Add3DParticlesColorKeyFrame(p, 0.0, 252, 254, 253, 255)
+	Add3DParticlesColorKeyFrame(p, 0.1, 247, 111, 5, 255)
 endfunction
 
 function findCacti(forest as Cacti[], objHit as integer)
@@ -335,15 +352,19 @@ function killCactiBranch(b as integer)
 endfunction
 
 function makeSplatter(b as integer)
-	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
-	//Set3DParticlesImage(p, LoadImage("splatter.png"))
-	Set3DParticlesImage(p, CreateImageColor(28, 165, 113, 255))
-	Set3DParticlesLife(p, 0.5)
-	Set3DParticlesSize(p, 0.03)
-	Set3DParticlesDirectionRange(p, 360, 180)
-	Set3DParticlesMax(p, 100)
-	Set3DParticlesFrequency(p, 100000)
-	Add3DParticlesForce(p, 0.1, 1, 0, -70, 0)
+	for i = 0 to 1
+		p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+		//Set3DParticlesImage(p, LoadImage("splatter.png"))
+		//Set3DParticlesImage(p, CreateImageColor(28, 165, 113, 255))	
+		Set3DParticlesImage(p, CreateImageColor(220,20,60, 255))	
+		Set3DParticlesLife(p, 0.5)
+		Set3DParticlesSize(p, 0.04)
+		Set3DParticlesDirection(p, 0, 7, 0, 0)
+		Set3DParticlesDirectionRange(p, 360, 180)
+		Set3DParticlesMax(p, 100)
+		Set3DParticlesFrequency(p, 100000)
+		Add3DParticlesForce(p, 0.1, 1, 0, -70, 0)
+	next i
 endfunction
 
 function makeCacti(coords as float[])
