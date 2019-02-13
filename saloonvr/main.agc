@@ -48,7 +48,8 @@ function main()
 	
 	#insert "makeObjects.agc"
 
-	killedIndex as integer = 0
+	positionIndex as integer : positionIndex = Random(0, 7)
+	positionIndexOld as integer : positionIndexOld = positionIndex
 	isFired as integer = 0
 	isBulletMoving as integer = 0
 	speed as float = 5.0
@@ -84,7 +85,7 @@ function main()
 	cactiCoords[7] = [0.15, 7.8, 9.75]
 
     forest as Cacti[]
-    forest.insert(makeCacti(cactiCoords[killedIndex]))
+    forest.insert(makeCacti(cactiCoords[positionIndex]))
     /*forest.insert(makeCacti(0.15, 0.8, 10.15))
     forest.insert(makeCacti(4.8, 0.6, 7.32))
     forest.insert(makeCacti(3.0, 0.6, 11))
@@ -127,8 +128,15 @@ function main()
 				forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
 				newCactiStatus = forest[cactiIndex].cactiState
 				if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
-					killedIndex = mod(killedIndex+1, 8)
-					forest.insert(makeCacti(cactiCoords[killedIndex]))
+					/*positionIndex = Random(0, 7)
+					while positionIndex = positionIndexOld
+						positionIndex = Random(0, 7)
+					endwhile*/
+					repeat
+						positionIndex = Random(0, 7)
+					until positionIndex <> positionIndexOld
+					positionIndexOld = positionIndex
+					forest.insert(makeCacti(cactiCoords[positionIndex]))
 				endif
 			endif
         endif
@@ -228,8 +236,8 @@ function main()
 						oldCactiStatus = forest[cactiIndex].cactiState
 						forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
 						newCactiStatus = forest[cactiIndex].cactiState
-						if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
-							killedIndex = mod(killedIndex+1, 8)
+						if oldCactiStatus <> newCactiStatus and newCactiStatus = 2
+							killedIndex = Random(0, 7)
 							forest.insert(makeCacti(cactiCoords[killedIndex]))
 						endif
 					endif
