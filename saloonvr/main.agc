@@ -86,15 +86,14 @@ function main()
 
     forest as Cacti[]
     forest.insert(makeCacti(cactiCoords[positionIndex]))
-    /*forest.insert(makeCacti(0.15, 0.8, 10.15))
-    forest.insert(makeCacti(4.8, 0.6, 7.32))
-    forest.insert(makeCacti(3.0, 0.6, 11))
-    forest.insert(makeCacti(-3.16, 0.6, 11))
-    forest.insert(makeCacti(3.0, 4.7, 9.99))
-    forest.insert(makeCacti(-3.16, 4.7, 10.09))
-    forest.insert(makeCacti(0.15, 7.8, 9.75))*/
     
 	camSpeed as float = 0.1
+	killedTime as float
+	timeToWait as float
+	createNewEnemy as integer = 0
+	difficulty as float = 1.0
+	enemiesKilled as integer = 0
+	
 
 	do
 		if GetRawKeyPressed(27) then exit
@@ -128,20 +127,23 @@ function main()
 				forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
 				newCactiStatus = forest[cactiIndex].cactiState
 				if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
-					/*positionIndex = Random(0, 7)
-					while positionIndex = positionIndexOld
-						positionIndex = Random(0, 7)
-					endwhile*/
-					repeat
-						positionIndex = Random(0, 7)
-					until positionIndex <> positionIndexOld
-					positionIndexOld = positionIndex
-					forest.insert(makeCacti(cactiCoords[positionIndex]))
+					killedTime = Timer()
+					difficulty = difficulty + 0.1
+					createNewEnemy = 1
+					timeToWait = 2.0 / difficulty	
 				endif
 			endif
         endif
+        
+        if createNewEnemy and Timer() - killedTime > timeToWait
+			createNewEnemy = 0
+			positionIndex = Random(0, 7)
+			forest.insert(makeCacti(cactiCoords[positionIndex]))
+			enemiesKilled = enemiesKilled + 1
+		endif
 		
-
+		Print(timeToWait)
+		Print(enemiesKilled)
 		//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 		//RotateObjectLocalY(bullet, -90)
 		
@@ -236,9 +238,11 @@ function main()
 						oldCactiStatus = forest[cactiIndex].cactiState
 						forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
 						newCactiStatus = forest[cactiIndex].cactiState
-						if oldCactiStatus <> newCactiStatus and newCactiStatus = 2
-							killedIndex = Random(0, 7)
-							forest.insert(makeCacti(cactiCoords[killedIndex]))
+						if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
+							killedTime = Timer()
+							difficulty = difficulty + 0.1
+							createNewEnemy = 1
+							timeToWait = 2.0 / difficulty	
 						endif
 					endif
 				endif
@@ -264,6 +268,7 @@ function main()
 			isBulletMoving = 1
 			RotateObjectLocalX(gun, -15)
 		endif*/
+
 		Step3DPhysicsWorld()
 		Sync()
 	loop
