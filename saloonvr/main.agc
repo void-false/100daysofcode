@@ -85,14 +85,16 @@ function main()
 	cactiCoords[7] = [0.15, 7.8, 9.75]
 
     forest as Cacti[]
-    forest.insert(makeCacti(cactiCoords[positionIndex]))
     
 	camSpeed as float = 0.1
 	killedTime as float
-	timeToWait as float
-	createNewEnemy as integer = 0
+	timeToWait as float = 2.0
+	timeSinceEnemyWaits as float
+	createNewEnemy as integer = 1
+	isEnemyOnScreen as integer = 0
 	difficulty as float = 1.0
 	enemiesKilled as integer = 0
+	playerAlive as integer = 1
 	
 
 	do
@@ -127,6 +129,7 @@ function main()
 				forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
 				newCactiStatus = forest[cactiIndex].cactiState
 				if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
+					isEnemyOnScreen = 0
 					killedTime = Timer()
 					difficulty = difficulty + 0.1
 					createNewEnemy = 1
@@ -140,10 +143,17 @@ function main()
 			positionIndex = Random(0, 7)
 			forest.insert(makeCacti(cactiCoords[positionIndex]))
 			enemiesKilled = enemiesKilled + 1
+			isEnemyOnScreen = 1
+			timeSinceEnemyWaits = Timer()
 		endif
 		
-		Print(timeToWait)
-		Print(enemiesKilled)
+		if playerAlive and isEnemyOnScreen and Timer() - timeSinceEnemyWaits > 2
+			killPlayer(forest[cactiIndex])
+			playerAlive = 0
+		endif
+		
+		if not playerAlive then gameOver()
+		
 		//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 		//RotateObjectLocalY(bullet, -90)
 		
@@ -272,6 +282,20 @@ function main()
 		Step3DPhysicsWorld()
 		Sync()
 	loop
+	
+endfunction
+
+function gameOver()
+	do
+		Print("GAME OVER")
+		sync()
+	loop
+endfunction
+
+function killPlayer(c ref as Cacti)
+	for i = 0 to c.cactiBranches.length-1
+		SetObjectColor(c.cactiBranches[i].branchId, 255, 0, 0, 255)
+	next i
 endfunction
 
 function muzzleFlash(b as integer)
