@@ -294,7 +294,8 @@ endfunction
 
 function killPlayer(c ref as Cacti)
 	for i = 0 to c.cactiBranches.length-1
-		SetObjectColor(c.cactiBranches[i].branchId, 255, 0, 0, 255)
+		currentBranch = c.cactiBranches[i].branchId
+		if GetObjectExists(currentBranch) and c.cactiBranches[i].branchState = 0 then SetObjectColor(currentBranch, 255, 0, 0, 255)
 	next i
 endfunction
 
