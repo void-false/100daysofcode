@@ -83,7 +83,7 @@ function main()
     
 	do
 		if GetRawKeyPressed(27) then exit
-		if GetRawKeyPressed(asc(" ")) then muzzleFlash()
+		if GetRawKeyPressed(asc(" ")) then muzzleFlash(gun)
 		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
         vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
         vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
@@ -106,8 +106,9 @@ function main()
 	
 endfunction
 
-function muzzleFlash()
-	p = Create3DParticles(-4, 1.8, 2)
+function muzzleFlash(b as integer)
+	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+	Set3DParticlesPosition(p, GetObjectX(b), GetObjectY(b)+0.12, GetObjectZ(b)-0.54)
 	Set3DParticlesImage(p, CreateImageColor(255, 255, 255, 255))	
 	Set3DParticlesLife(p, 0.1)
 	Set3DParticlesSize(p, 0.02)
