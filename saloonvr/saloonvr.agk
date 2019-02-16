@@ -51,8 +51,8 @@ FILE_1=createCacti.agc;-1
 FILE_2=makeObjects.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;4577;0
-FILE_NAME_1=0;makeObjects.agc;2606;1
+FILE_NAME_0=0;main.agc;9644;1
+FILE_NAME_1=1;makeObjects.agc;2606;2
 
 [project]
 description=

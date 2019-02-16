@@ -12,6 +12,7 @@ SetOrientationAllowed( 1, 1, 1, 1 ) // allow both portrait and landscape on mobi
 //SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 SetScissor( 0,0,0,0 ) // use the maximum available screen space, no black borders
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
+SetAntialiasMode(1)
 
 Create3DPhysicsWorld(1)
 SetSkyBoxVisible(1)
@@ -30,8 +31,9 @@ camSpeed as float = 0.1
 
 function main()
 	
-	SetCameraPosition(1, -4, 1.8, -1)
-	SetCameraLookAt(1, -6, 1.3, 10, 0)
+	SetCameraPosition(1, -4.0, 1.8, 6.2)
+	SetCameraRange(1, 0.01, 1000)
+	SetCameraLookAt(1, -18, 1.3, 10, 0)
 	
 	ground = CreateObjectBox(100, 1, 100)
 	SetObjectColor(ground, 244, 191, 66, 255)
@@ -48,9 +50,36 @@ function main()
     camZ as float
     forest as Cacti[]
     forest.insert(makeCacti(-6, 0.6, 7))
-	for i = 0 to 10
+	/*for i = 0 to 10
 		forest.insert(makeCacti(Random(0, 10)*-1, 0.6, Random(7, 30)))
-    next i
+    next i*/
+    
+    gun = CreateObjectBox(0.04, 0.2, 0.1)
+    SetObjectColor(gun, 63, 61, 62, 255)
+	SetObjectPosition(gun, 0, 0, 0)
+	RotateObjectLocalX(gun, 15)
+	FixObjectPivot(gun)
+
+	body = CreateObjectBox(0.04, 0.1, 0.2)
+	SetObjectColor(body, 63, 61, 62, 255)
+	SetObjectPosition(body, 0, 0.1, 0.07)
+	FixObjectToObject(body, gun)
+
+	drum = CreateObjectCylinder(0.12, 0.10, 6)
+	SetObjectColor(drum, 63, 61, 62, 255)
+	RotateObjectLocalX(drum, 90)
+	SetObjectPosition(drum, 0, 0.1, 0.09)
+	FixObjectToObject(drum, gun)
+
+	barrel = CreateObjectCylinder(0.4, 0.04, 10)
+	SetObjectColor(barrel, 63, 61, 62, 255)
+	RotateObjectLocalX(barrel, 90)
+	SetObjectPosition(barrel, 0, 0.12, 0.34)
+	FixObjectToObject(barrel, gun)
+	
+	
+	SetObjectPosition(gun, -5.3, 1.6, 6.9)
+    RotateObjectLocalY(gun, 180)
     
 	do
 		if GetRawKeyPressed(27) then exit
@@ -70,6 +99,8 @@ function main()
 		Print(Get3DPhysicsTotalObjects())
 		gosub checkInput
 		Step3DPhysicsWorld()
+		Print(GetCameraX(1))
+		Print(GetCameraZ(1))
 		Sync()
 	loop
 	
