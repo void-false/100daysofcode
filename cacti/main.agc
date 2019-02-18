@@ -31,9 +31,9 @@ camSpeed as float = 0.1
 
 function main()
 	
-	SetCameraPosition(1, -4.0, 1.8, 6.2)
+	SetCameraPosition(1, -4, 1.8, 4)
 	SetCameraRange(1, 0.01, 1000)
-	SetCameraLookAt(1, -18, 1.3, 10, 0)
+	SetCameraLookAt(1, -7, 1.3, 10, 0)
 	
 	ground = CreateObjectBox(100, 1, 100)
 	SetObjectColor(ground, 244, 191, 66, 255)
@@ -108,11 +108,11 @@ endfunction
 
 function muzzleFlash(b as integer)
 	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
-	Set3DParticlesPosition(p, GetObjectX(b), GetObjectY(b)+0.12, GetObjectZ(b)-0.54)
+	Set3DParticlesPosition(p, GetObjectX(b), GetObjectY(b)+0.12, GetObjectZ(b)-0.56)
 	Set3DParticlesImage(p, CreateImageColor(255, 255, 255, 255))	
 	Set3DParticlesLife(p, 0.1)
-	Set3DParticlesSize(p, 0.02)
-	Set3DParticlesDirection(p, 0, 0.7, 0, 0)
+	Set3DParticlesSize(p, 0.04)
+	Set3DParticlesDirection(p, 0, 1.5, 0, 0)
 	Set3DParticlesDirectionRange(p, 360, 0)
 	Set3DParticlesMax(p, 50)
 	Set3DParticlesFrequency(p, 10000)
