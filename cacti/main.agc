@@ -17,9 +17,17 @@ SetAntialiasMode(1)
 Create3DPhysicsWorld(1)
 SetSkyBoxVisible(1)
 
+// shadows
+SetShadowMappingMode( 3 )
+SetShadowSmoothing( 1 ) // random sampling
+SetShadowMapSize( 2048, 2048 )
+SetShadowRange( 30 ) // use the full camera range
+SetShadowBias( 0.0012 ) // offset shadows slightly to avoid shadow artifacts
+
 type Cacti
 	cactiState as integer
 	cactiBranches as cactiBranch[6]
+	cactiGunId as integer
 endtype
 
 type CactiBranch
@@ -41,6 +49,8 @@ function main()
 	Create3DPhysicsKinematicBody(ground)
 	SetObject3DPhysicsFriction(ground, 1)
 	SetObject3DPhysicsRollingFriction(ground, 1)
+	SetObjectReceiveShadow(ground, 1)
+	SetObjectLightMode(ground, 1)
 
 	vecX as float
     vecY as float
@@ -54,36 +64,13 @@ function main()
 		forest.insert(makeCacti(Random(0, 10)*-1, 0.6, Random(7, 30)))
     next i*/
     
-    gun = CreateObjectBox(0.04, 0.2, 0.1)
-    SetObjectColor(gun, 63, 61, 62, 255)
-	SetObjectPosition(gun, 0, 0, 0)
-	RotateObjectLocalX(gun, 15)
-	FixObjectPivot(gun)
-
-	body = CreateObjectBox(0.04, 0.1, 0.2)
-	SetObjectColor(body, 63, 61, 62, 255)
-	SetObjectPosition(body, 0, 0.1, 0.07)
-	FixObjectToObject(body, gun)
-
-	drum = CreateObjectCylinder(0.12, 0.10, 6)
-	SetObjectColor(drum, 63, 61, 62, 255)
-	RotateObjectLocalX(drum, 90)
-	SetObjectPosition(drum, 0, 0.1, 0.09)
-	FixObjectToObject(drum, gun)
-
-	barrel = CreateObjectCylinder(0.4, 0.04, 10)
-	SetObjectColor(barrel, 63, 61, 62, 255)
-	RotateObjectLocalX(barrel, 90)
-	SetObjectPosition(barrel, 0, 0.12, 0.34)
-	FixObjectToObject(barrel, gun)
-	
-	
-	SetObjectPosition(gun, -5.3, 1.6, 6.9)
-    RotateObjectLocalY(gun, 180)
     
+    gun = forest[0].cactiGunId
 	do
 		if GetRawKeyPressed(27) then exit
-		if GetRawKeyPressed(asc(" ")) then muzzleFlash(gun)
+		if GetRawKeyPressed(asc(" "))
+			muzzleFlash(gun)
+		endif
 		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
         vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
         vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
@@ -96,11 +83,9 @@ function main()
             cactiIndex = findCacti(forest, objHit)
             if cactiIndex <> -1 then forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
         endif
-		Print(Get3DPhysicsTotalObjects())
 		gosub checkInput
 		Step3DPhysicsWorld()
-		Print(GetCameraX(1))
-		Print(GetCameraZ(1))
+		
 		Sync()
 	loop
 	
@@ -144,6 +129,7 @@ function killCacti(c as Cacti, objId as integer)
 			setFrictionAndVelocity(branches[i].branchId)
 			branches[i].branchState = 1
 		next i
+		Create3DPhysicsDynamicBody(c.cactiGunId)
 		c.cactiState = 2
 	elseif (c.cactiState = 0) and (objId = branches[1].branchId or objId = branches[4].branchId or objId = branches[5].branchId)
 		indexi as integer[3] = [1, 4, 5]
@@ -164,6 +150,7 @@ function killCacti(c as Cacti, objId as integer)
 			setFrictionAndVelocity(branches[indexi[i]].branchId)
 			branches[indexi[i]].branchState = 1
 		next i
+		Create3DPhysicsDynamicBody(c.cactiGunId)
 		c.cactiState = 2
 	endif
 	c.cactiBranches = branches
@@ -238,9 +225,37 @@ function makeCacti(x as float, y as float, z as float)
 		SetObjectCastShadow(branches[i].branchId, 1)
 	next i
 	
+	c.cactiGunId = makeCactiGun(branches[0].branchId)
 	c.cactiBranches = branches
 endfunction (c)
 
+function makeCactiGun(rootBranch as integer)
+	gun = CreateObjectBox(0.04, 0.2, 0.1)
+    SetObjectColor(gun, 63, 61, 62, 255)
+	SetObjectPosition(gun, 0, 0, 0)
+	RotateObjectLocalX(gun, 15)
+	FixObjectPivot(gun)
+
+	body = CreateObjectBox(0.04, 0.1, 0.2)
+	SetObjectColor(body, 63, 61, 62, 255)
+	SetObjectPosition(body, 0, 0.1, 0.07)
+	FixObjectToObject(body, gun)
+
+	drum = CreateObjectCylinder(0.12, 0.10, 6)
+	SetObjectColor(drum, 63, 61, 62, 255)
+	RotateObjectLocalX(drum, 90)
+	SetObjectPosition(drum, 0, 0.1, 0.09)
+	FixObjectToObject(drum, gun)
+
+	barrel = CreateObjectCylinder(0.4, 0.04, 10)
+	SetObjectColor(barrel, 63, 61, 62, 255)
+	RotateObjectLocalX(barrel, 90)
+	SetObjectPosition(barrel, 0, 0.12, 0.34)
+	FixObjectToObject(barrel, gun)
+	
+	SetObjectPosition(gun, GetObjectX(rootBranch)+0.7, GetObjectY(rootBranch)+1, GetObjectZ(rootBranch)-0.1)
+    RotateObjectLocalY(gun, 180)
+endfunction (gun)
 
 
 main()
