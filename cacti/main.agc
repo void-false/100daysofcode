@@ -39,7 +39,7 @@ camSpeed as float = 0.1
 
 function main()
 	
-	SetCameraPosition(1, -4, 1.8, 4)
+	SetCameraPosition(1, -4, 1.8, 3)
 	SetCameraRange(1, 0.01, 1000)
 	SetCameraLookAt(1, -7, 1.3, 10, 0)
 	
@@ -85,7 +85,7 @@ function main()
         endif
 		gosub checkInput
 		Step3DPhysicsWorld()
-		
+		Print(gun)
 		Sync()
 	loop
 	
@@ -129,7 +129,6 @@ function killCacti(c as Cacti, objId as integer)
 			setFrictionAndVelocity(branches[i].branchId)
 			branches[i].branchState = 1
 		next i
-		Create3DPhysicsDynamicBody(c.cactiGunId)
 		c.cactiState = 2
 	elseif (c.cactiState = 0) and (objId = branches[1].branchId or objId = branches[4].branchId or objId = branches[5].branchId)
 		indexi as integer[3] = [1, 4, 5]
@@ -150,9 +149,9 @@ function killCacti(c as Cacti, objId as integer)
 			setFrictionAndVelocity(branches[indexi[i]].branchId)
 			branches[indexi[i]].branchState = 1
 		next i
-		Create3DPhysicsDynamicBody(c.cactiGunId)
 		c.cactiState = 2
 	endif
+	if c.cactiState = 2 then Create3DPhysicsDynamicBody(c.cactiGunId) 
 	c.cactiBranches = branches
 endfunction (c)
 
@@ -176,7 +175,8 @@ function killCactiBranch(b as integer)
 		SetObjectPosition(debris, GetObjectX(b)+i, GetObjectY(b)+i, GetObjectZ(b)+i)
 		Create3DPhysicsDynamicBody(debris)
 		SetObject3DPhysicsAngularVelocity(debris, Random(-180, 180), Random(-180, 180), Random(-180, 180), 10)
-		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)		
+		SetObject3DPhysicsLinearVelocity(debris, i*2, 1, 0, 5)
+		SetObjectCastShadow(debris, 1)		
 	next i
 	makeSplatter(b)
 	DeleteObject(b)
@@ -231,30 +231,36 @@ endfunction (c)
 
 function makeCactiGun(rootBranch as integer)
 	gun = CreateObjectBox(0.04, 0.2, 0.1)
-    SetObjectColor(gun, 63, 61, 62, 255)
 	SetObjectPosition(gun, 0, 0, 0)
 	RotateObjectLocalX(gun, 15)
 	FixObjectPivot(gun)
 
 	body = CreateObjectBox(0.04, 0.1, 0.2)
-	SetObjectColor(body, 63, 61, 62, 255)
 	SetObjectPosition(body, 0, 0.1, 0.07)
-	FixObjectToObject(body, gun)
 
 	drum = CreateObjectCylinder(0.12, 0.10, 6)
-	SetObjectColor(drum, 63, 61, 62, 255)
 	RotateObjectLocalX(drum, 90)
 	SetObjectPosition(drum, 0, 0.1, 0.09)
-	FixObjectToObject(drum, gun)
 
 	barrel = CreateObjectCylinder(0.4, 0.04, 10)
-	SetObjectColor(barrel, 63, 61, 62, 255)
 	RotateObjectLocalX(barrel, 90)
 	SetObjectPosition(barrel, 0, 0.12, 0.34)
-	FixObjectToObject(barrel, gun)
+
+	gunParts as integer[]
+	gunparts.insert(gun)
+	gunparts.insert(body)
+	gunparts.insert(drum)
+	gunparts.insert(barrel)
+	
+	for i = 0 to gunParts.length
+		SetObjectColor(gunParts[i], 63, 61, 62, 255)
+		SetObjectCastShadow(gunParts[i], 1)
+		if i <> 0 then FixObjectToObject(gunParts[i], gun)
+	next i
 	
 	SetObjectPosition(gun, GetObjectX(rootBranch)+0.7, GetObjectY(rootBranch)+1, GetObjectZ(rootBranch)-0.1)
     RotateObjectLocalY(gun, 180)
+
 endfunction (gun)
 
 
