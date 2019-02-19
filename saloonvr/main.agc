@@ -36,6 +36,8 @@ type Cacti
     cactiState as integer
     cactiBranches as cactiBranch[6]
 	cactiGunId as integer
+	timeCreated as float
+	isShooting as integer
 endtype
 
 type CactiBranch
@@ -436,6 +438,7 @@ function makeCacti(coords as float[])
         SetObjectCastShadow(branches[i].branchId, 1)
     next i
 
+	c.timeCreated = Timer()
 	c.cactiGunId = makeCactiGun(branches[0].branchId)
     c.cactiBranches = branches
 endfunction (c)

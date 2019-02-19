@@ -28,6 +28,8 @@ type Cacti
 	cactiState as integer
 	cactiBranches as cactiBranch[6]
 	cactiGunId as integer
+	timeCreated as float
+	isShooting as integer
 endtype
 
 type CactiBranch
@@ -65,11 +67,11 @@ function main()
     next i*/
     
     
-    gun = forest[0].cactiGunId
+    c1 as Cacti : c1 = forest[0]
 	do
 		if GetRawKeyPressed(27) then exit
 		if GetRawKeyPressed(asc(" "))
-			muzzleFlash(gun)
+			muzzleFlash(c1.cactiGunId)
 		endif
 		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
         vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
@@ -84,8 +86,13 @@ function main()
             if cactiIndex <> -1 then forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
         endif
 		gosub checkInput
+		if not c1.isShooting and (Timer() - c1.timeCreated > 1.0)
+			muzzleFlash(c1.cactiGunId) 
+			c1.isShooting = 1
+			shotCooldown as float : shotCooldown = Timer()
+		endif
+		if c1.isShooting and Timer() - shotCooldown > 0.5 then c1.isShooting = 0
 		Step3DPhysicsWorld()
-		Print(gun)
 		Sync()
 	loop
 	
@@ -225,6 +232,7 @@ function makeCacti(x as float, y as float, z as float)
 		SetObjectCastShadow(branches[i].branchId, 1)
 	next i
 	
+	c.timeCreated = Timer()
 	c.cactiGunId = makeCactiGun(branches[0].branchId)
 	c.cactiBranches = branches
 endfunction (c)
