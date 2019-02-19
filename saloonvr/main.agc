@@ -35,6 +35,7 @@ type Cacti
 	cactiId as integer
     cactiState as integer
     cactiBranches as cactiBranch[6]
+	cactiGunId as integer
 endtype
 
 type CactiBranch
@@ -359,6 +360,7 @@ function killCacti(c as Cacti, objId as integer)
         next i
         c.cactiState = 2
     endif
+	if c.cactiState = 2 then Create3DPhysicsDynamicBody(c.cactiGunId) 
     c.cactiBranches = branches
 endfunction (c)
 
@@ -434,8 +436,43 @@ function makeCacti(coords as float[])
         SetObjectCastShadow(branches[i].branchId, 1)
     next i
 
+	c.cactiGunId = makeCactiGun(branches[0].branchId)
     c.cactiBranches = branches
 endfunction (c)
+
+function makeCactiGun(rootBranch as integer)
+	gun = CreateObjectBox(0.04, 0.2, 0.1)
+	SetObjectPosition(gun, 0, 0, 0)
+	RotateObjectLocalX(gun, 15)
+	FixObjectPivot(gun)
+
+	body = CreateObjectBox(0.04, 0.1, 0.2)
+	SetObjectPosition(body, 0, 0.1, 0.07)
+
+	drum = CreateObjectCylinder(0.12, 0.10, 6)
+	RotateObjectLocalX(drum, 90)
+	SetObjectPosition(drum, 0, 0.1, 0.09)
+
+	barrel = CreateObjectCylinder(0.4, 0.04, 10)
+	RotateObjectLocalX(barrel, 90)
+	SetObjectPosition(barrel, 0, 0.12, 0.34)
+
+	gunParts as integer[]
+	gunparts.insert(gun)
+	gunparts.insert(body)
+	gunparts.insert(drum)
+	gunparts.insert(barrel)
+	
+	for i = 0 to gunParts.length
+		SetObjectColor(gunParts[i], 63, 61, 62, 255)
+		SetObjectCastShadow(gunParts[i], 1)
+		if i <> 0 then FixObjectToObject(gunParts[i], gun)
+	next i
+	
+	SetObjectPosition(gun, GetObjectX(rootBranch)+0.7, GetObjectY(rootBranch)+1, GetObjectZ(rootBranch)-0.1)
+    RotateObjectLocalY(gun, 180)
+
+endfunction (gun)
 
 main()
 
