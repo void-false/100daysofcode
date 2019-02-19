@@ -147,12 +147,19 @@ function main()
 			forest.insert(makeCacti(cactiCoords[positionIndex]))
 			enemiesKilled = enemiesKilled + 1
 			isEnemyOnScreen = 1
-			timeSinceEnemyWaits = Timer()
+			//timeSinceEnemyWaits = Timer()
 		endif
 		
-		if playerAlive and isEnemyOnScreen and Timer() - timeSinceEnemyWaits > 2
-			killPlayer(forest[cactiIndex])
-			playerAlive = 0
+		if playerAlive and isEnemyOnScreen 
+			cc as Cacti : cc = forest[forest.length]
+			if Timer() - cc.timeCreated > 1.0 and cc.cactiState <> 2 and not cc.isShooting
+				muzzleFlashCacti(cc.cactiGunId)
+				forest[forest.length].isShooting = 1
+				enemyCooldown as float : enemyCooldown = Timer()
+			endif
+			if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
+			//killPlayer(forest[cactiIndex])
+			//playerAlive = 0
 		endif
 		
 		if not playerAlive then gameOver()
@@ -309,6 +316,20 @@ function muzzleFlash(b as integer)
 	Set3DParticlesLife(p, 0.1)
 	Set3DParticlesSize(p, 0.02)
 	Set3DParticlesDirection(p, 0, 0.7, 0, 0)
+	Set3DParticlesDirectionRange(p, 360, 0)
+	Set3DParticlesMax(p, 50)
+	Set3DParticlesFrequency(p, 10000)
+	Add3DParticlesColorKeyFrame(p, 0.0, 252, 254, 253, 255)
+	Add3DParticlesColorKeyFrame(p, 0.1, 247, 111, 5, 255)
+endfunction
+
+function muzzleFlashCacti(b as integer)
+	p = Create3DParticles(GetObjectX(b), GetObjectY(b), GetObjectZ(b))
+	Set3DParticlesPosition(p, GetObjectX(b), GetObjectY(b)+0.12, GetObjectZ(b)-0.56)
+	Set3DParticlesImage(p, CreateImageColor(255, 255, 255, 255))	
+	Set3DParticlesLife(p, 0.1)
+	Set3DParticlesSize(p, 0.07)
+	Set3DParticlesDirection(p, 0, 2.5, 0, 0)
 	Set3DParticlesDirectionRange(p, 360, 0)
 	Set3DParticlesMax(p, 50)
 	Set3DParticlesFrequency(p, 10000)
