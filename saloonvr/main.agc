@@ -141,6 +141,8 @@ function main()
 			endif
         endif
         
+        Print(timeToWait)
+        
         if createNewEnemy and Timer() - killedTime > timeToWait
 			createNewEnemy = 0
 			positionIndex = Random(0, 7)
@@ -152,17 +154,17 @@ function main()
 		
 		if playerAlive and isEnemyOnScreen 
 			cc as Cacti : cc = forest[forest.length]
-			if Timer() - cc.timeCreated > 1.0 and cc.cactiState <> 2 and not cc.isShooting
+			if Timer() - cc.timeCreated > timeToWait and cc.cactiState <> 2 and not cc.isShooting
 				muzzleFlashCacti(cc.cactiGunId)
 				forest[forest.length].isShooting = 1
 				enemyCooldown as float : enemyCooldown = Timer()
 			endif
 			if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
 			//killPlayer(forest[cactiIndex])
-			//playerAlive = 0
+			playerAlive = 0
 		endif
 		
-		if not playerAlive then gameOver()
+		if not playerAlive then gameOver(gameOver)
 		
 		//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 		//RotateObjectLocalY(bullet, -90)
@@ -267,6 +269,14 @@ function main()
 					endif
 				endif
 			endif
+			
+				SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
+				SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
+				MoveObjectLocalZ(gameOver, 2.5)
+				//MoveObjectLocalX(gameOver,0.15)
+				//MoveObjectLocalY(gameOver,-0.1)
+				//RotateObjectLocalX(gameOver, 15)
+				//RotateObjectLocalY(gameOver, 15)	
 		
 			AGKVR.UpdatePlayer()
 			AGKVR.Render()	
@@ -295,11 +305,8 @@ function main()
 	
 endfunction
 
-function gameOver()
-	do
-		Print("GAME OVER")
-		sync()
-	loop
+function gameOver(gameOver as integer)
+	SetObjectVisible(gameOver, 1)
 endfunction
 
 function killPlayer(c ref as Cacti)

@@ -8,7 +8,7 @@ SetObjectLightMode(ground, 1)
 SetObject3DPhysicsFriction(ground, 1)
 SetObject3DPhysicsRollingFriction(ground, 1)
 	
-global gun as integer
+//global gun as integer
 gun = CreateObjectBox(0.02, 0.1, 0.05)
 SetObjectPosition(gun, 0, -0.03, -0.01)
 RotateObjectLocalX(gun, 15)
@@ -137,3 +137,11 @@ SetObjectColor(saloonColumnRight,255,165,79, 255)
 SetObjectPosition(saloonColumnRight,  GetObjectX(saloonFloor)+1.51, GetObjectY(saloonFloor)+3.5, GetObjectZ(saloonFloor)+0.1)
 Create3DPhysicsStaticBody(saloonColumnRight)
 SetObjectCastShadow(saloonColumnRight, 1)
+
+gameOver = CreateObjectPlane(2, 1)
+//SetObjectLightMode(gameOver, 0)
+gameOverImg = LoadImage("gameover.png")
+SetObjectTransparency(gameOver, 1)
+//SetImageTransparentColor(gameOverImg, 0, 0, 0)
+SetObjectImage(gameOver, gameOverImg, 0)
+SetObjectVisible(gameOver, 0)
