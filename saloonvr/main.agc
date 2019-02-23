@@ -158,13 +158,14 @@ function main()
 				muzzleFlashCacti(cc.cactiGunId)
 				forest[forest.length].isShooting = 1
 				enemyCooldown as float : enemyCooldown = Timer()
+				playerAlive = 0
 			endif
 			if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
 			//killPlayer(forest[cactiIndex])
-			playerAlive = 0
+			//playerAlive = 0
 		endif
 		
-		if not playerAlive then gameOver(gameOver)
+		if not playerAlive then showGameOver(gameOver)
 		
 		//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 		//RotateObjectLocalY(bullet, -90)
@@ -305,7 +306,7 @@ function main()
 	
 endfunction
 
-function gameOver(gameOver as integer)
+function showGameOver(gameOver as integer)
 	SetObjectVisible(gameOver, 1)
 endfunction
 
