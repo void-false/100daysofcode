@@ -156,9 +156,10 @@ function main()
 			cc as Cacti : cc = forest[forest.length]
 			if Timer() - cc.timeCreated > timeToWait and cc.cactiState <> 2 and not cc.isShooting
 				muzzleFlashCacti(cc.cactiGunId)
+				Create3DPhysicsDynamicBody(gun)
 				forest[forest.length].isShooting = 1
 				enemyCooldown as float : enemyCooldown = Timer()
-				playerAlive = 0
+				playerAlive = 0			
 			endif
 			if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
 			//killPlayer(forest[cactiIndex])
@@ -200,7 +201,7 @@ function main()
 			SetCameraPosition(1, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
 			SetCameraRotation(1, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
 			
-			if AGKVR.RightControllerFound()
+			if AGKVR.RightControllerFound() and playerAlive
 				SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 				SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
 				RotateObjectLocalX(gun, 60)
@@ -271,13 +272,13 @@ function main()
 				endif
 			endif
 			
-				SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
-				SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
-				MoveObjectLocalZ(gameOver, 2.5)
-				//MoveObjectLocalX(gameOver,0.15)
-				//MoveObjectLocalY(gameOver,-0.1)
-				//RotateObjectLocalX(gameOver, 15)
-				//RotateObjectLocalY(gameOver, 15)	
+			SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
+			SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
+			MoveObjectLocalZ(gameOver, 0.5)
+			//MoveObjectLocalX(gameOver,0.15)
+			//MoveObjectLocalY(gameOver,-0.1)
+			//RotateObjectLocalX(gameOver, 15)
+			//RotateObjectLocalY(gameOver, 15)	
 		
 			AGKVR.UpdatePlayer()
 			AGKVR.Render()	
