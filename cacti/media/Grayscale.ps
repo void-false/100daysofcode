@@ -1,0 +1,19 @@
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 xy = fragCoord.xy / iResolution.xy;
+    vec4 texColor = texture(iChannel0, xy);
+    float avg = (texColor.r + texColor.g + texColor.b) / 3.0; 
+    
+    float stepr = (texColor.r - avg) / 100.0;
+    float stepg = (texColor.g - avg) / 100.0;
+    float stepb = (texColor.b - avg) / 100.0;
+    
+    if(iFrame < 100) {
+        fragColor.r = texColor.r - stepr * float(iFrame);
+        fragColor.g = texColor.g - stepg * float(iFrame);;
+		fragColor.b = texColor.b - stepb * float(iFrame);;
+    }
+    else {
+   		fragColor.rgb = vec3(avg);
+    }
+}
