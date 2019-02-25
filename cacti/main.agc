@@ -16,7 +16,7 @@ SetAntialiasMode(1)
 
 Create3DPhysicsWorld(1)
 SetSkyBoxVisible(1)
-
+SetAmbientColor(100, 100, 100)
 // shadows
 SetShadowMappingMode( 3 )
 SetShadowSmoothing( 1 ) // random sampling
