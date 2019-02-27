@@ -144,3 +144,30 @@ SetObjectTransparency(gameOver, 1)
 //SetImageTransparentColor(gameOverImg, 0, 0, 0)
 SetObjectImage(gameOver, gameOverImg, 0)
 SetObjectVisible(gameOver, 0)
+
+mainMenu = CreateObjectPlane(1.6, 0.9)
+SetObjectColor(mainMenu, 244, 113, 66, 255)
+SetObjectPosition(mainMenu, 0, 0.45, 1.5)
+SetObjectLightMode(mainMenu, 1)
+SetObjectCastShadow(mainMenu, 1)
+SetObjectReceiveShadow(mainMenu, 1)
+
+buttonPlay = CreateObjectPlane(0.32, 0.09)
+SetObjectColor(buttonPlay, 244, 227, 73, 255)
+SetObjectPosition(buttonPlay, 0, 0.7, 1.45)
+SetObjectCastShadow(buttonPlay, 1)
+SetObjectImage(buttonPlay, LoadImage("play.png"), 0)
+
+buttonHelp = CreateObjectPlane(0.32, 0.09)
+SetObjectColor(buttonHelp, 244, 227, 73, 255)
+SetObjectPosition(buttonHelp, 0, GetObjectY(buttonPlay) - 0.25 , 1.45)
+SetObjectCastShadow(buttonHelp, 1)
+SetObjectImage(buttonHelp, LoadImage("help.png"), 0)
+
+buttonExit = CreateObjectPlane(0.32, 0.09)
+SetObjectColor(buttonExit, 244, 227, 73, 255)
+SetObjectPosition(buttonExit, 0, GetObjectY(buttonHelp) - 0.25, 1.45)
+SetObjectCastShadow(buttonExit, 1)
+SetObjectImage(buttonExit, LoadImage("exit.png"), 0)
+
+

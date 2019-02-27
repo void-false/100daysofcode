@@ -45,12 +45,14 @@ type CactiBranch
     branchState as integer
 endtype
 
-
-
 function main()
 	
 	#insert "makeObjects.agc"
-
+	#constant STATEMAINMENU = 0
+	#constant STATEPLAYING = 1
+	#constant STATEGAMEOVER = 2
+	
+	gameState as integer = STATEMAINMENU
 	positionIndex as integer : positionIndex = Random(0, 7)
 	positionIndexOld as integer : positionIndexOld = positionIndex
 	isFired as integer = 0
@@ -99,6 +101,12 @@ function main()
 	enemiesKilled as integer = 0
 	playerAlive as integer = 1
 	
+	menuObject as integer[]
+	menuObject.insert(mainMenu)
+	menuObject.insert(buttonPlay)
+	menuObject.insert(buttonHelp)
+	menuObject.insert(buttonExit)
+	
 
 	do
 		if GetRawKeyPressed(27) then exit
@@ -118,189 +126,215 @@ function main()
 		if GetRawKeyState(16) and GetRawKeyState(asc("Z")) then RotateObjectLocalZ(gun, -1)
 		
 		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
-        vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
-        vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
-        camX = GetCameraX(1)
-        camY = GetCameraY(1)
-        camZ = GetCameraZ(1)
-
-        if GetPointerPressed()
-            objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
-            cactiIndex = findCacti(forest, objHit)
-            if cactiIndex <> -1
-				oldCactiStatus = forest[cactiIndex].cactiState
-				forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
-				newCactiStatus = forest[cactiIndex].cactiState
-				if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
-					isEnemyOnScreen = 0
-					killedTime = Timer()
-					difficulty = difficulty + 0.1
-					createNewEnemy = 1
-					timeToWait = 2.0 / difficulty	
-				endif
+		vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
+		vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
+		camX = GetCameraX(1)
+		camY = GetCameraY(1)
+		camZ = GetCameraZ(1)
+		Print(gameState)
+		if gameState = STATEMAINMENU
+			if GetPointerPressed()
+				objHit = ObjectRayCast(0, camX, camY, CamZ, vecX+camX, vecY+camY, vecZ+camZ)		
+				gameState = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
 			endif
-        endif
-        
-        Print(timeToWait)
-        
-        if createNewEnemy and Timer() - killedTime > timeToWait
-			createNewEnemy = 0
-			positionIndex = Random(0, 7)
-			forest.insert(makeCacti(cactiCoords[positionIndex]))
-			enemiesKilled = enemiesKilled + 1
-			isEnemyOnScreen = 1
-			//timeSinceEnemyWaits = Timer()
-		endif
-		
-		if playerAlive and isEnemyOnScreen 
-			cc as Cacti : cc = forest[forest.length]
-			if Timer() - cc.timeCreated > timeToWait and cc.cactiState <> 2 and not cc.isShooting
-				muzzleFlashCacti(cc.cactiGunId)
-				Create3DPhysicsDynamicBody(gun)
-				forest[forest.length].isShooting = 1
-				enemyCooldown as float : enemyCooldown = Timer()
-				playerAlive = 0			
+			if gameState <> STATEMAINMENU
+				hideMenu(menuObject)
+				forest.length = -1
+				killedTime = 0.0
+				timeToWait = 2.0
+				timeSinceEnemyWaits = 0.0
+				createNewEnemy = 1
+				isEnemyOnScreen = 0
+				difficulty = 1.0
+				enemiesKilled = 0
+				playerAlive = 1
 			endif
-			if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
-			//killPlayer(forest[cactiIndex])
-			//playerAlive = 0
-		endif
-		
-		if not playerAlive then showGameOver(gameOver)
-		
-		//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
-		//RotateObjectLocalY(bullet, -90)
-		
-		if GetRawKeyState(asc(" ")) 
-			MoveObjectLocalX(bullet, 0.01)
-		elseif GetRawKeyReleased(asc(" "))
-			SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
-		endif
-		
-		if GetRawKeyPressed(asc("R")) then SetObjectRotation(gun, 0, 0, 0)
-		
-		if GetRawMouseRightPressed()
-			startx# = GetPointerX()
-			starty# = GetPointerY()
-			angx# = GetCameraAngleX(1)
-			angy# = GetCameraAngleY(1)
-		endif
-		if GetRawMouseRightState()
-			fDiffX# = (GetPointerX() - startx#)/2.0
-			fDiffY# = (GetPointerY() - starty#)/2.0
-			SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
-		endif
-		
-		if AGKVR.IsHMDPresent()
-			
-			if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.06)
-			if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.06)
-			if GetRawKeyState(asc("A")) then AGKVR.MovePlayerLocalX(-0.06)
-			if GetRawKeyState(asc("D")) then AGKVR.MovePlayerLocalX(0.06)
-			
-			SetCameraPosition(1, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
-			SetCameraRotation(1, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
-			
-			if AGKVR.RightControllerFound() and playerAlive
-				SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
-				SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
-				RotateObjectLocalX(gun, 60)
-				
-				SetObjectRotation(trigger, 45+AGKVR.RightController_Trigger()*45, GetObjectAngleY(trigger), GetObjectAngleZ(trigger))
-				
-				if isFired and not dragHammerStart and AGKVR.RightController_JoyY() > 0.8
-					dragHammerStart = 1
-				endif
-				
-				if dragHammerStart and not dragHammerFinish
-					//SetObjectRotation(hammer, (AGKVR.RightController_JoyY()+1)*45, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
-					SetObjectRotation(hammer, AGKVR.RightController_JoyY()*90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
-				endif
-				
-				if dragHammerStart and AGKVR.RightController_JoyY() = 0
-					dragHammerStart = 0
-					SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))		
-				endif
-				
-				if dragHammerStart and AGKVR.RightController_JoyY() < 0.0
-					SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
-					isFired = 0
-					dragHammerFinish = 1
-					dragHammerStart = 0
-				endif
-
-				if AGKVR.RightController_Trigger() = 1.0
-					isFired = 1
-					dragHammerStart = 0
-					dragHammerFinish = 0
-					SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))	
-					muzzleFlash(bullet)
-				endif
-				
-				bulletStartX = GetObjectX(bullet)
-				bulletStartY = GetObjectY(bullet)
-				bulletStartZ = GetObjectZ(bullet)
-				
-				if isFired
-					MoveObjectLocalZ(bullet, 1.1)
-						
-				else
-					SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
-					SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
-					MoveObjectLocalZ(bullet, 0.3)
-					MoveObjectLocalY(bullet, 0.04)
-				endif
-				
-				bulletEndX = GetObjectX(bullet)
-				bulletEndY = GetObjectY(bullet)
-				bulletEndZ = GetObjectZ(bullet)
-				
-				objHit = ObjectSphereSlide(0, bulletStartX, bulletStartY, bulletStartZ, bulletEndX, bulletEndY, bulletEndZ, 0.011)
-				if objHit <> 0
-					cactiIndex = findCacti(forest, objHit)
-					if cactiIndex <> -1
-						oldCactiStatus = forest[cactiIndex].cactiState
-						forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
-						newCactiStatus = forest[cactiIndex].cactiState
-						if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
-							killedTime = Timer()
-							difficulty = difficulty + 0.1
-							createNewEnemy = 1
-							timeToWait = 2.0 / difficulty	
-						endif
+		elseif gameState = STATEGAMEOVER
+			if GetPointerPressed()
+				playerAlive = 1
+				objHit = ObjectRayCast(0, camX, camY, CamZ, vecX+camX, vecY+camY, vecZ+camZ)		
+				gameState = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
+			endif
+	
+		elseif gameState = STATEPLAYING
+			if GetPointerPressed()
+				objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
+				cactiIndex = findCacti(forest, objHit)
+				if cactiIndex <> -1
+					oldCactiStatus = forest[cactiIndex].cactiState
+					forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
+					newCactiStatus = forest[cactiIndex].cactiState
+					if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
+						isEnemyOnScreen = 0
+						killedTime = Timer()
+						difficulty = difficulty + 0.1
+						createNewEnemy = 1
+						timeToWait = 2.0 / difficulty	
 					endif
 				endif
 			endif
 			
-			SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
-			SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
-			MoveObjectLocalZ(gameOver, 0.5)
-			//MoveObjectLocalX(gameOver,0.15)
-			//MoveObjectLocalY(gameOver,-0.1)
-			//RotateObjectLocalX(gameOver, 15)
-			//RotateObjectLocalY(gameOver, 15)	
-		
-			AGKVR.UpdatePlayer()
-			AGKVR.Render()	
-		endif
-		
-		
-		/*if isBulletMoving
-			MoveObjectLocalX(bullet, cos(AGKVR.GetRightHandAngleX())/100.0)
-			MoveObjectLocalZ(bullet, sin(AGKVR.GetRightHandAngleZ())/100.0)
-		endif
-		
-		if isFired = 1 and AGKVR.RightController_Trigger() = 0
-			isFired = 0
-		endif
-		
-		if isFired = 0 and AGKVR.RightController_Trigger() = 1
-			AGKVR.RightController_TriggerPulse(0, 1000)
-			isFired = 1
-			isBulletMoving = 1
-			RotateObjectLocalX(gun, -15)
-		endif*/
+			if createNewEnemy and Timer() - killedTime > timeToWait
+				createNewEnemy = 0
+				positionIndex = Random(0, 7)
+				forest.insert(makeCacti(cactiCoords[positionIndex]))
+				enemiesKilled = enemiesKilled + 1
+				isEnemyOnScreen = 1
+				//timeSinceEnemyWaits = Timer()
+			endif
+			
+			if playerAlive and isEnemyOnScreen 
+				cc as Cacti : cc = forest[forest.length]
+				if Timer() - cc.timeCreated > timeToWait and cc.cactiState <> 2 and not cc.isShooting
+					muzzleFlashCacti(cc.cactiGunId)
+					Create3DPhysicsDynamicBody(gun)
+					forest[forest.length].isShooting = 1
+					enemyCooldown as float : enemyCooldown = Timer()
+					playerAlive = 0			
+				endif
+				if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
+				//killPlayer(forest[cactiIndex])
+				//playerAlive = 0
+			endif
+			
+			if not playerAlive
+				gameState = STATEGAMEOVER
+				showGameOver(gameOver)
+				showMenu(menuObject)
+			endif
+			//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
+			//RotateObjectLocalY(bullet, -90)
+			
+			if GetRawKeyState(asc(" ")) 
+				MoveObjectLocalX(bullet, 0.01)
+			elseif GetRawKeyReleased(asc(" "))
+				SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
+			endif
+			
+			if GetRawKeyPressed(asc("R")) then SetObjectRotation(gun, 0, 0, 0)
+			
+			if GetRawMouseRightPressed()
+				startx# = GetPointerX()
+				starty# = GetPointerY()
+				angx# = GetCameraAngleX(1)
+				angy# = GetCameraAngleY(1)
+			endif
+			if GetRawMouseRightState()
+				fDiffX# = (GetPointerX() - startx#)/2.0
+				fDiffY# = (GetPointerY() - starty#)/2.0
+				SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
+			endif
+			
+			if AGKVR.IsHMDPresent()
+				
+				if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.06)
+				if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.06)
+				if GetRawKeyState(asc("A")) then AGKVR.MovePlayerLocalX(-0.06)
+				if GetRawKeyState(asc("D")) then AGKVR.MovePlayerLocalX(0.06)
+				
+				SetCameraPosition(1, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
+				SetCameraRotation(1, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
+				
+				if AGKVR.RightControllerFound() and playerAlive
+					SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
+					SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
+					RotateObjectLocalX(gun, 60)
+					
+					SetObjectRotation(trigger, 45+AGKVR.RightController_Trigger()*45, GetObjectAngleY(trigger), GetObjectAngleZ(trigger))
+					
+					if isFired and not dragHammerStart and AGKVR.RightController_JoyY() > 0.8
+						dragHammerStart = 1
+					endif
+					
+					if dragHammerStart and not dragHammerFinish
+						//SetObjectRotation(hammer, (AGKVR.RightController_JoyY()+1)*45, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
+						SetObjectRotation(hammer, AGKVR.RightController_JoyY()*90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
+					endif
+					
+					if dragHammerStart and AGKVR.RightController_JoyY() = 0
+						dragHammerStart = 0
+						SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))		
+					endif
+					
+					if dragHammerStart and AGKVR.RightController_JoyY() < 0.0
+						SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
+						isFired = 0
+						dragHammerFinish = 1
+						dragHammerStart = 0
+					endif
 
+					if AGKVR.RightController_Trigger() = 1.0
+						isFired = 1
+						dragHammerStart = 0
+						dragHammerFinish = 0
+						SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))	
+						muzzleFlash(bullet)
+					endif
+					
+					bulletStartX = GetObjectX(bullet)
+					bulletStartY = GetObjectY(bullet)
+					bulletStartZ = GetObjectZ(bullet)
+					
+					if isFired
+						MoveObjectLocalZ(bullet, 1.1)
+							
+					else
+						SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
+						SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
+						MoveObjectLocalZ(bullet, 0.3)
+						MoveObjectLocalY(bullet, 0.04)
+					endif
+					
+					bulletEndX = GetObjectX(bullet)
+					bulletEndY = GetObjectY(bullet)
+					bulletEndZ = GetObjectZ(bullet)
+					
+					objHit = ObjectSphereSlide(0, bulletStartX, bulletStartY, bulletStartZ, bulletEndX, bulletEndY, bulletEndZ, 0.011)
+					if objHit <> 0
+						cactiIndex = findCacti(forest, objHit)
+						if cactiIndex <> -1
+							oldCactiStatus = forest[cactiIndex].cactiState
+							forest[cactiIndex] = killCacti(forest[cactiIndex], objHit)
+							newCactiStatus = forest[cactiIndex].cactiState
+							if newCactiStatus = 2 and oldCactiStatus <> newCactiStatus
+								killedTime = Timer()
+								difficulty = difficulty + 0.1
+								createNewEnemy = 1
+								timeToWait = 2.0 / difficulty	
+							endif
+						endif
+					endif
+				endif
+				
+				SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
+				SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
+				MoveObjectLocalZ(gameOver, 0.5)
+				//MoveObjectLocalX(gameOver,0.15)
+				//MoveObjectLocalY(gameOver,-0.1)
+				//RotateObjectLocalX(gameOver, 15)
+				//RotateObjectLocalY(gameOver, 15)	
+			
+				AGKVR.UpdatePlayer()
+				AGKVR.Render()	
+			endif
+			
+			
+			/*if isBulletMoving
+				MoveObjectLocalX(bullet, cos(AGKVR.GetRightHandAngleX())/100.0)
+				MoveObjectLocalZ(bullet, sin(AGKVR.GetRightHandAngleZ())/100.0)
+			endif
+			
+			if isFired = 1 and AGKVR.RightController_Trigger() = 0
+				isFired = 0
+			endif
+			
+			if isFired = 0 and AGKVR.RightController_Trigger() = 1
+				AGKVR.RightController_TriggerPulse(0, 1000)
+				isFired = 1
+				isBulletMoving = 1
+				RotateObjectLocalX(gun, -15)
+			endif*/
+		endif
 		Step3DPhysicsWorld()
 		Sync()
 	loop
@@ -506,6 +540,36 @@ function makeCactiGun(rootBranch as integer)
     RotateObjectLocalY(gun, 180)
 
 endfunction (gun)
+
+function checkMenuButtons(buttonPlay as integer, buttonHelp as integer, buttonExit as integer, objHit as integer)
+	if objHit = buttonPlay
+		gameState = 1
+	elseif objHit = buttonHelp
+		SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.483)
+	elseif objHit = buttonExit
+		
+		end
+	endif
+	/*if objHit = buttonPlay then SetObjectPosition(buttonPlay, GetObjectX(buttonPlay), GetObjectY(buttonPlay), 1.483)
+	if GetRawKeyReleased(asc("1")) then SetObjectPosition(buttonPlay, GetObjectX(buttonPlay), GetObjectY(buttonPlay), 1.45)
+	if GetRawKeyState(asc("2")) then SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.483)
+	if GetRawKeyReleased(asc("2")) then SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.45)
+	if GetRawKeyState(asc("3")) then SetObjectPosition(buttonExit, GetObjectX(buttonExit), GetObjectY(buttonExit), 1.483)
+	if GetRawKeyReleased(asc("3")) then SetObjectPosition(buttonExit, GetObjectX(buttonExit), GetObjectY(buttonExit), 1.45)*/
+	
+endfunction(gameState)
+
+function hideMenu(menuObject as integer[])
+	for i = 0 to menuObject.length
+		MoveObjectLocalY(menuObject[i], -1000)
+	next i
+endfunction
+
+function showMenu(menuObject as integer[])
+	for i = 0 to menuObject.length
+		MoveObjectLocalY(menuObject[i], 1000)
+	next i
+endfunction
 
 main()
 
