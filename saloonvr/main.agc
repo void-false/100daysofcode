@@ -1,6 +1,6 @@
 SetErrorMode(2)
 
-#import_plugin AGKVR
+//#import_plugin AGKVR
 
 SetWindowTitle("Saloon VR")
 SetVirtualResolution( 1024, 768 )
@@ -11,7 +11,7 @@ SetCameraRange( 1, 0.1, 100 )
 SetWindowAllowResize( 1 )
 SetAntialiasMode(1)
 
-if AGKVR.IsHmdPresent()
+/*if AGKVR.IsHmdPresent()
 	SetSyncRate(0, 0)
 	AGKVR.SetCameraRange(0.01, 1000.0)
 	initError as integer
@@ -19,7 +19,7 @@ if AGKVR.IsHmdPresent()
 	AGKVR.SetPlayerPosition(2, 0, 0)	
 	AGKVR.LockPlayerTurn( 1 )
 	AGKVR.LockPlayerPitch( 0 )
-endif
+endif*/
 	
 Create3DPhysicsWorld(1)
 SetSkyBoxVisible(1)
@@ -131,29 +131,38 @@ function main()
 		camX = GetCameraX(1)
 		camY = GetCameraY(1)
 		camZ = GetCameraZ(1)
+		
 		Print(gameState)
+		
 		if gameState = STATEMAINMENU
 			if GetPointerPressed()
 				objHit = ObjectRayCast(0, camX, camY, CamZ, vecX+camX, vecY+camY, vecZ+camZ)		
-				gameState = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
+				buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
+				if buttonPressed = 1
+					gameState = STATEPLAYING
+					hideMenu(menuObject)
+					ResetTimer()
+				endif
 			endif
-			if gameState <> STATEMAINMENU
-				hideMenu(menuObject)
-				forest.length = -1
-				killedTime = 0.0
-				timeToWait = 2.0
-				timeSinceEnemyWaits = 0.0
-				createNewEnemy = 1
-				isEnemyOnScreen = 0
-				difficulty = 1.0
-				enemiesKilled = 0
-				playerAlive = 1
-			endif
+
 		elseif gameState = STATEGAMEOVER
 			if GetPointerPressed()
-				playerAlive = 1
 				objHit = ObjectRayCast(0, camX, camY, CamZ, vecX+camX, vecY+camY, vecZ+camZ)		
-				gameState = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
+				buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
+				if buttonPressed = 1
+					hideMenu(menuObject)
+					clearForest(forest)
+					killedTime = 0.0
+					timeToWait = 2.0
+					timeSinceEnemyWaits = 0.0
+					createNewEnemy = 1
+					isEnemyOnScreen = 0
+					difficulty = 1.0
+					enemiesKilled = 0
+					playerAlive = 1
+					gameState = STATEPLAYING
+					ResetTimer()
+				endif
 			endif
 	
 		elseif gameState = STATEPLAYING
@@ -225,7 +234,7 @@ function main()
 				SetCameraRotation( 1, angx# + fDiffY#, angy# + fDiffX#, 0 )
 			endif
 			
-			if AGKVR.IsHMDPresent()
+			/*if AGKVR.IsHMDPresent()
 				
 				if GetRawKeyState(asc("W")) then AGKVR.MovePlayerLocalZ(0.06)
 				if GetRawKeyState(asc("S")) then AGKVR.MovePlayerLocalZ(-0.06)
@@ -316,7 +325,7 @@ function main()
 			
 				AGKVR.UpdatePlayer()
 				AGKVR.Render()	
-			endif
+			endif*/
 			
 			
 			/*if isBulletMoving
@@ -542,8 +551,9 @@ function makeCactiGun(rootBranch as integer)
 endfunction (gun)
 
 function checkMenuButtons(buttonPlay as integer, buttonHelp as integer, buttonExit as integer, objHit as integer)
+	buttonPressed = -1
 	if objHit = buttonPlay
-		gameState = 1
+		buttonPressed = 1
 	elseif objHit = buttonHelp
 		SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.483)
 	elseif objHit = buttonExit
@@ -557,7 +567,7 @@ function checkMenuButtons(buttonPlay as integer, buttonHelp as integer, buttonEx
 	if GetRawKeyState(asc("3")) then SetObjectPosition(buttonExit, GetObjectX(buttonExit), GetObjectY(buttonExit), 1.483)
 	if GetRawKeyReleased(asc("3")) then SetObjectPosition(buttonExit, GetObjectX(buttonExit), GetObjectY(buttonExit), 1.45)*/
 	
-endfunction(gameState)
+endfunction(buttonPressed)
 
 function hideMenu(menuObject as integer[])
 	for i = 0 to menuObject.length
@@ -568,6 +578,15 @@ endfunction
 function showMenu(menuObject as integer[])
 	for i = 0 to menuObject.length
 		MoveObjectLocalY(menuObject[i], 1000)
+	next i
+endfunction
+
+function clearForest(forest as Cacti[])
+	for i = 0 to forest.length
+		for j = 0 to forest[i].cactiBranches.length
+			DeleteObject(forest[i].cactiBranches[j].branchId)			
+		next j
+		DeleteObject(forest[i].cactiGunId)
 	next i
 endfunction
 
