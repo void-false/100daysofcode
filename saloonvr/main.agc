@@ -344,6 +344,7 @@ function main()
 				RotateObjectLocalX(gun, -15)
 			endif*/
 		endif
+		Print(forest.length)
 		Step3DPhysicsWorld()
 		Sync()
 	loop
@@ -581,13 +582,16 @@ function showMenu(menuObject as integer[])
 	next i
 endfunction
 
-function clearForest(forest as Cacti[])
+function clearForest(forest ref as Cacti[])
 	for i = 0 to forest.length
 		for j = 0 to forest[i].cactiBranches.length
 			DeleteObject(forest[i].cactiBranches[j].branchId)			
 		next j
-		DeleteObject(forest[i].cactiGunId)
+		for k = forest[i].cactiGunId+3 to forest[i].cactiGunId step -1
+			DeleteObject(k)
+		next k
 	next i
+	forest.length = -1
 endfunction
 
 main()
