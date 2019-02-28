@@ -151,6 +151,7 @@ function main()
 				buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
 				if buttonPressed = 1
 					hideMenu(menuObject)
+					hideGameOver(gameOver)
 					forest.length = -1
 					clearScene(menuObject[menuObject.length]+1)
 					killedTime = 0.0
@@ -354,6 +355,10 @@ endfunction
 
 function showGameOver(gameOver as integer)
 	SetObjectVisible(gameOver, 1)
+endfunction
+
+function hideGameOver(gameOver as integer)
+	SetObjectVisible(gameOver, 0)
 endfunction
 
 function killPlayer(c ref as Cacti)
