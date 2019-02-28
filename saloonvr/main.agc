@@ -151,7 +151,8 @@ function main()
 				buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
 				if buttonPressed = 1
 					hideMenu(menuObject)
-					clearForest(forest)
+					forest.length = -1
+					clearScene(menuObject[menuObject.length]+1)
 					killedTime = 0.0
 					timeToWait = 2.0
 					timeSinceEnemyWaits = 0.0
@@ -582,16 +583,12 @@ function showMenu(menuObject as integer[])
 	next i
 endfunction
 
-function clearForest(forest ref as Cacti[])
-	for i = 0 to forest.length
-		for j = 0 to forest[i].cactiBranches.length
-			DeleteObject(forest[i].cactiBranches[j].branchId)			
-		next j
-		for k = forest[i].cactiGunId+3 to forest[i].cactiGunId step -1
-			DeleteObject(k)
-		next k
+function clearScene(startObjectId as integer)
+	lastObjectId = startObjectId + 10000
+	for i = startObjectId to lastObjectId 
+		DeleteObject(i)
 	next i
-	forest.length = -1
+		
 endfunction
 
 main()
