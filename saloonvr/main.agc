@@ -258,9 +258,41 @@ function main()
 						MoveObjectLocalZ(pointB, 2)
 						objHit = ObjectRayCast(0, GetObjectX(pointer), GetObjectY(pointer), GetObjectZ(pointer), GetObjectX(pointB), GetObjectY(pointB), GetObjectZ(pointB))
 						buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
+						if buttonPressed = 1
+							gameState = STATEPLAYING
+							hideMenu(menuObject)
+							SetObjectVisible(pointer, 0)
+							ResetTimer()
+						endif
 					endif
 				elseif gameState = STATEGAMEOVER
-					
+					SetObjectVisible(pointer, 1)
+					SetObjectPosition(pointer, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
+					SetObjectRotation(pointer, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
+					RotateObjectLocalX(pointer, 60)
+					if AGKVR.RightController_Trigger() = 1.0
+						SetObjectPosition(pointB, GetObjectX(pointer), GetObjectY(pointer), GetObjectZ(pointer))
+						SetObjectRotation(pointB, GetObjectAngleX(pointer), GetObjectAngleY(pointer), GetObjectAngleZ(pointer)) 
+						MoveObjectLocalZ(pointB, 2)
+						objHit = ObjectRayCast(0, GetObjectX(pointer), GetObjectY(pointer), GetObjectZ(pointer), GetObjectX(pointB), GetObjectY(pointB), GetObjectZ(pointB))
+						buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
+						if buttonPressed = 1
+							gameState = STATEPLAYING
+							hideMenu(menuObject)
+							forest.length = -1
+							clearScene(menuObject[menuObject.length]+1)
+							killedTime = 0.0
+							timeToWait = 2.0
+							timeSinceEnemyWaits = 0.0
+							createNewEnemy = 1
+							isEnemyOnScreen = 0
+							difficulty = 1.0
+							enemiesKilled = 0
+							playerAlive = 1
+							SetObjectVisible(pointer, 0)
+							ResetTimer()
+						endif
+					endif
 				elseif gameState = STATEPLAYING
 					SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 					SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())

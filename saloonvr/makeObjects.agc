@@ -83,7 +83,7 @@ FixObjectPivot(pointer)
 
 pointB = CreateObjectSphere(0.01, 5, 5)
 SetObjectColor(pointB, 0, 0, 255, 255)
-
+SetObjectVisible(pointB, 0)
 
 saloonFloor = CreateObjectBox(10, 0.3, 1)
 SetObjectColor(saloonFloor,76,0,11, 255)
