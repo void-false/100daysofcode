@@ -68,19 +68,21 @@ RotateObjectLocalZ(triggerAxis, 90)
 FixObjectToObject(triggerAxis, gun)
 SetObjectCollisionMode(triggerAxis, 0)
 
-//RotateObjectLocalX(gun, 45)
-//FixObjectPivot(gun)
-
-
-/*gun = CreateObjectBox(0.02, 0.15, 0.2)
-SetObjectColor(gun, 224, 221, 210, 255)
-SetObjectPosition(gun, 0, 1.2, 0)*/
-
 bullet = CreateObjectBox(0.022, 0.022, 0.022)
 SetObjectColor(bullet, 119, 27, 12, 255)
 SetObjectPosition(bullet, 0, 1.2, 0)
 SetObjectCollisionMode(bullet, 0)
 SetObjectVisible(bullet, 0)
+
+
+pointer = CreateObjectBox(0.001, 0.001, 1.0)
+SetObjectCollisionMode(pointer, 0)
+SetObjectColor(pointer, 200, 0, 0, 255)
+SetObjectPosition(pointer, 0, 0, 0.5)
+FixObjectPivot(pointer)
+
+pointB = CreateObjectSphere(0.01, 5, 5)
+SetObjectColor(pointB, 0, 0, 255, 255)
 
 
 saloonFloor = CreateObjectBox(10, 0.3, 1)
@@ -146,15 +148,16 @@ SetObjectImage(gameOver, gameOverImg, 0)
 SetObjectVisible(gameOver, 0)
 
 mainMenu = CreateObjectPlane(1.6, 0.9)
-SetObjectColor(mainMenu, 244, 113, 66, 255)
-SetObjectPosition(mainMenu, 0, 0.45, 1.5)
+SetObjectTransparency(mainMenu, 1)
+SetObjectColor(mainMenu, 244, 113, 66, 125)
+SetObjectPosition(mainMenu, 0, 1.45, 1.5)
 SetObjectLightMode(mainMenu, 1)
 SetObjectCastShadow(mainMenu, 1)
 SetObjectReceiveShadow(mainMenu, 1)
 
 buttonPlay = CreateObjectPlane(0.32, 0.09)
 SetObjectColor(buttonPlay, 244, 227, 73, 255)
-SetObjectPosition(buttonPlay, 0, 0.7, 1.45)
+SetObjectPosition(buttonPlay, 0, 1.7, 1.45)
 SetObjectCastShadow(buttonPlay, 1)
 SetObjectImage(buttonPlay, LoadImage("play.png"), 0)
 
