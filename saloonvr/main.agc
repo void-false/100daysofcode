@@ -16,7 +16,8 @@ if AGKVR.IsHmdPresent()
 	AGKVR.SetCameraRange(0.01, 1000.0)
 	initError as integer
 	initError = AGKVR.Init(500, 501)
-	AGKVR.SetPlayerPosition(1.5, 0, 0)	
+	//AGKVR.SetPlayerPosition(1.5, 0, 0)	
+	AGKVR.SetPlayerPosition(0, 0, 0)	
 	AGKVR.LockPlayerTurn( 1 )
 	AGKVR.LockPlayerPitch( 0 )
 endif
