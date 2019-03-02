@@ -100,6 +100,7 @@ function main()
 	difficulty as float = 1.0
 	enemiesKilled as integer = 0
 	playerAlive as integer = 1
+	triggerUnplressed as integer = 0
 	
 	menuObject as integer[]
 	menuObject.insert(mainMenu)
@@ -266,6 +267,7 @@ function main()
 						endif
 					endif
 				elseif gameState = STATEGAMEOVER
+					triggerUnplressed = 0
 					SetObjectVisible(pointer, 1)
 					SetObjectPosition(pointer, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 					SetObjectRotation(pointer, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
@@ -279,6 +281,11 @@ function main()
 						if buttonPressed = 1
 							gameState = STATEPLAYING
 							hideMenu(menuObject)
+							SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
+							isFired = 0
+							isBulletMoving = 0
+							dragHammerStart = 0
+							dragHammerFinish = 0
 							forest.length = -1
 							clearScene(menuObject[menuObject.length]+1)
 							killedTime = 0.0
@@ -294,6 +301,7 @@ function main()
 						endif
 					endif
 				elseif gameState = STATEPLAYING
+					if AGKVR.RightController_Trigger() < 0.5 then triggerUnplressed = 1
 					SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 					SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
 					RotateObjectLocalX(gun, 60)
@@ -321,7 +329,7 @@ function main()
 						dragHammerStart = 0
 					endif
 
-					if AGKVR.RightController_Trigger() = 1.0
+					if AGKVR.RightController_Trigger() = 1.0 and triggerUnplressed
 						isFired = 1
 						dragHammerStart = 0
 						dragHammerFinish = 0
