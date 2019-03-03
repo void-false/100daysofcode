@@ -140,7 +140,7 @@ Create3DPhysicsStaticBody(saloonColumnRight)
 SetObjectCastShadow(saloonColumnRight, 1)
 
 gameOver = CreateObjectPlane(0.5, 0.25)
-//SetObjectLightMode(gameOver, 0)
+SetObjectCollisionMode(gameOver, 0)
 gameOverImg = LoadImage("gameover.png")
 SetObjectTransparency(gameOver, 1)
 //SetImageTransparentColor(gameOverImg, 0, 0, 0)

@@ -174,6 +174,7 @@ function main()
 			endif
 	
 		elseif gameState = STATEPLAYING
+			hideGameOver(gameOver)
 			Delete3DPhysicsBody(gun)
 			if GetPointerPressed()
 				objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
@@ -274,6 +275,13 @@ function main()
 					endif
 				elseif gameState = STATEGAMEOVER
 					triggerUnplressed = 0
+					SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
+					SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
+					MoveObjectLocalZ(gameOver, 0.75)
+					//MoveObjectLocalX(gameOver, 0.15)
+					MoveObjectLocalY(gameOver, 0.3)
+					//RotateObjectLocalX(gameOver, 15)
+					//RotateObjectLocalY(gameOver, 15)
 					SetObjectVisible(pointer, 1)
 					SetObjectPosition(pointer, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 					SetObjectRotation(pointer, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
@@ -379,13 +387,7 @@ function main()
 				endif
 			endif
 			
-			//SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
-			//SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
-			//MoveObjectLocalZ(gameOver, 0.5)
-			//MoveObjectLocalX(gameOver,0.15)
-			//MoveObjectLocalY(gameOver,-0.1)
-			//RotateObjectLocalX(gameOver, 15)
-			//RotateObjectLocalY(gameOver, 15)	
+	
 		
 			AGKVR.UpdatePlayer()
 			AGKVR.Render()	
