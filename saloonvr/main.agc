@@ -102,6 +102,8 @@ function main()
 	enemiesKilled as integer = 0
 	playerAlive as integer = 1
 	triggerUnplressed as integer = 0
+	deathDelay as float = 1.0
+	playerKilledTime as float
 	
 	menuObject as integer[]
 	menuObject.insert(mainMenu)
@@ -146,6 +148,10 @@ function main()
 			endif
 
 		elseif gameState = STATEGAMEOVER
+			if Timer() - playerKilledTime > deathDelay
+				showGameOver(gameOver)
+				showMenu(menuObject)
+			endif
 			if GetPointerPressed()
 				objHit = ObjectRayCast(0, camX, camY, CamZ, vecX+camX, vecY+camY, vecZ+camZ)		
 				buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
@@ -210,9 +216,8 @@ function main()
 			endif
 			
 			if not playerAlive
+				playerKilledTime = Timer()
 				gameState = STATEGAMEOVER
-				showGameOver(gameOver)
-				showMenu(menuObject)
 			endif
 			//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 			//RotateObjectLocalY(bullet, -90)
@@ -640,13 +645,15 @@ endfunction(buttonPressed)
 
 function hideMenu(menuObject as integer[])
 	for i = 0 to menuObject.length
-		MoveObjectLocalY(menuObject[i], -1000)
+		SetObjectVisible(menuObject[i], 0)
+		SetObjectCollisionMode(menuObject[i], 0)
 	next i
 endfunction
 
 function showMenu(menuObject as integer[])
 	for i = 0 to menuObject.length
-		MoveObjectLocalY(menuObject[i], 1000)
+		SetObjectVisible(menuObject[i], 1)
+		SetObjectCollisionMode(menuObject[i], 1)
 	next i
 endfunction
 
