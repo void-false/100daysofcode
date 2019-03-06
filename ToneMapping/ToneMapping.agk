@@ -13,13 +13,11 @@ ouya_icon_path=
 package_name=
 permission_flags=7
 play_app_id=
-sdk_version=1
-arcore=0
+sdk_version=0
 version_name=
 version_number=0
 firebase_config_path=
-url_scheme=
-deep_link=
+arcore=0
 
 [ipa_settings]
 app_icon_path=
@@ -31,14 +29,12 @@ orientation=0
 output_path=
 prov_profile_path=
 splash_1136_path=
-splash_2436_path=
 splash_2048_path=
 splash_960_path=
 uses_ads=0
 version_number=
 firebase_config_path=
-url_scheme=
-deep_link=
+splash_2436_path=
 
 [html5_settings]
 commands_used=0
@@ -47,11 +43,9 @@ output_path=
 
 [projectfiles]
 FILE_0=main.agc;-1
-FILE_1=makeObjects.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;9718;0
-FILE_NAME_1=0;makeObjects.agc;5342;1
+FILE_NAME_0=1;main.agc;7425;0
 
 [project]
 description=
