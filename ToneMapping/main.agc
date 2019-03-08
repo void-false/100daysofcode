@@ -79,9 +79,9 @@ SetClearColor( 255,255,255 )
 
 // create our scene, everything must be assigned the tone map image so it knows how to adjust its light calculations
 // all objects will also need to be using a shader that knows how to use it
-CreateSkybox( toneImg )
+//CreateSkybox( toneImg )
 CreateGround( toneImg )
-CreateRoom( toneImg )
+//CreateRoom( toneImg )
 
 // position the camera in the room
 SetCameraPosition( 1, 15, 20, 0 )
@@ -101,6 +101,7 @@ time# = 0
 //SetSPriteSize( 1, 30, 30 )
 
 do
+	if GetRawKeyPressed(27) then exit
 	// control the camera
 	speed# = 1.0
 	if ( GetRawKeyState( 16 ) ) then speed# = 0.1
@@ -197,7 +198,7 @@ do
 	Swap()
 loop
 
-function CreateSkybox( toneImg as integer )
+/*function CreateSkybox( toneImg as integer )
 	front = CreateObjectPlane( 1000,1000 )
 	back = CreateObjectPlane( 1000,1000 )
 	left = CreateObjectPlane( 1000,1000 )
@@ -254,7 +255,7 @@ function CreateSkybox( toneImg as integer )
 	SetObjectImage( right, toneImg, 1 )
 	SetObjectImage( top, toneImg, 1 )
 	SetObjectImage( bottom, toneImg, 1 )
-endfunction
+endfunction*/
 
 function CreateGround( toneImg as integer )
 	objectShader = LoadShader( "Object.vs", "Object.ps" )
@@ -282,6 +283,7 @@ function CreateGround( toneImg as integer )
 		
 		SetObjectPosition( i, x, Random(0,7)-2, z )
 		SetObjectRotation( i, Random(0,180)-90, Random(0,360), Random(0,180)-90 )
+		SetObjectColor(i, Random(0, 255), Random(0, 255), Random(0, 255), 255)
 		
 		// all objects must have the tone map image, and a shader that knows how to use it
 		SetObjectImage( i, toneImg, 0 )
@@ -290,7 +292,7 @@ function CreateGround( toneImg as integer )
 	next i
 endfunction
 
-function CreateRoom( toneImg as integer )
+/*function CreateRoom( toneImg as integer )
 	left1 = CreateObjectBox( 1, 40, 20 )
 	left2 = CreateObjectBox( 1, 40, 20 )
 	left3 = CreateObjectBox( 1, 20, 10 )
@@ -341,4 +343,4 @@ function CreateRoom( toneImg as integer )
 	SetObjectImage( back, toneImg, 0 )
 	SetObjectImage( top, toneImg, 0 )
 	SetObjectImage( ground, toneImg, 0 )
-endfunction
+endfunction*/
