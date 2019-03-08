@@ -65,7 +65,9 @@ function main()
 	/*for i = 0 to 10
 		forest.insert(makeCacti(Random(0, 10)*-1, 0.6, Random(7, 30)))
     next i*/
-    
+    renderImage = CreateRenderImage(1024, 768, 0, 0 )
+    quad = CreateObjectQuad()
+    shader = LoadFullScreenShader("Luminance.ps")
     
     c1 as Cacti : c1 = forest[0]
 	do
@@ -93,7 +95,20 @@ function main()
 		endif
 		if c1.isShooting and Timer() - shotCooldown > 0.5 then c1.isShooting = 0
 		Step3DPhysicsWorld()
-		Sync()
+		Update(0)
+		SetRenderToImage(renderImage, -1)
+		ClearScreen()
+		Render()
+		SetObjectImage(quad, renderImage, 0)
+		SetObjectShader(quad, shader)
+		SetRenderToScreen()
+		ClearScreen()
+		if mod(GetSeconds(), 2) = 0
+			DrawObject(quad)
+		else
+			Render()
+		endif
+		Swap()
 	loop
 	
 endfunction
