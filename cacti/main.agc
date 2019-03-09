@@ -40,7 +40,7 @@ endtype
 camSpeed as float = 0.1
 
 function main()
-	
+
 	SetCameraPosition(1, -4, 1.8, 3)
 	SetCameraRange(1, 0.01, 1000)
 	SetCameraLookAt(1, -7, 1.3, 10, 0)
@@ -67,8 +67,10 @@ function main()
     next i*/
     renderImage = CreateRenderImage(1024, 768, 0, 0 )
     quad = CreateObjectQuad()
-    shader = LoadFullScreenShader("Luminance.ps")
-    
+    shaderBW = LoadFullScreenShader("Luminance.ps")
+    shaderDefault = LoadFullScreenShader("Default.ps")
+    isShaderSet as integer = 0
+    endTime as float = 0.0
     c1 as Cacti : c1 = forest[0]
 	do
 		if GetRawKeyPressed(27) then exit
@@ -101,14 +103,18 @@ function main()
 		ClearScreen()
 		Render()
 		SetObjectImage(quad, renderImage, 0)
-		SetObjectShader(quad, shader)
+		if Timer() > 2
+			if not isShaderSet
+				isShaderSet = 1 : endTime = Timer() + 1.5
+			endif
+			SetShaderConstantByName(shaderBW, "endTime", endTime, 0, 0, 0)
+			SetObjectShader(quad, shaderBW)		
+		else
+			SetObjectShader(quad, shaderDefault)			
+		endif
 		SetRenderToScreen()
 		ClearScreen()
-		if mod(GetSeconds(), 2) = 1
-			DrawObject(quad)
-		else
-			Render()
-		endif
+		DrawObject(quad)	
 		Swap()
 	loop
 	
