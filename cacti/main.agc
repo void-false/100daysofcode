@@ -94,6 +94,7 @@ function main()
 			shotCooldown as float : shotCooldown = Timer()
 		endif
 		if c1.isShooting and Timer() - shotCooldown > 0.5 then c1.isShooting = 0
+		
 		Step3DPhysicsWorld()
 		Update(0)
 		SetRenderToImage(renderImage, -1)
@@ -103,7 +104,7 @@ function main()
 		SetObjectShader(quad, shader)
 		SetRenderToScreen()
 		ClearScreen()
-		if mod(GetSeconds(), 2) = 0
+		if mod(GetSeconds(), 2) = 1
 			DrawObject(quad)
 		else
 			Render()
