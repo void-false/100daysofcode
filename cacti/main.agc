@@ -116,6 +116,7 @@ function main()
 		ClearScreen()
 		DrawObject(quad)	
 		Swap()
+		
 	loop
 	
 endfunction
