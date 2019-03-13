@@ -19,7 +19,7 @@ if AGKVR.IsHmdPresent()
 	//AGKVR.SetPlayerPosition(1.5, 0, 0)	
 	AGKVR.SetPlayerPosition(0, 0, 0)	
 	AGKVR.LockPlayerTurn( 1 )
-	AGKVR.LockPlayerPitch( 0 )
+	AGKVR.LockPlayerPitch( 0 )	
 endif
 	
 Create3DPhysicsWorld(1)
@@ -111,7 +111,12 @@ function main()
 	menuObject.insert(buttonHelp)
 	menuObject.insert(buttonExit)
 	
-
+	shaderEndTime as float = 0.0
+	renderImage as integer : renderImage = CreateRenderImage(GetImageWidth(500), GetImageHeight(500), 0, 0)
+	shaderBW as integer : shaderBW = LoadFullScreenShader("Luminance.ps")
+	shaderDefault as integer : shaderDefault = LoadFullScreenShader("Default.ps")
+	shaderCurrent as integer : shaderCurrent = shaderDefault
+	
 	do
 		if GetRawKeyPressed(27) then exit
 		
@@ -175,6 +180,7 @@ function main()
 	
 		elseif gameState = STATEPLAYING
 			hideGameOver(gameOver)
+			shaderCurrent = shaderDefault
 			Delete3DPhysicsBody(gun)
 			if GetPointerPressed()
 				objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
@@ -209,7 +215,9 @@ function main()
 					Create3DPhysicsDynamicBody(gun)
 					forest[forest.length].isShooting = 1
 					enemyCooldown as float : enemyCooldown = Timer()
-					playerAlive = 0			
+					playerAlive = 0		
+					shaderCurrent = shaderBW
+					shaderEndTime = Timer() + 1.5	
 				endif
 				if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
 				//killPlayer(forest[cactiIndex])
@@ -388,9 +396,30 @@ function main()
 			endif
 			
 	
-		
+			Update(0)
 			AGKVR.UpdatePlayer()
-			AGKVR.Render()	
+			AGKVR.SetCameraToRightEye()
+			SetRenderToImage(renderImage, -1)
+			ClearScreen()
+			Render()
+			SetObjectImage(quad, renderImage, 0)
+			SetShaderConstantByName(shaderBW, "endTime", shaderEndTime, 0, 0, 0)
+			SetObjectShader(quad, shaderCurrent)
+			SetRenderToImage(500, 0)
+			DrawObject(quad)
+			AGKVR.SubmitRightEye()
+			//AGKVR.Render()	
+			AGKVR.SetCameraToLeftEye()
+			SetRenderToImage(renderImage, -1)
+			ClearScreen()
+			Render()
+			SetObjectImage(quad, renderImage, 0)
+			SetShaderConstantByName(shaderBW, "endTime", shaderEndTime, 0, 0, 0)
+			SetObjectShader(quad, shaderCurrent)
+			SetRenderToImage(501, 0)
+			DrawObject(quad)
+			AGKVR.SubmitLeftEye()
+			SetRenderToScreen()
 		endif
 			
 			

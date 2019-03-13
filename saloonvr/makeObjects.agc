@@ -147,6 +147,9 @@ SetObjectTransparency(gameOver, 1)
 SetObjectImage(gameOver, gameOverImg, 0)
 SetObjectVisible(gameOver, 0)
 
+quad as integer
+quad = CreateObjectQuad()
+
 mainMenu = CreateObjectPlane(1.6, 0.9)
 SetObjectTransparency(mainMenu, 1)
 SetObjectColor(mainMenu, 244, 113, 66, 125)
