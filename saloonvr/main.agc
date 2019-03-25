@@ -349,6 +349,7 @@ function main()
 						isFired = 0
 						dragHammerFinish = 1
 						dragHammerStart = 0
+						isBulletMoving = 0
 					endif
 
 					if AGKVR.RightController_Trigger() = 1.0 and triggerUnplressed
@@ -363,9 +364,14 @@ function main()
 					bulletStartY = GetObjectY(bullet)
 					bulletStartZ = GetObjectZ(bullet)
 					
+					if not isBulletMoving and isFired
+						AGKVR.RightController_TriggerPulse(0, 1000)
+						isBulletMoving = 1
+						RotateObjectLocalX(gun, -15)
+					endif
+					
 					if isFired
-						MoveObjectLocalZ(bullet, 1.1)
-							
+						MoveObjectLocalZ(bullet, 1.1)						
 					else
 						SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
 						SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
@@ -423,16 +429,7 @@ function main()
 		endif
 			
 			
-			/*if isBulletMoving
-				MoveObjectLocalX(bullet, cos(AGKVR.GetRightHandAngleX())/100.0)
-				MoveObjectLocalZ(bullet, sin(AGKVR.GetRightHandAngleZ())/100.0)
-			endif
-			
-			if isFired = 1 and AGKVR.RightController_Trigger() = 0
-				isFired = 0
-			endif
-			
-			if isFired = 0 and AGKVR.RightController_Trigger() = 1
+			/*if isFired = 0 and AGKVR.RightController_Trigger() = 1
 				AGKVR.RightController_TriggerPulse(0, 1000)
 				isFired = 1
 				isBulletMoving = 1
