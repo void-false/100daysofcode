@@ -58,6 +58,7 @@ function main()
 	positionIndexOld as integer : positionIndexOld = positionIndex
 	isFired as integer = 0
 	isBulletMoving as integer = 0
+	startRecoil as integer = 0
 	speed as float = 5.0
 	dragHammerStart as integer = 0
 	dragHammerFinish as integer = 0
@@ -318,6 +319,7 @@ function main()
 							difficulty = 1.0
 							enemiesKilled = 0
 							playerAlive = 1
+							startRecoil = 0
 							SetObjectVisible(pointer, 0)
 							ResetTimer()
 						endif
@@ -349,7 +351,7 @@ function main()
 						isFired = 0
 						dragHammerFinish = 1
 						dragHammerStart = 0
-						isBulletMoving = 0
+						startRecoil = 0
 					endif
 
 					if AGKVR.RightController_Trigger() = 1.0 and triggerUnplressed
@@ -358,16 +360,17 @@ function main()
 						dragHammerFinish = 0
 						SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))	
 						muzzleFlash(bullet)
+						if not startRecoil then startRecoil = 1
 					endif
 					
 					bulletStartX = GetObjectX(bullet)
 					bulletStartY = GetObjectY(bullet)
 					bulletStartZ = GetObjectZ(bullet)
 					
-					if not isBulletMoving and isFired
+					if startRecoil and startRecoil < 10
 						AGKVR.RightController_TriggerPulse(0, 1000)
-						isBulletMoving = 1
-						RotateObjectLocalX(gun, -15)
+						startRecoil = startRecoil + 1
+						//RotateObjectLocalX(gun, -15)
 					endif
 					
 					if isFired
@@ -427,14 +430,6 @@ function main()
 			AGKVR.SubmitLeftEye()
 			SetRenderToScreen()
 		endif
-			
-			
-			/*if isFired = 0 and AGKVR.RightController_Trigger() = 1
-				AGKVR.RightController_TriggerPulse(0, 1000)
-				isFired = 1
-				isBulletMoving = 1
-				RotateObjectLocalX(gun, -15)
-			endif*/
 		
 		Step3DPhysicsWorld()
 		Sync()
