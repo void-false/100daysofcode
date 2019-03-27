@@ -59,6 +59,7 @@ function main()
 	isFired as integer = 0
 	isBulletMoving as integer = 0
 	startRecoil as integer = 0
+	muzzleClimb as integer = 0
 	speed as float = 5.0
 	dragHammerStart as integer = 0
 	dragHammerFinish as integer = 0
@@ -320,6 +321,7 @@ function main()
 							enemiesKilled = 0
 							playerAlive = 1
 							startRecoil = 0
+							muzzleClimb = 0
 							SetObjectVisible(pointer, 0)
 							ResetTimer()
 						endif
@@ -328,7 +330,7 @@ function main()
 					if AGKVR.RightController_Trigger() < 0.5 then triggerUnplressed = 1
 					SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 					SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
-					RotateObjectLocalX(gun, 60)
+					RotateObjectLocalX(gun, 60 - muzzleClimb)
 					
 					SetObjectRotation(trigger, 45+AGKVR.RightController_Trigger()*45, GetObjectAngleY(trigger), GetObjectAngleZ(trigger))
 					
@@ -352,6 +354,7 @@ function main()
 						dragHammerFinish = 1
 						dragHammerStart = 0
 						startRecoil = 0
+						muzzleClimb = 0
 					endif
 
 					if AGKVR.RightController_Trigger() = 1.0 and triggerUnplressed
@@ -360,7 +363,10 @@ function main()
 						dragHammerFinish = 0
 						SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))	
 						muzzleFlash(bullet)
-						if not startRecoil then startRecoil = 1
+						if not startRecoil
+							startRecoil = 1
+							muzzleClimb = 10
+						endif
 					endif
 					
 					bulletStartX = GetObjectX(bullet)
@@ -370,6 +376,7 @@ function main()
 					if startRecoil and startRecoil < 10
 						AGKVR.RightController_TriggerPulse(0, 1000)
 						startRecoil = startRecoil + 1
+						muzzleClimb = muzzleClimb - 1
 						//RotateObjectLocalX(gun, -15)
 					endif
 					
