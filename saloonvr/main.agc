@@ -46,13 +46,14 @@ type CactiBranch
     branchState as integer
 endtype
 
+#constant STATEMAINMENU = 0
+#constant STATEPLAYING = 1
+#constant STATEGAMEOVER = 2
+
 function main()
 	
 	#insert "makeObjects.agc"
-	#constant STATEMAINMENU = 0
-	#constant STATEPLAYING = 1
-	#constant STATEGAMEOVER = 2
-	
+
 	gameState as integer = STATEMAINMENU
 	positionIndex as integer : positionIndex = Random(0, 7)
 	positionIndexOld as integer : positionIndexOld = positionIndex
@@ -103,7 +104,7 @@ function main()
 	difficulty as float = 1.0
 	enemiesKilled as integer = 0
 	playerAlive as integer = 1
-	triggerUnplressed as integer = 0
+	triggerUnpressed as integer = 0
 	deathDelay as float = 1.0
 	playerKilledTime as float
 	
@@ -119,29 +120,18 @@ function main()
 	shaderDefault as integer : shaderDefault = LoadFullScreenShader("Default.ps")
 	shaderCurrent as integer : shaderCurrent = shaderDefault
 	
+	rayCastValues as float[]
+	
 	do
-		if GetRawKeyPressed(27) then exit
-		
-		if GetRawKeyState(asc("W")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, camSpeed)
-		if GetRawKeyState(asc("S")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, -camSpeed)
-		if GetRawKeyState(asc("A")) and not GetRawKeyState(16) then MoveCameraLocalX(1, -camSpeed)
-		if GetRawKeyState(asc("D")) and not GetRawKeyState(16) then MoveCameraLocalX(1, camSpeed)
-		if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, camSpeed)
-		if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -camSpeed)
-		
-		if GetRawKeyState(16) and GetRawKeyState(asc("W")) then RotateObjectLocalX(gun, -1)
-		if GetRawKeyState(16) and GetRawKeyState(asc("S")) then RotateObjectLocalX(gun, 1)
-		if GetRawKeyState(16) and GetRawKeyState(asc("A")) then RotateObjectLocalY(gun, -1)
-		if GetRawKeyState(16) and GetRawKeyState(asc("D")) then RotateObjectLocalY(gun, 1)
-		if GetRawKeyState(16) and GetRawKeyState(asc("Q")) then RotateObjectLocalZ(gun, 1)
-		if GetRawKeyState(16) and GetRawKeyState(asc("Z")) then RotateObjectLocalZ(gun, -1)
-		
-		vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
+		checkFlatControls(camSpeed, gun)
+		rayCastValues = getRayCastValues()
+
+		/*vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
 		vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
 		vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
 		camX = GetCameraX(1)
 		camY = GetCameraY(1)
-		camZ = GetCameraZ(1)
+		camZ = GetCameraZ(1)*/
 		
 		if gameState = STATEMAINMENU
 			if GetPointerPressed()
@@ -284,7 +274,7 @@ function main()
 						endif
 					endif
 				elseif gameState = STATEGAMEOVER
-					triggerUnplressed = 0
+					triggerUnpressed = 0
 					SetObjectPosition(gameOver, AGKVR.GetHMDX(), AGKVR.GetHMDY(), AGKVR.GetHMDZ())
 					SetObjectRotation(gameOver, AGKVR.GetHMDAngleX(), AGKVR.GetHMDAngleY(), AGKVR.GetHMDAngleZ())
 					MoveObjectLocalZ(gameOver, 0.75)
@@ -327,7 +317,7 @@ function main()
 						endif
 					endif
 				elseif gameState = STATEPLAYING
-					if AGKVR.RightController_Trigger() < 0.5 then triggerUnplressed = 1
+					if AGKVR.RightController_Trigger() < 0.5 then triggerUnpressed = 1
 					SetObjectPosition(gun, AGKVR.GetRightHandX(), AGKVR.GetRightHandY(), AGKVR.GetRightHandZ())
 					SetObjectRotation(gun, AGKVR.GetRightHandAngleX(), AGKVR.GetRightHandAngleY(), AGKVR.GetRightHandAngleZ())
 					RotateObjectLocalX(gun, 60 - muzzleClimb)
@@ -357,7 +347,7 @@ function main()
 						muzzleClimb = 0
 					endif
 
-					if AGKVR.RightController_Trigger() = 1.0 and triggerUnplressed
+					if AGKVR.RightController_Trigger() = 1.0 and triggerUnpressed
 						isFired = 1
 						dragHammerStart = 0
 						dragHammerFinish = 0
@@ -441,6 +431,40 @@ function main()
 		Step3DPhysicsWorld()
 		Sync()
 	loop
+endfunction
+
+function getRayCastValues()
+	rayCastValues as float[]
+	vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
+	vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
+	vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
+	camX = GetCameraX(1)
+	camY = GetCameraY(1)
+	camZ = GetCameraZ(1)	
+	rayCastValues.insert(camX)
+	rayCastValues.insert(camY)
+	rayCastValues.insert(camZ)
+	rayCastValues.insert(vecX+camX)
+	rayCastValues.insert(vecY+camY)
+	rayCastValues.insert(vecZ+camZ)
+endfunction(rayCastValues)
+
+function checkFlatControls(camSpeed as float, gun as integer)			
+	if GetRawKeyPressed(27) then end
+
+	if GetRawKeyState(asc("W")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, camSpeed)
+	if GetRawKeyState(asc("S")) and not GetRawKeyState(16) then MoveCameraLocalZ(1, -camSpeed)
+	if GetRawKeyState(asc("A")) and not GetRawKeyState(16) then MoveCameraLocalX(1, -camSpeed)
+	if GetRawKeyState(asc("D")) and not GetRawKeyState(16) then MoveCameraLocalX(1, camSpeed)
+	if GetRawKeyState(asc("Q")) and not GetRawKeyState(16) then MoveCameraLocalY(1, camSpeed)
+	if GetRawKeyState(asc("Z")) and not GetRawKeyState(16) then MoveCameraLocalY(1, -camSpeed)
+
+	if GetRawKeyState(16) and GetRawKeyState(asc("W")) then RotateObjectLocalX(gun, -1)
+	if GetRawKeyState(16) and GetRawKeyState(asc("S")) then RotateObjectLocalX(gun, 1)
+	if GetRawKeyState(16) and GetRawKeyState(asc("A")) then RotateObjectLocalY(gun, -1)
+	if GetRawKeyState(16) and GetRawKeyState(asc("D")) then RotateObjectLocalY(gun, 1)
+	if GetRawKeyState(16) and GetRawKeyState(asc("Q")) then RotateObjectLocalZ(gun, 1)
+	if GetRawKeyState(16) and GetRawKeyState(asc("Z")) then RotateObjectLocalZ(gun, -1)
 endfunction
 
 function moveMenuY(menuObject as integer[], dy as float)
