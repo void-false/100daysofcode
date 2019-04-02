@@ -125,17 +125,10 @@ function main()
 	do
 		checkFlatControls(camSpeed, gun)
 		rayCastValues = getRayCastValues()
-
-		/*vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
-		vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
-		vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
-		camX = GetCameraX(1)
-		camY = GetCameraY(1)
-		camZ = GetCameraZ(1)*/
 		
 		if gameState = STATEMAINMENU
 			if GetPointerPressed()
-				objHit = ObjectRayCast(0, camX, camY, CamZ, vecX+camX, vecY+camY, vecZ+camZ)		
+				objHit = ObjectRayCast(0, rayCastValues[0], rayCastValues[1], rayCastValues[2], rayCastValues[3], rayCastValues[4], rayCastValues[5])		
 				buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
 				if buttonPressed = 1
 					gameState = STATEPLAYING
@@ -150,7 +143,7 @@ function main()
 				showMenu(menuObject)
 			endif
 			if GetPointerPressed()
-				objHit = ObjectRayCast(0, camX, camY, CamZ, vecX+camX, vecY+camY, vecZ+camZ)		
+				objHit = ObjectRayCast(0, rayCastValues[0], rayCastValues[1], rayCastValues[2], rayCastValues[3], rayCastValues[4], rayCastValues[5])	
 				buttonPressed = checkMenuButtons(buttonPlay, buttonHelp, buttonExit, objHit)
 				if buttonPressed = 1
 					hideMenu(menuObject)
@@ -175,7 +168,7 @@ function main()
 			shaderCurrent = shaderDefault
 			Delete3DPhysicsBody(gun)
 			if GetPointerPressed()
-				objHit = ObjectRayCast(0, camX, camY, camZ, vecX+camX, vecY+camY, vecZ+camZ)
+				objHit = ObjectRayCast(0, rayCastValues[0], rayCastValues[1], rayCastValues[2], rayCastValues[3], rayCastValues[4], rayCastValues[5])
 				cactiIndex = findCacti(forest, objHit)
 				if cactiIndex <> -1
 					oldCactiStatus = forest[cactiIndex].cactiState
@@ -434,19 +427,13 @@ function main()
 endfunction
 
 function getRayCastValues()
-	rayCastValues as float[]
-	vecX = Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800
-	vecY = Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800
-	vecZ = Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800
-	camX = GetCameraX(1)
-	camY = GetCameraY(1)
-	camZ = GetCameraZ(1)	
-	rayCastValues.insert(camX)
-	rayCastValues.insert(camY)
-	rayCastValues.insert(camZ)
-	rayCastValues.insert(vecX+camX)
-	rayCastValues.insert(vecY+camY)
-	rayCastValues.insert(vecZ+camZ)
+	rayCastValues as float[]	
+	rayCastValues.insert(GetCameraX(1))
+	rayCastValues.insert(GetCameraY(1))
+	rayCastValues.insert(GetCameraZ(1))
+	rayCastValues.insert(Get3DVectorXFromScreen(GetPointerX(), GetPointerY()) * 800 + GetCameraX(1))
+	rayCastValues.insert(Get3DVectorYFromScreen(GetPointerX(), GetPointerY()) * 800 + GetCameraY(1))
+	rayCastValues.insert(Get3DVectorZFromScreen(GetPointerX(), GetPointerY()) * 800 + GetCameraZ(1))
 endfunction(rayCastValues)
 
 function checkFlatControls(camSpeed as float, gun as integer)			
