@@ -58,7 +58,6 @@ function main()
 	positionIndex as integer : positionIndex = Random(0, 7)
 	positionIndexOld as integer : positionIndexOld = positionIndex
 	isFired as integer = 0
-	isBulletMoving as integer = 0
 	startRecoil as integer = 0
 	muzzleClimb as integer = 0
 	speed as float = 5.0
@@ -75,13 +74,6 @@ function main()
 	SetCameraPosition(1, 0, 1.86, -5)
 	SetCameraRange(1, 0.01, 1000)
 	SetCameraLookAt(1, 0.15, 2.8, 10.15, 0)
-
-    vecX as float
-    vecY as float
-    vecZ as float
-    camX as float
-    camY as float
-    camZ as float
 
     cactiCoords as float[7,2]
 	cactiCoords[0] = [-6, 0.6, 7]
@@ -107,12 +99,6 @@ function main()
 	triggerUnpressed as integer = 0
 	deathDelay as float = 1.0
 	playerKilledTime as float
-	
-	menuObject as integer[]
-	menuObject.insert(mainMenu)
-	menuObject.insert(buttonPlay)
-	menuObject.insert(buttonHelp)
-	menuObject.insert(buttonExit)
 	
 	shaderEndTime as float = 0.0
 	renderImage as integer : renderImage = CreateRenderImage(GetImageWidth(500), GetImageHeight(500), 0, 0)
@@ -206,23 +192,13 @@ function main()
 				endif
 				if Timer() - enemyCooldown > 0.5 then forest[forest.length].isShooting = 0
 				//killPlayer(forest[cactiIndex])
-				//playerAlive = 0
 			endif
 			
 			if not playerAlive
 				playerKilledTime = Timer()
 				gameState = STATEGAMEOVER
 			endif
-			//SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
-			//RotateObjectLocalY(bullet, -90)
 		endif
-		if GetRawKeyState(asc(" ")) 
-			MoveObjectLocalX(bullet, 0.01)
-		elseif GetRawKeyReleased(asc(" "))
-			SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
-		endif
-		
-		if GetRawKeyPressed(asc("R")) then SetObjectRotation(gun, 0, 0, 0)
 		
 		if GetRawMouseRightPressed()
 			startx# = GetPointerX()
@@ -290,7 +266,6 @@ function main()
 							hideMenu(menuObject)
 							SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
 							isFired = 0
-							isBulletMoving = 0
 							dragHammerStart = 0
 							dragHammerFinish = 0
 							forest.length = -1
@@ -352,16 +327,15 @@ function main()
 						endif
 					endif
 					
-					bulletStartX = GetObjectX(bullet)
-					bulletStartY = GetObjectY(bullet)
-					bulletStartZ = GetObjectZ(bullet)
-					
 					if startRecoil and startRecoil < 10
 						AGKVR.RightController_TriggerPulse(0, 1000)
 						startRecoil = startRecoil + 1
 						muzzleClimb = muzzleClimb - 1
-						//RotateObjectLocalX(gun, -15)
 					endif
+					
+					bulletStartX = GetObjectX(bullet)
+					bulletStartY = GetObjectY(bullet)
+					bulletStartZ = GetObjectZ(bullet)
 					
 					if isFired
 						MoveObjectLocalZ(bullet, 1.1)						
@@ -393,37 +367,41 @@ function main()
 					endif
 				endif
 			endif
-			
-	
-			Update(0)
-			AGKVR.UpdatePlayer()
-			AGKVR.SetCameraToRightEye()
-			SetRenderToImage(renderImage, -1)
-			ClearScreen()
-			Render()
-			SetObjectImage(quad, renderImage, 0)
-			SetShaderConstantByName(shaderBW, "endTime", shaderEndTime, 0, 0, 0)
-			SetObjectShader(quad, shaderCurrent)
-			SetRenderToImage(500, 0)
-			DrawObject(quad)
-			AGKVR.SubmitRightEye()
-			//AGKVR.Render()	
-			AGKVR.SetCameraToLeftEye()
-			SetRenderToImage(renderImage, -1)
-			ClearScreen()
-			Render()
-			SetObjectImage(quad, renderImage, 0)
-			SetShaderConstantByName(shaderBW, "endTime", shaderEndTime, 0, 0, 0)
-			SetObjectShader(quad, shaderCurrent)
-			SetRenderToImage(501, 0)
-			DrawObject(quad)
-			AGKVR.SubmitLeftEye()
-			SetRenderToScreen()
+		
+		updateVR(renderImage, quad, shaderCurrent, shaderBW, shaderEndTime)	
+
 		endif
 		
 		Step3DPhysicsWorld()
 		Sync()
 	loop
+endfunction
+
+function updateVR()
+	Update(0)
+	AGKVR.UpdatePlayer()
+	AGKVR.SetCameraToRightEye()
+	SetRenderToImage(renderImage, -1)
+	ClearScreen()
+	Render()
+	SetObjectImage(quad, renderImage, 0)
+	SetShaderConstantByName(shaderBW, "endTime", shaderEndTime, 0, 0, 0)
+	SetObjectShader(quad, shaderCurrent)
+	SetRenderToImage(500, 0)
+	DrawObject(quad)
+	AGKVR.SubmitRightEye()
+	//AGKVR.Render()	
+	AGKVR.SetCameraToLeftEye()
+	SetRenderToImage(renderImage, -1)
+	ClearScreen()
+	Render()
+	SetObjectImage(quad, renderImage, 0)
+	SetShaderConstantByName(shaderBW, "endTime", shaderEndTime, 0, 0, 0)
+	SetObjectShader(quad, shaderCurrent)
+	SetRenderToImage(501, 0)
+	DrawObject(quad)
+	AGKVR.SubmitLeftEye()
+	SetRenderToScreen()
 endfunction
 
 function getRayCastValues()
@@ -452,6 +430,8 @@ function checkFlatControls(camSpeed as float, gun as integer)
 	if GetRawKeyState(16) and GetRawKeyState(asc("D")) then RotateObjectLocalY(gun, 1)
 	if GetRawKeyState(16) and GetRawKeyState(asc("Q")) then RotateObjectLocalZ(gun, 1)
 	if GetRawKeyState(16) and GetRawKeyState(asc("Z")) then RotateObjectLocalZ(gun, -1)
+	
+	
 endfunction
 
 function moveMenuY(menuObject as integer[], dy as float)

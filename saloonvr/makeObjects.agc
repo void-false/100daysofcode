@@ -176,4 +176,8 @@ SetObjectPosition(buttonExit, 0, GetObjectY(buttonHelp) - 0.25, 1.45)
 SetObjectCastShadow(buttonExit, 1)
 SetObjectImage(buttonExit, LoadImage("exit.png"), 0)
 
-
+menuObject as integer[]
+menuObject.insert(mainMenu)
+menuObject.insert(buttonPlay)
+menuObject.insert(buttonHelp)
+menuObject.insert(buttonExit)
