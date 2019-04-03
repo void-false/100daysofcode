@@ -377,7 +377,7 @@ function main()
 	loop
 endfunction
 
-function updateVR()
+function updateVR(renderImage as integer, quad as integer, shaderCurrent as integer, shaderBW as integer, shaderEndTime as float)
 	Update(0)
 	AGKVR.UpdatePlayer()
 	AGKVR.SetCameraToRightEye()
