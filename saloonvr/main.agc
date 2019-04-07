@@ -46,6 +46,16 @@ type CactiBranch
     branchState as integer
 endtype
 
+type BulletType
+	id as integer
+	startX as float
+	startY as float
+	startZ as float
+	endX as float
+	endY as float
+	endZ as float
+endtype
+
 #constant STATEMAINMENU = 0
 #constant STATEPLAYING = 1
 #constant STATEGAMEOVER = 2
@@ -64,12 +74,14 @@ function main()
 	dragHammerStart as integer = 0
 	dragHammerFinish as integer = 0
 
-	bulletStartX as float
+	myBullet as BulletType
+	myBullet.id = bullet
+	/*bulletStartX as float
 	bulletStartY as float
 	bulletStartZ as float
 	bulletEndX as float
 	bulletEndY as float
-	bulletEndZ as float
+	bulletEndZ as float*/
 
 	SetCameraPosition(1, 0, 1.86, -5)
 	SetCameraRange(1, 0.01, 1000)
@@ -320,7 +332,7 @@ function main()
 						dragHammerStart = 0
 						dragHammerFinish = 0
 						SetObjectRotation(hammer, 90, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))	
-						muzzleFlash(bullet)
+						muzzleFlash(myBullet.id)
 						if not startRecoil
 							startRecoil = 1
 							muzzleClimb = 10
@@ -333,9 +345,10 @@ function main()
 						muzzleClimb = muzzleClimb - 1
 					endif
 					
-					bulletStartX = GetObjectX(bullet)
+					/*bulletStartX = GetObjectX(bullet)
 					bulletStartY = GetObjectY(bullet)
-					bulletStartZ = GetObjectZ(bullet)
+					bulletStartZ = GetObjectZ(bullet)*/
+					bulletUpdateStart(myBullet)
 					
 					if isFired
 						MoveObjectLocalZ(bullet, 1.1)						
@@ -346,9 +359,10 @@ function main()
 						MoveObjectLocalY(bullet, 0.04)
 					endif
 					
-					bulletEndX = GetObjectX(bullet)
+					bulletUpdateEn(myBullet.id)
+					/*bulletEndX = GetObjectX(bullet)
 					bulletEndY = GetObjectY(bullet)
-					bulletEndZ = GetObjectZ(bullet)
+					bulletEndZ = GetObjectZ(bullet)*/
 					
 					objHit = ObjectSphereSlide(0, bulletStartX, bulletStartY, bulletStartZ, bulletEndX, bulletEndY, bulletEndZ, 0.011)
 					if objHit <> 0
@@ -375,6 +389,10 @@ function main()
 		Step3DPhysicsWorld()
 		Sync()
 	loop
+endfunction
+
+function bulletUpdateStart(b ref as BulletType)
+	
 endfunction
 
 function updateVR(renderImage as integer, quad as integer, shaderCurrent as integer, shaderBW as integer, shaderEndTime as float)
