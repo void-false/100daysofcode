@@ -76,12 +76,6 @@ function main()
 
 	myBullet as BulletType
 	myBullet.id = bullet
-	/*bulletStartX as float
-	bulletStartY as float
-	bulletStartZ as float
-	bulletEndX as float
-	bulletEndY as float
-	bulletEndZ as float*/
 
 	SetCameraPosition(1, 0, 1.86, -5)
 	SetCameraRange(1, 0.01, 1000)
@@ -344,27 +338,18 @@ function main()
 						startRecoil = startRecoil + 1
 						muzzleClimb = muzzleClimb - 1
 					endif
-					
-					/*bulletStartX = GetObjectX(bullet)
-					bulletStartY = GetObjectY(bullet)
-					bulletStartZ = GetObjectZ(bullet)*/
+
 					bulletUpdateStart(myBullet)
 					
 					if isFired
-						MoveObjectLocalZ(bullet, 1.1)						
+						MoveObjectLocalZ(myBullet.id, 1.1)						
 					else
-						SetObjectRotation(bullet, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
-						SetObjectPosition(bullet, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
-						MoveObjectLocalZ(bullet, 0.3)
-						MoveObjectLocalY(bullet, 0.04)
+						bulletUpdatePositionInGun(myBullet, gun)
 					endif
 					
-					bulletUpdateEn(myBullet.id)
-					/*bulletEndX = GetObjectX(bullet)
-					bulletEndY = GetObjectY(bullet)
-					bulletEndZ = GetObjectZ(bullet)*/
+					bulletUpdateEnd(myBullet)
 					
-					objHit = ObjectSphereSlide(0, bulletStartX, bulletStartY, bulletStartZ, bulletEndX, bulletEndY, bulletEndZ, 0.011)
+					objHit = ObjectSphereSlide(0, myBullet.startX, myBullet.startY, myBullet.startZ, myBullet.endX, myBullet.endY, myBullet.endZ, 0.011)
 					if objHit <> 0
 						cactiIndex = findCacti(forest, objHit)
 						if cactiIndex <> -1
@@ -391,8 +376,23 @@ function main()
 	loop
 endfunction
 
+function bulletUpdatePositionInGun(myBullet ref as BulletType, gun)
+	SetObjectRotation(myBullet.id, GetObjectAngleX(gun), GetObjectAngleY(gun), GetObjectAngleZ(gun))
+	SetObjectPosition(myBullet.id, GetObjectX(gun), GetObjectY(gun), GetObjectZ(gun))
+	MoveObjectLocalZ(myBullet.id, 0.3)
+	MoveObjectLocalY(myBullet.id, 0.04)
+endfunction
+
 function bulletUpdateStart(b ref as BulletType)
-	
+	b.startX = GetObjectX(b.id)
+	b.startY = GetObjectY(b.id)
+	b.startZ = GetObjectZ(b.id)
+endfunction
+
+function bulletUpdateEnd(b ref as BulletType)
+	b.endX = GetObjectX(b.id)
+	b.endY = GetObjectY(b.id)
+	b.endZ = GetObjectZ(b.id)
 endfunction
 
 function updateVR(renderImage as integer, quad as integer, shaderCurrent as integer, shaderBW as integer, shaderEndTime as float)
