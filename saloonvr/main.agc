@@ -673,13 +673,6 @@ function checkMenuButtons(buttonPlay as integer, buttonHelp as integer, buttonEx
 		
 		end
 	endif
-	/*if objHit = buttonPlay then SetObjectPosition(buttonPlay, GetObjectX(buttonPlay), GetObjectY(buttonPlay), 1.483)
-	if GetRawKeyReleased(asc("1")) then SetObjectPosition(buttonPlay, GetObjectX(buttonPlay), GetObjectY(buttonPlay), 1.45)
-	if GetRawKeyState(asc("2")) then SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.483)
-	if GetRawKeyReleased(asc("2")) then SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.45)
-	if GetRawKeyState(asc("3")) then SetObjectPosition(buttonExit, GetObjectX(buttonExit), GetObjectY(buttonExit), 1.483)
-	if GetRawKeyReleased(asc("3")) then SetObjectPosition(buttonExit, GetObjectX(buttonExit), GetObjectY(buttonExit), 1.45)*/
-	
 endfunction(buttonPressed)
 
 function hideMenu(menuObject as integer[])
