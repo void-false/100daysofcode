@@ -668,7 +668,8 @@ function checkMenuButtons(buttonPlay as integer, buttonHelp as integer, buttonEx
 	if objHit = buttonPlay
 		buttonPressed = 1
 	elseif objHit = buttonHelp
-		SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.483)
+		//SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.483)
+		buttonPressed = 2
 	elseif objHit = buttonExit
 		
 		end
