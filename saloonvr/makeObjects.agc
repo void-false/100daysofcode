@@ -147,6 +147,22 @@ SetObjectTransparency(gameOver, 1)
 SetObjectImage(gameOver, gameOverImg, 0)
 SetObjectVisible(gameOver, 0)
 
+instructionsBackground = CreateObjectPlane(1.6, 0.9)
+SetObjectPosition(instructionsBackground, 0, 1.45, 1.50)
+SetObjectTransparency(instructionsBackground, 1)
+SetObjectColor(instructionsBackground, 244, 113, 55, 125)
+SetObjectVisible(instructionsBackground, 0)
+SetObjectReceiveShadow(instructionsBackground, 0)
+SetObjectCollisionMode(instructionsBackground, 0)
+
+instructionsText = CreateObjectPlane(1.5, 0.6)
+SetObjectPosition(instructionsText, 0, 1.45, 1.49)
+SetObjectTransparency(instructionsText, 1)
+SetObjectImage(instructionsText, LoadImage("instructions.png"), 0)
+SetObjectVisible(instructionsText, 0)
+SetObjectCollisionMode(instructionsText, 0)
+
+
 quad as integer
 quad = CreateObjectQuad()
 

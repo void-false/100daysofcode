@@ -65,6 +65,7 @@ function main()
 	#insert "makeObjects.agc"
 
 	gameState as integer = STATEMAINMENU
+	menuIsShown as integer = 0
 	positionIndex as integer : positionIndex = Random(0, 7)
 	positionIndexOld as integer : positionIndexOld = positionIndex
 	isFired as integer = 0
@@ -126,13 +127,22 @@ function main()
 					gameState = STATEPLAYING
 					hideMenu(menuObject)
 					ResetTimer()
+				elseif buttonPressed = 2
+					hideMenu(menuObject)
+					SetObjectVisible(instructionsText, 1)
+					SetObjectVisible(instructionsBackground, 1)
+				else
+					showMenu(menuObject)
+					SetObjectVisible(instructionsText, 0)
+					SetObjectVisible(instructionsBackground, 0)
 				endif
 			endif
 
 		elseif gameState = STATEGAMEOVER
-			if Timer() - playerKilledTime > deathDelay
+			if Timer() - playerKilledTime > deathDelay and not menuIsShown
 				showGameOver(gameOver)
 				showMenu(menuObject)
+				menuIsShown = 1
 			endif
 			if GetPointerPressed()
 				objHit = ObjectRayCast(0, rayCastValues[0], rayCastValues[1], rayCastValues[2], rayCastValues[3], rayCastValues[4], rayCastValues[5])	
@@ -140,6 +150,7 @@ function main()
 				if buttonPressed = 1
 					hideMenu(menuObject)
 					hideGameOver(gameOver)
+					menuIsShown = 0
 					forest.length = -1
 					clearScene(menuObject[menuObject.length]+1)
 					killedTime = 0.0
@@ -152,6 +163,14 @@ function main()
 					playerAlive = 1
 					gameState = STATEPLAYING
 					ResetTimer()
+				elseif buttonPressed = 2
+					hideMenu(menuObject)
+					SetObjectVisible(instructionsText, 1)
+					SetObjectVisible(instructionsBackground, 1)
+				else
+					showMenu(menuObject)
+					SetObjectVisible(instructionsText, 0)
+					SetObjectVisible(instructionsBackground, 0)
 				endif
 			endif
 	
@@ -670,8 +689,7 @@ function checkMenuButtons(buttonPlay as integer, buttonHelp as integer, buttonEx
 	elseif objHit = buttonHelp
 		//SetObjectPosition(buttonHelp, GetObjectX(buttonHelp), GetObjectY(buttonHelp), 1.483)
 		buttonPressed = 2
-	elseif objHit = buttonExit
-		
+	elseif objHit = buttonExit	
 		end
 	endif
 endfunction(buttonPressed)
