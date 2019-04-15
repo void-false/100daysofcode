@@ -265,6 +265,14 @@ function main()
 							hideMenu(menuObject)
 							SetObjectVisible(pointer, 0)
 							ResetTimer()
+						elseif buttonPressed = 2
+							hideMenu(menuObject)
+							SetObjectVisible(instructionsText, 1)
+							SetObjectVisible(instructionsBackground, 1)
+						else
+							showMenu(menuObject)
+							SetObjectVisible(instructionsText, 0)
+							SetObjectVisible(instructionsBackground, 0)
 						endif
 					endif
 				elseif gameState = STATEGAMEOVER
@@ -289,6 +297,7 @@ function main()
 						if buttonPressed = 1
 							gameState = STATEPLAYING
 							hideMenu(menuObject)
+							menuIsShown = 0
 							SetObjectRotation(hammer, 0, GetObjectAngleY(hammer), GetObjectAngleZ(hammer))
 							isFired = 0
 							dragHammerStart = 0
@@ -307,6 +316,14 @@ function main()
 							muzzleClimb = 0
 							SetObjectVisible(pointer, 0)
 							ResetTimer()
+						elseif buttonPressed = 2
+							hideMenu(menuObject)
+							SetObjectVisible(instructionsText, 1)
+							SetObjectVisible(instructionsBackground, 1)
+						else
+							showMenu(menuObject)
+							SetObjectVisible(instructionsText, 0)
+							SetObjectVisible(instructionsBackground, 0)
 						endif
 					endif
 				elseif gameState = STATEPLAYING
