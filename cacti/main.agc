@@ -40,7 +40,7 @@ endtype
 camSpeed as float = 0.1
 
 function main()
-	
+
 	SetCameraPosition(1, -4, 1.8, 3)
 	SetCameraRange(1, 0.01, 1000)
 	SetCameraLookAt(1, -7, 1.3, 10, 0)
@@ -65,8 +65,12 @@ function main()
 	/*for i = 0 to 10
 		forest.insert(makeCacti(Random(0, 10)*-1, 0.6, Random(7, 30)))
     next i*/
-    
-    
+    renderImage = CreateRenderImage(1024, 768, 0, 0 )
+    quad = CreateObjectQuad()
+    shaderBW = LoadFullScreenShader("Luminance.ps")
+    shaderDefault = LoadFullScreenShader("Default.ps")
+    isShaderSet as integer = 0
+    endTime as float = 0.0
     c1 as Cacti : c1 = forest[0]
 	do
 		if GetRawKeyPressed(27) then exit
@@ -92,8 +96,27 @@ function main()
 			shotCooldown as float : shotCooldown = Timer()
 		endif
 		if c1.isShooting and Timer() - shotCooldown > 0.5 then c1.isShooting = 0
+		
 		Step3DPhysicsWorld()
-		Sync()
+		Update(0)
+		SetRenderToImage(renderImage, -1)
+		ClearScreen()
+		Render()
+		SetObjectImage(quad, renderImage, 0)
+		if Timer() > 2
+			if not isShaderSet
+				isShaderSet = 1 : endTime = Timer() + 1.5
+			endif
+			SetShaderConstantByName(shaderBW, "endTime", endTime, 0, 0, 0)
+			SetObjectShader(quad, shaderBW)		
+		else
+			SetObjectShader(quad, shaderDefault)			
+		endif
+		SetRenderToScreen()
+		ClearScreen()
+		DrawObject(quad)	
+		Swap()
+		
 	loop
 	
 endfunction

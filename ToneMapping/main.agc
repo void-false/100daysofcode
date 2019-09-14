@@ -7,16 +7,16 @@ SetErrorMode(2)
 
 // set window properties
 SetWindowTitle( "ToneMapping" )
-SetWindowSize( 1800, 1200, 0 )
+SetWindowSize( 1024, 768, 0 )
 SetWindowAllowResize( 1 )
 SetScissor( 0,0,0,0 )
 
 // set display properties
 SetVirtualResolution( 1024, 768 )
 SetOrientationAllowed( 1, 1, 1, 1 )
-SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
+SetSyncRate( 60, 0 ) // 30fps instead of 60 to save battery
 UseNewDefaultFonts( 1 ) // since version 2.0.22 we can use nicer default fonts
-SetClearColor( 255,255,255 )
+SetClearColor( 125,125,125 )
 
 // set a high sun and ambient color
 SetSunColor( 300,300,300 )
@@ -29,8 +29,8 @@ SetShadowMapSize( 1024,1024 )
 SetShadowBias( 0.001 )
 
 // a light for inside the room, dark relative to the sun
-CreatePointLight( 1, 0,30,0, 150, 20,20,20 )
-SetPointLightMode( 1, 1 ) // make it a pixel shader light, better quality, and we can separate it from the ambient light in the vertex shader
+//CreatePointLight( 1, 0,30,0, 150, 20,20,20 )
+//SetPointLightMode( 1, 1 ) // make it a pixel shader light, better quality, and we can separate it from the ambient light in the vertex shader
 
 width = GetDeviceWidth()
 height = GetDeviceHeight()
@@ -75,13 +75,13 @@ SetRenderToImage( toneImg, 0 )
 SetClearColor( 128,128,128 )
 ClearScreen()
 SetRenderToScreen()
-SetClearColor( 255,255,255 )
+SetClearColor( 125,125,125 )
 
 // create our scene, everything must be assigned the tone map image so it knows how to adjust its light calculations
 // all objects will also need to be using a shader that knows how to use it
-CreateSkybox( toneImg )
+//CreateSkybox( toneImg )
 CreateGround( toneImg )
-CreateRoom( toneImg )
+//CreateRoom( toneImg )
 
 // position the camera in the room
 SetCameraPosition( 1, 15, 20, 0 )
@@ -101,6 +101,107 @@ time# = 0
 //SetSPriteSize( 1, 30, 30 )
 
 do
+	checkInput()
+    
+    // change exposure
+    if ( GetRawKeyState( 33 ) or GetVirtualButtonState(3) ) then inc exposure#, 0.01
+    if ( GetRawKeyState( 34 ) or GetVirtualButtonState(4) ) then dec exposure#, 0.01
+    SetShaderConstantByName( toneShader, "targetExposure", exposure#, 0,0,0 )
+
+	Print( "FPS: " + str(ScreenFPS(),2) )  
+	Print( "Target Exposure: " + str(exposure#) )
+   
+    // only call this once, updates the scene, physics, animation, etc
+    Update(0)
+    
+    // render scene to image so we can get luminance data from it
+    SetRenderToImage( sceneImg, -1 )
+    ClearScreen()
+    Render()
+    
+    // render the scene to the first luminance image, the first luminance image is also smaller so it will start reducing the size
+    SetRenderToImage( 101, 0 ) // first luminance image
+    ClearScreen()
+    SetObjectShader( quad, luminanceShader )
+    SetObjectImage( quad, sceneImg, 0 )
+    DrawObject( quad )
+    
+    // luminance reduction, reduce the first luminance image to a 1x1 image containing the average luminance
+    /*SetObjectShader( quad, defaultQuadShader ) // even though this makes no changes to the image, the render image is smaller than the source image, so it reduces it in the process of passing through
+    for i = 2 to numLumImages
+		SetRenderToImage( i+100, 0 )
+		ClearScreen()
+		SetObjectImage( quad, i+99, 0 )
+		DrawObject( quad )
+	next i*/
+	
+	// start tone mapping, first make a copy of the existing tone image so we use it as an input to the shader whilst writing the new value
+	/*SetRenderToImage( toneImgTemp, 0 )
+	ClearScreen()
+	SetObjectShader( quad, defaultQuadShader )
+	SetObjectImage( quad, toneImg, 0 )
+	DrawObject( quad )*/
+	
+	// now modify tone image, this will only take effect when we draw all the objects next frame
+	/*SetRenderToImage( toneImg, 0 )
+	ClearScreen()
+	SetObjectShader( quad, toneShader )
+	SetObjectImage( quad, toneImgTemp, 0 )
+	SetObjectImage( quad, finalLumImg, 1 )
+	DrawObject( quad )	*/
+	
+	// draw the scene image to the screen
+	SetRenderToScreen() // no need to clear as it was already done by Swap() at the end of the last frame
+	SetObjectImage( quad, sceneImg, 0 )
+	SetObjectShader( quad, defaultQuadShader ) // no changes to the image, just draw it to the screen
+	DrawObject( quad )
+	
+	// for debugging luminance image
+	//SetSpriteImage( 1, finalLumImg )
+	//SetSpriteVisible( 1, 1 )
+	//DrawSprite( 1 )
+	//SetSpriteVisible( 1, 0 )
+	
+	Swap()
+loop
+
+function CreateGround( toneImg as integer )
+	objectShader = LoadShader( "Object.vs", "Object.ps" )
+	ground = CreateObjectPlane( 200,200 )
+	SetObjectPosition( ground, 0,-0.4,0 )
+	SetObjectRotation( ground, 90, 0, 0 )
+	SetObjectImage( ground, toneImg, 0 )
+	SetObjectShader( ground, objectShader )
+	SetObjectCastShadow( ground, 1 )
+
+	for i = 1 to 50
+		objType = Random( 0, 3 )
+		select objType
+			case 0 : CreateObjectBox( i, 10,10,10 ) : endcase
+			case 1 : CreateObjectSphere( i, 10,20,20 ) : endcase
+			case 2 : CreateObjectCone( i, 10,10,20 ) : endcase
+			case 3 : CreateObjectCylinder( i, 10,10,20 ) : endcase
+		endselect
+		
+		// keep objects outside the room
+		repeat
+			x = Random(0,200)-100
+			z = Random(0,200)-100
+		until x > 30 or x < -30 or z > 30 or z < -30
+		
+		SetObjectPosition( i, x, Random(0,7)-2, z )
+		SetObjectRotation( i, Random(0,180)-90, Random(0,360), Random(0,180)-90 )
+		SetObjectColor(i, Random(0, 255), Random(0, 255), Random(0, 255), 255)
+		
+		// all objects must have the tone map image, and a shader that knows how to use it
+		SetObjectImage( i, toneImg, 0 )
+		SetObjectShader( i, objectShader )
+		SetObjectCastShadow( i, 1 )
+	next i
+endfunction
+
+function checkInput()
+	if GetRawKeyPressed(27) then end
 	// control the camera
 	speed# = 1.0
 	if ( GetRawKeyState( 16 ) ) then speed# = 0.1
@@ -134,70 +235,9 @@ do
         if ( newX# < -89 ) then newX# = -89
         SetCameraRotation( 1, newX#, angy# + fDiffX#, 0 )
     endif
-    
-    // change exposure
-    if ( GetRawKeyState( 33 ) or GetVirtualButtonState(3) ) then inc exposure#, 0.01
-    if ( GetRawKeyState( 34 ) or GetVirtualButtonState(4) ) then dec exposure#, 0.01
-    SetShaderConstantByName( toneShader, "targetExposure", exposure#, 0,0,0 )
+endfunction
 
-	Print( "FPS: " + str(ScreenFPS(),2) )  
-	Print( "Target Exposure: " + str(exposure#) )
-   
-    // only call this once, updates the scene, physics, animation, etc
-    Update(0)
-    
-    // render scene to image so we can get luminance data from it
-    SetRenderToImage( sceneImg, -1 )
-    ClearScreen()
-    Render()
-    
-    // render the scene to the first luminance image, the first luminance image is also smaller so it will start reducing the size
-    SetRenderToImage( 101, 0 ) // first luminance image
-    ClearScreen()
-    SetObjectShader( quad, luminanceShader )
-    SetObjectImage( quad, sceneImg, 0 )
-    DrawObject( quad )
-    
-    // luminance reduction, reduce the first luminance image to a 1x1 image containing the average luminance
-    SetObjectShader( quad, defaultQuadShader ) // even though this makes no changes to the image, the render image is smaller than the source image, so it reduces it in the process of passing through
-    for i = 2 to numLumImages
-		SetRenderToImage( i+100, 0 )
-		ClearScreen()
-		SetObjectImage( quad, i+99, 0 )
-		DrawObject( quad )
-	next i
-	
-	// start tone mapping, first make a copy of the existing tone image so we use it as an input to the shader whilst writing the new value
-	SetRenderToImage( toneImgTemp, 0 )
-	ClearScreen()
-	SetObjectShader( quad, defaultQuadShader )
-	SetObjectImage( quad, toneImg, 0 )
-	DrawObject( quad )
-	
-	// now modify tone image, this will only take effect when we draw all the objects next frame
-	SetRenderToImage( toneImg, 0 )
-	ClearScreen()
-	SetObjectShader( quad, toneShader )
-	SetObjectImage( quad, toneImgTemp, 0 )
-	SetObjectImage( quad, finalLumImg, 1 )
-	DrawObject( quad )	
-	
-	// draw the scene image to the screen
-	SetRenderToScreen() // no need to clear as it was already done by Swap() at the end of the last frame
-	SetObjectImage( quad, sceneImg, 0 )
-	SetObjectShader( quad, defaultQuadShader ) // no changes to the image, just draw it to the screen
-	DrawObject( quad )
-	
-	// for debugging luminance image
-	//SetSpriteImage( 1, finalLumImg )
-	//SetSpriteVisible( 1, 1 )
-	//DrawSprite( 1 )
-	//SetSpriteVisible( 1, 0 )
-	
-	Swap()
-loop
-
-function CreateSkybox( toneImg as integer )
+/*function CreateSkybox( toneImg as integer )
 	front = CreateObjectPlane( 1000,1000 )
 	back = CreateObjectPlane( 1000,1000 )
 	left = CreateObjectPlane( 1000,1000 )
@@ -254,43 +294,11 @@ function CreateSkybox( toneImg as integer )
 	SetObjectImage( right, toneImg, 1 )
 	SetObjectImage( top, toneImg, 1 )
 	SetObjectImage( bottom, toneImg, 1 )
-endfunction
+endfunction*/
 
-function CreateGround( toneImg as integer )
-	objectShader = LoadShader( "Object.vs", "Object.ps" )
-	ground = CreateObjectPlane( 200,200 )
-	SetObjectPosition( ground, 0,-0.4,0 )
-	SetObjectRotation( ground, 90, 0, 0 )
-	SetObjectImage( ground, toneImg, 0 )
-	SetObjectShader( ground, objectShader )
-	SetObjectCastShadow( ground, 1 )
 
-	for i = 1 to 50
-		objType = Random( 0, 3 )
-		select objType
-			case 0 : CreateObjectBox( i, 10,10,10 ) : endcase
-			case 1 : CreateObjectSphere( i, 10,20,20 ) : endcase
-			case 2 : CreateObjectCone( i, 10,10,20 ) : endcase
-			case 3 : CreateObjectCylinder( i, 10,10,20 ) : endcase
-		endselect
-		
-		// keep objects outside the room
-		repeat
-			x = Random(0,200)-100
-			z = Random(0,200)-100
-		until x > 30 or x < -30 or z > 30 or z < -30
-		
-		SetObjectPosition( i, x, Random(0,7)-2, z )
-		SetObjectRotation( i, Random(0,180)-90, Random(0,360), Random(0,180)-90 )
-		
-		// all objects must have the tone map image, and a shader that knows how to use it
-		SetObjectImage( i, toneImg, 0 )
-		SetObjectShader( i, objectShader )
-		SetObjectCastShadow( i, 1 )
-	next i
-endfunction
 
-function CreateRoom( toneImg as integer )
+/*function CreateRoom( toneImg as integer )
 	left1 = CreateObjectBox( 1, 40, 20 )
 	left2 = CreateObjectBox( 1, 40, 20 )
 	left3 = CreateObjectBox( 1, 20, 10 )
@@ -341,4 +349,4 @@ function CreateRoom( toneImg as integer )
 	SetObjectImage( back, toneImg, 0 )
 	SetObjectImage( top, toneImg, 0 )
 	SetObjectImage( ground, toneImg, 0 )
-endfunction
+endfunction*/
