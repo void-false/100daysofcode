@@ -1,0 +1,21 @@
+#ifdef GL_ES
+	#ifdef GL_FRAGMENT_PRECISION_HIGH   
+		precision highp float;
+	#else
+		precision mediump float;
+	#endif
+#endif
+
+uniform sampler2D texture0;
+varying vec2 uvVarying;
+
+vec4 sepia(vec4 inColor)
+{
+	float avg = (inColor.r + inColor.g + inColor.b) * 0.33333334;
+	return vec4(avg + 0.07843, avg, avg - 0.07843, inColor.a);
+}
+
+void main()
+{
+	gl_FragColor = sepia(texture2D(texture0, uvVarying.xy));
+}
