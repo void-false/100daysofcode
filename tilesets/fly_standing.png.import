@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/set-cave_bright.png-f712b3c966955767400f1586ac642e8e.stex"
+path="res://.import/fly_standing.png-e1c95e38b7c5ea903b04c8fd8e91268a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://set-cave_bright.png"
-dest_files=[ "res://.import/set-cave_bright.png-f712b3c966955767400f1586ac642e8e.stex" ]
+source_file="res://fly_standing.png"
+dest_files=[ "res://.import/fly_standing.png-e1c95e38b7c5ea903b04c8fd8e91268a.stex" ]
 
 [params]
 

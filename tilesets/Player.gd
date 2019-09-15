@@ -5,8 +5,16 @@ const JUMP_HEIGHT = -400
 const UP = Vector2(0, -1)
 
 var motion = Vector2()
+var flies_eaten = 0
+
 
 func _physics_process(delta):
+	
+	if flies_eaten == 3:
+		$"../Label".visible = true
+	
+	if Input.is_action_pressed("ui_cancel"):
+		get_tree().quit()
 	
 	motion.y += GRAVITY
 	
@@ -27,3 +35,8 @@ func _physics_process(delta):
 			motion.y = JUMP_HEIGHT
 		
 	motion = move_and_slide(motion, UP)
+	
+	
+func _on_Fly_eaten():
+	flies_eaten += 1
+
