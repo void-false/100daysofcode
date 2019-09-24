@@ -15,6 +15,7 @@ func _physics_process(delta):
 	movement_loop()
 	spritedir_loop()
 	
+	
 func spritedir_loop():
 	match motion:
 		Vector2.UP:
@@ -35,11 +36,23 @@ func spritedir_loop():
 				$Sprite.flip_h = false
 				$Sprite.rotation_degrees = -90
 			$Sprite/AnimationPlayer.play("Walking")
-		Vector2.LEFT:
-			movedir = "left"
-			$Sprite.flip_h = false
-			$Sprite.rotation_degrees = 0
+		(Vector2.LEFT + Vector2.UP):
+			movedir = "up"	
+			if gravity == Vector2.LEFT:
+				$Sprite.flip_h = false
+				$Sprite.rotation_degrees = 90
+			elif gravity == Vector2.RIGHT:
+				$Sprite.flip_h = true
+				$Sprite.rotation_degrees = -90
 			$Sprite/AnimationPlayer.play("Walking")
+		Vector2.LEFT:
+			if not is_on_wall():
+				movedir = "left"
+				$Sprite.flip_h = false
+				$Sprite.rotation_degrees = 0
+				$Sprite/AnimationPlayer.play("Walking")
+			else:
+				$Sprite/AnimationPlayer.play("Idle")
 		Vector2.RIGHT:
 			movedir = "right"
 			$Sprite.flip_h = true
@@ -48,12 +61,13 @@ func spritedir_loop():
 		Vector2.ZERO:
 			$Sprite/AnimationPlayer.play("Idle")
 			
+			
 	if is_on_ceiling() and (movedir == "left" or movedir == "right"):
 		$Sprite.flip_v = true
 		$Sprite.rotation_degrees = 0
 	elif is_on_wall() and (movedir == "up" or movedir == "down"):
 		$Sprite.flip_v = false
-	elif is_on_floor():
+	elif is_on_floor() or free_fall:
 		$Sprite.flip_v = false
 
 		
@@ -94,7 +108,7 @@ func movement_loop():
 		free_fall = true
 
 	
-	move_and_slide(motion.normalized() * SPEED + gravity, Vector2.UP)
+	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
 	$Ceiling.visible = is_on_ceiling()
 	$WallLeft.visible = is_on_wall()  
