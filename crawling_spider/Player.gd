@@ -27,6 +27,8 @@ func spritedir_loop():
 				$Sprite.flip_h = true
 				$Sprite.rotation_degrees = -90
 			$Sprite/AnimationPlayer.play("Walking")
+			if is_on_ceiling():
+				$Sprite/AnimationPlayer.play("Idle")
 		Vector2.DOWN:
 			movedir = "down"
 			if gravity == Vector2.LEFT:
@@ -53,11 +55,23 @@ func spritedir_loop():
 				$Sprite/AnimationPlayer.play("Walking")
 			else:
 				$Sprite/AnimationPlayer.play("Idle")
-		Vector2.RIGHT:
-			movedir = "right"
-			$Sprite.flip_h = true
-			$Sprite.rotation_degrees = 0
+		(Vector2.RIGHT + Vector2.UP):
+			movedir = "up"	
+			if gravity == Vector2.LEFT:
+				$Sprite.flip_h = false
+				$Sprite.rotation_degrees = 90
+			elif gravity == Vector2.RIGHT:
+				$Sprite.flip_h = true
+				$Sprite.rotation_degrees = -90
 			$Sprite/AnimationPlayer.play("Walking")
+		Vector2.RIGHT:
+			if not is_on_wall():
+				movedir = "right"
+				$Sprite.flip_h = true
+				$Sprite.rotation_degrees = 0
+				$Sprite/AnimationPlayer.play("Walking")
+			else:
+				$Sprite/AnimationPlayer.play("Idle")
 		Vector2.ZERO:
 			$Sprite/AnimationPlayer.play("Idle")
 			
@@ -69,17 +83,12 @@ func spritedir_loop():
 		$Sprite.flip_v = false
 	elif is_on_floor() or free_fall:
 		$Sprite.flip_v = false
-
+		$Sprite.rotation_degrees = 0
 		
 			
 func control_loop():
-	var LEFT = Input.is_action_pressed("ui_left")
-	var RIGHT = Input.is_action_pressed("ui_right")
-	var UP = Input.is_action_pressed("ui_up")
-	var DOWN = Input.is_action_pressed("ui_down")
-
-	motion.x = -int(LEFT) + int(RIGHT)
-	motion.y = -int(UP) + int(DOWN)
+	motion.x =  int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
+	motion.y =  int(Input.is_action_pressed("ui_down")) - int(Input.is_action_pressed("ui_up")) 
 
 func movement_loop():
 	
@@ -111,8 +120,8 @@ func movement_loop():
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
 	$Ceiling.visible = is_on_ceiling()
-	$WallLeft.visible = is_on_wall()  
-	$WallRight.visible = is_on_wall() 
+	$WallLeft.visible = is_on_wall() and gravity == Vector2.LEFT
+	$WallRight.visible = is_on_wall() and gravity == Vector2.RIGHT
 	$Floor.visible = is_on_floor()
 	
 

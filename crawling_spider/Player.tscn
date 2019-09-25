@@ -39,8 +39,8 @@ tracks/0/keys = {
 }
 
 [sub_resource type="CapsuleShape2D" id=3]
-radius = 32.2176
-height = 6.10348
+radius = 29.9708
+height = 7.48932
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 17.9596, 17.3865 )
@@ -60,7 +60,8 @@ anims/Idle = SubResource( 1 )
 anims/Walking = SubResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0, 3.75 )
+position = Vector2( 0.936813, 4.68407 )
+rotation = 1.5708
 shape = SubResource( 3 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -77,6 +78,9 @@ motion_mirroring = Vector2( 800, 800 )
 [node name="Sky" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
 texture = ExtResource( 3 )
 centered = false
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Ceiling" type="Label" parent="."]
 visible = false
