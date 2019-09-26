@@ -9,6 +9,7 @@ var movedir = "right"
 var walking_on_ceiling = false
 var walking_on_wall = false
 var free_fall = false
+var previous_plane
 
 func _physics_process(delta):
 	control_loop()
@@ -101,10 +102,19 @@ func spritedir_loop():
 			
 			
 	if is_on_ceiling(): # and (movedir == "left" or movedir == "right"):
+		if previous_plane == "wall_left":
+			$Sprite.flip_h = true
+		elif previous_plane == "wall_right":
+			$Sprite.flip_h = false
 		$Sprite.flip_v = true
 		$Sprite.rotation_degrees = 0
 	elif is_on_wall(): # and (movedir == "up" or movedir == "down"):
 		$Sprite.flip_v = false
+		if previous_plane == "ceiling":
+			if motion.x > 0:
+				$Sprite.flip_h = false
+			elif motion.x < 0:
+				$Sprite.flip_h = true
 	elif is_on_floor() or free_fall:
 		$Sprite.flip_v = false
 		$Sprite.rotation_degrees = 0
@@ -139,14 +149,41 @@ func movement_loop():
 	else:
 		motion.y = 0
 		free_fall = true
-	
+		
+	previous_plane = get_previous_plane()
+
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
-
-		
 	$Ceiling.visible = is_on_ceiling()
 	$WallLeft.visible = is_on_wall() and gravity == Vector2.LEFT
 	$WallRight.visible = is_on_wall() and gravity == Vector2.RIGHT
 	$Floor.visible = is_on_floor()
 	
-
+func get_previous_plane():
+	if is_on_ceiling():
+		return "ceiling"
+	elif is_on_floor():
+		return "floor"
+	elif is_on_wall() and gravity == Vector2.RIGHT:
+		return "wall_right"
+	elif is_on_wall() and gravity == Vector2.LEFT:
+		return "wall_left"
+	return "none"
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
