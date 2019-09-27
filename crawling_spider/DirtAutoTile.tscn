@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://DirtAutoTile.gd" type="Script" id=1]
 [ext_resource path="res://DirtTileset.tres" type="TileSet" id=2]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Fonts/Boxy-Bold.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Fly.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Theme" id=1]
 
@@ -41,3 +42,21 @@ custom_fonts/font = SubResource( 2 )
 text = "USE ARROW KEYS TO MOVE"
 align = 3
 valign = 3
+
+[node name="Fly" parent="." instance=ExtResource( 5 )]
+position = Vector2( 803.084, 285.983 )
+rotation = 1.57079
+scale = Vector2( 0.2, 0.2 )
+
+[node name="Fly2" parent="." instance=ExtResource( 5 )]
+position = Vector2( 680.942, 217.727 )
+scale = Vector2( 0.2, 0.2 )
+
+[node name="Fly3" parent="." instance=ExtResource( 5 )]
+position = Vector2( 292.361, 105.164 )
+rotation = 1.57079
+scale = Vector2( 0.2, 0.2 )
+
+[node name="Fly4" parent="." instance=ExtResource( 5 )]
+position = Vector2( 290.564, 347.653 )
+scale = Vector2( 0.2, 0.2 )
