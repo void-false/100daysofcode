@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/spider05.png-87cbeedff633773e700a271963a38777.stex"
+path="res://.import/wasp.png-356a0cebdd6f8a988a683d1450770c1b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spider05.png"
-dest_files=[ "res://.import/spider05.png-87cbeedff633773e700a271963a38777.stex" ]
+source_file="res://wasp.png"
+dest_files=[ "res://.import/wasp.png-356a0cebdd6f8a988a683d1450770c1b.stex" ]
 
 [params]
 

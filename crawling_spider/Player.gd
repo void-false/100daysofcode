@@ -10,14 +10,21 @@ var walking_on_ceiling = false
 var walking_on_wall = false
 var free_fall = false
 var previous_plane
+var is_alive = true
+var played_dead = false
 
 func _physics_process(delta):
 	control_loop()
 	movement_loop()
 	spritedir_loop()
-	
+	check_collisions_loop()
 	
 func spritedir_loop():
+	if not is_alive:
+		if not played_dead:
+			$Sprite/AnimationPlayer.play("Dead")
+			played_dead = true
+		return
 	match motion:
 		Vector2.UP:
 			movedir = "up"	
@@ -152,6 +159,10 @@ func movement_loop():
 		
 	previous_plane = get_previous_plane()
 
+	if not is_alive:
+		free_fall = true
+
+		
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
 	$Ceiling.visible = is_on_ceiling()
@@ -171,19 +182,11 @@ func get_previous_plane():
 	return "none"
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+func check_collisions_loop():
+	for i in get_slide_count():
+		var collision = get_slide_collision(i)
+		if collision.collider.name == "Wasp":
+			print("Player hit wasp")
+
+func _on_Wasp_hit_player():
+	is_alive = false
