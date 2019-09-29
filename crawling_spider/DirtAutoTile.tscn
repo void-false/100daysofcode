@@ -26,7 +26,7 @@ __meta__ = {
 }
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 802.484, 222.527 )
+position = Vector2( 801.484, 222.014 )
 
 [node name="Label" type="Label" parent="."]
 visible = false

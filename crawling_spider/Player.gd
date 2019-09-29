@@ -24,6 +24,8 @@ func spritedir_loop():
 		if not played_dead:
 			$Sprite/AnimationPlayer.play("Dead")
 			played_dead = true
+			motion = Vector2.ZERO
+
 		return
 	match motion:
 		Vector2.UP:
@@ -128,6 +130,8 @@ func spritedir_loop():
 		
 			
 func control_loop():
+	if not is_alive:
+		return
 	motion.x =  int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
 	motion.y =  int(Input.is_action_pressed("ui_down")) - int(Input.is_action_pressed("ui_up")) 
 
@@ -138,7 +142,7 @@ func movement_loop():
 	else:
 		gravity.y = 0
 	
-	if is_on_ceiling():
+	if is_on_ceiling() and is_alive:
 		free_fall = false
 		gravity = Vector2.UP
 		if motion.y > 0:
@@ -186,7 +190,8 @@ func check_collisions_loop():
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
 		if collision.collider.name == "Wasp":
-			print("Player hit wasp")
+			_on_Wasp_hit_player()
 
 func _on_Wasp_hit_player():
 	is_alive = false
+	$Camera2D.current = false

@@ -17,14 +17,14 @@ func control_loop():
 	motion.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 
 func move_loop():
-	if test_move(transform, motion):
-		motion.x *= -1
+	
 	move_and_slide(motion.normalized() * speed)
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
 		if collision.collider.name == "Player":
 			emit_signal("hit_player")
-
+	if test_move(transform, motion):
+		motion.x *= -1
 
 func spritedir_loop():
 
