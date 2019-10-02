@@ -169,10 +169,10 @@ func movement_loop():
 		
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
-	$Ceiling.visible = is_on_ceiling()
-	$WallLeft.visible = is_on_wall() and gravity == Vector2.LEFT
-	$WallRight.visible = is_on_wall() and gravity == Vector2.RIGHT
-	$Floor.visible = is_on_floor()
+#	$Ceiling.visible = is_on_ceiling()
+#	$WallLeft.visible = is_on_wall() and gravity == Vector2.LEFT
+#	$WallRight.visible = is_on_wall() and gravity == Vector2.RIGHT
+#	$Floor.visible = is_on_floor()
 	
 func get_previous_plane():
 	if is_on_ceiling():
@@ -195,3 +195,11 @@ func check_collisions_loop():
 func _on_Wasp_hit_player():
 	is_alive = false
 	$Camera2D.current = false
+	$CollisionShape2D.disabled = true
+
+
+func _on_ExitDoor_body_entered(body):
+	self.visible = false
+	$"../CanvasLayer/WinLabel".visible = true
+	$"../CanvasLayer/Fireworks1".emitting = true
+	$"../CanvasLayer/Fireworks2".emitting = true
