@@ -6,8 +6,6 @@ const SPEED = 150
 var gravity = Vector2.UP
 var motion = Vector2()
 var movedir = "right"
-var walking_on_ceiling = false
-var walking_on_wall = false
 var free_fall = false
 var previous_plane
 var is_alive = true
@@ -132,6 +130,10 @@ func spritedir_loop():
 func control_loop():
 	if not is_alive:
 		return
+	if not visible:
+		motion = Vector2.ZERO
+		return
+	
 	motion.x =  int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
 	motion.y =  int(Input.is_action_pressed("ui_down")) - int(Input.is_action_pressed("ui_up")) 
 
@@ -193,12 +195,14 @@ func check_collisions_loop():
 			_on_Wasp_hit_player()
 
 func _on_Wasp_hit_player():
+	$"../BackToMenuTimer".start()
 	is_alive = false
 	$Camera2D.current = false
 	$CollisionShape2D.disabled = true
-
+	
 
 func _on_ExitDoor_body_entered(body):
+	$"../BackToMenuTimer".start()
 	self.visible = false
 	$"../CanvasLayer/WinLabel".visible = true
 	$"../CanvasLayer/Fireworks1".emitting = true

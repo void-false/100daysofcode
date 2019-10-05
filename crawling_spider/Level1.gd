@@ -7,3 +7,7 @@ func _physics_process(delta):
 	elif Input.is_action_pressed("quit"):
 		get_tree().quit()
 
+
+
+func _on_BackToMenuTimer_timeout() -> void:
+	get_tree().change_scene("res://MainMenu.tscn")
