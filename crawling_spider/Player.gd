@@ -11,6 +11,7 @@ var previous_plane
 var is_alive = true
 var played_dead = false
 
+
 func _physics_process(delta):
 	control_loop()
 	movement_loop()
@@ -23,8 +24,8 @@ func spritedir_loop():
 			$Sprite/AnimationPlayer.play("Dead")
 			played_dead = true
 			motion = Vector2.ZERO
-
 		return
+	
 	match motion:
 		Vector2.UP:
 			movedir = "up"	
@@ -137,7 +138,8 @@ func control_loop():
 	motion.x =  int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
 	motion.y =  int(Input.is_action_pressed("ui_down")) - int(Input.is_action_pressed("ui_up")) 
 
-func movement_loop():
+
+func movement_loop() -> void:
 	
 	if free_fall:
 		gravity.y += 20
@@ -151,9 +153,9 @@ func movement_loop():
 			gravity = Vector2.DOWN
 	elif is_on_wall():
 		free_fall = false
-		if motion.x < 0:
+		if test_move(transform, Vector2.LEFT):
 			gravity = Vector2.LEFT
-		elif motion.x > 0:
+		elif test_move(transform, Vector2.RIGHT):
 			gravity = Vector2.RIGHT
 	elif is_on_floor():
 		free_fall = false
@@ -162,19 +164,25 @@ func movement_loop():
 	else:
 		motion.y = 0
 		free_fall = true
-		
+	
+	var boost : int = 2
+	if free_fall and previous_plane == "wall_right" and motion.x == 0:
+		motion.x = boost
+	elif free_fall and previous_plane == "wall_left" and motion.x == 0:
+		motion.x = -boost
+			
 	previous_plane = get_previous_plane()
 
 	if not is_alive:
 		free_fall = true
 
-		
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
 #	$Ceiling.visible = is_on_ceiling()
 #	$WallLeft.visible = is_on_wall() and gravity == Vector2.LEFT
 #	$WallRight.visible = is_on_wall() and gravity == Vector2.RIGHT
 #	$Floor.visible = is_on_floor()
+	
 	
 func get_previous_plane():
 	if is_on_ceiling():
