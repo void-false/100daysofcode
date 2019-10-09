@@ -8,6 +8,7 @@ size = 26
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
+extra_spacing_top = 3
 font_data = ExtResource( 2 )
 
 [node name="MainMenu" type="Node"]
@@ -43,21 +44,28 @@ alignment = 1
 
 [node name="Play" type="Button" parent="Control/MenuItems"]
 margin_right = 174.0
-margin_bottom = 24.0
+margin_bottom = 27.0
 custom_fonts/font = SubResource( 2 )
 text = "PLAY"
 
 [node name="Options" type="Button" parent="Control/MenuItems"]
-margin_top = 40.0
+margin_top = 43.0
 margin_right = 174.0
-margin_bottom = 64.0
+margin_bottom = 70.0
 custom_fonts/font = SubResource( 2 )
 text = "OPTIONS"
 
-[node name="Exit" type="Button" parent="Control/MenuItems"]
-margin_top = 80.0
+[node name="HighScore" type="Button" parent="Control/MenuItems"]
+margin_top = 86.0
 margin_right = 174.0
-margin_bottom = 104.0
+margin_bottom = 113.0
+custom_fonts/font = SubResource( 2 )
+text = "HIGH SCORE"
+
+[node name="Exit" type="Button" parent="Control/MenuItems"]
+margin_top = 129.0
+margin_right = 174.0
+margin_bottom = 156.0
 custom_fonts/font = SubResource( 2 )
 text = "EXIT"
 
@@ -65,4 +73,5 @@ text = "EXIT"
 position = Vector2( 399.584, 225.335 )
 current = true
 [connection signal="pressed" from="Control/MenuItems/Play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="Control/MenuItems/HighScore" to="." method="_on_HighScore_pressed"]
 [connection signal="pressed" from="Control/MenuItems/Exit" to="." method="_on_Exit_pressed"]
