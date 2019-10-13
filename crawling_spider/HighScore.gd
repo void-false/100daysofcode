@@ -7,6 +7,8 @@ func _ready() -> void:
 		var name : String = get_random_name()
 		get_node("VBoxContainer/Row" + String(i) + "/NameLabel").text = name
 		get_node("VBoxContainer/Row" + String(i) + "/ScoreLabel").text = String(10000 / (i*i))
+		
+	print(Globals.score)
 
 
 func get_random_name() -> String:
