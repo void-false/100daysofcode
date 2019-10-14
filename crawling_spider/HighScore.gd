@@ -2,12 +2,14 @@ extends Node
 
 
 func _ready() -> void:
+	$"VBoxContainer/BackButton".grab_focus()
 	randomize()
 	for i in range(1, 11):
 		var name : String = get_random_name()
 		get_node("VBoxContainer/Row" + String(i) + "/NameLabel").text = name
 		get_node("VBoxContainer/Row" + String(i) + "/ScoreLabel").text = String(10000 / (i*i))
 		
+	Globals.score = 10000 / ((Globals.end_time - Globals.start_time) / 1000)
 	print(Globals.score)
 
 

@@ -216,4 +216,4 @@ func _on_ExitDoor_body_entered(body):
 	$"../CanvasLayer/Fireworks1".emitting = true
 	$"../CanvasLayer/Fireworks2".emitting = true
 	Globals.end_time = OS.get_ticks_msec()
-	print((Globals.end_time - Globals.start_time) / 1000)
+	
