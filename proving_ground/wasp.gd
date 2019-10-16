@@ -27,6 +27,7 @@ func move_loop():
 func spritedir_loop():
 
 	if motion.length() > 0:
+		$AnimationPlayer.seek(0.3, false)
 		$AnimationPlayer.playback_speed = 3
 		$Sprite.flip_h =  motion.x > 0
 	else:
