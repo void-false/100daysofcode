@@ -13,4 +13,5 @@ func _on_NameLineEdit_text_changed(new_text):
 
 
 func _on_SubmitButton_pressed():
+	Globals.update_score($"VBoxContainer/NameLineEdit".text)
 	get_tree().change_scene("res://HighScore.tscn")
