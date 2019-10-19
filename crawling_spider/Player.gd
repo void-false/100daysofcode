@@ -9,7 +9,7 @@ var movedir = "right"
 var free_fall = false
 var previous_plane
 var is_alive = true
-var played_dead = false
+var is_dead_anim_playing = false
 
 
 func _physics_process(delta):
@@ -20,9 +20,9 @@ func _physics_process(delta):
 	
 func spritedir_loop():
 	if not is_alive:
-		if not played_dead:
+		if not is_dead_anim_playing:
 			$Sprite/AnimationPlayer.play("Dead")
-			played_dead = true
+			is_dead_anim_playing = true
 			motion = Vector2.ZERO
 		return
 	
