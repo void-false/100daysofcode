@@ -126,3 +126,11 @@ margin_top = 75.9671
 margin_right = 24.608
 margin_bottom = 89.9671
 text = "floor"
+
+[node name="Grabbing" type="Label" parent="."]
+visible = false
+margin_left = -15.392
+margin_top = 75.9671
+margin_right = 24.608
+margin_bottom = 89.9671
+text = "Grabbing"

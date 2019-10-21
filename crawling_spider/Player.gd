@@ -10,7 +10,7 @@ var free_fall = false
 var previous_plane
 var is_alive = true
 var is_dead_anim_playing = false
-
+var is_grabbing : bool = false
 
 func _physics_process(delta):
 	control_loop()
@@ -135,6 +135,11 @@ func control_loop():
 		motion = Vector2.ZERO
 		return
 	
+	if Input.is_action_pressed("ui_select"):
+		is_grabbing = true
+	else:
+		is_grabbing = false
+	
 	motion.x =  int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
 	motion.y =  int(Input.is_action_pressed("ui_down")) - int(Input.is_action_pressed("ui_up")) 
 
@@ -182,6 +187,7 @@ func movement_loop() -> void:
 #	$WallLeft.visible = is_on_wall() and gravity == Vector2.LEFT
 #	$WallRight.visible = is_on_wall() and gravity == Vector2.RIGHT
 #	$Floor.visible = is_on_floor()
+	$Grabbing.visible = is_grabbing
 	
 	
 func get_previous_plane():
