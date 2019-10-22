@@ -150,8 +150,6 @@ func movement_loop() -> void:
 	if is_on_ceiling() and is_alive:
 		free_fall = false
 		gravity = Vector2.UP
-		if motion.y > 0:
-			gravity = Vector2.DOWN
 	elif is_on_wall():
 		free_fall = false
 		if test_move(transform, Vector2.LEFT):
@@ -176,9 +174,6 @@ func movement_loop() -> void:
 	if not is_alive:
 		free_fall = true
 		
-	if is_grabbing:
-		gravity.y = 0
-
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
 #	$Ceiling.visible = is_on_ceiling()
