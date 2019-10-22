@@ -11,6 +11,7 @@ var previous_plane
 var is_alive = true
 var is_dead_anim_playing = false
 var is_grabbing : bool = false
+var boost : int = 2
 
 func _physics_process(delta):
 	control_loop()
@@ -134,22 +135,17 @@ func control_loop():
 	if not visible:
 		motion = Vector2.ZERO
 		return
-	
-	if Input.is_action_pressed("ui_select"):
-		is_grabbing = true
-	else:
-		is_grabbing = false
-	
-	motion.x =  int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
-	motion.y =  int(Input.is_action_pressed("ui_down")) - int(Input.is_action_pressed("ui_up")) 
+
+	is_grabbing = Input.is_action_pressed("ui_select")
+
+	motion.x =  Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	motion.y =  Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 
 
 func movement_loop() -> void:
 	
 	if free_fall:
 		gravity.y += 20
-	else:
-		gravity.y = 0
 	
 	if is_on_ceiling() and is_alive:
 		free_fall = false
@@ -170,7 +166,6 @@ func movement_loop() -> void:
 		motion.y = 0
 		free_fall = true
 	
-	var boost : int = 2
 	if free_fall and previous_plane == "wall_right" and motion.x == 0:
 		motion.x = boost
 	elif free_fall and previous_plane == "wall_left" and motion.x == 0:
@@ -180,6 +175,9 @@ func movement_loop() -> void:
 
 	if not is_alive:
 		free_fall = true
+		
+	if is_grabbing:
+		gravity.y = 0
 
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	

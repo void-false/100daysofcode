@@ -24,7 +24,7 @@ func generate_high_score() -> Array:
 	randomize()
 	for i in range(10):
 		var row : Array = [0, "A"]
-		row[0] = randi() % 1000 + 1
+		row[0] = randi() % 500 + 1
 		row[1] = get_random_name()
 		table.append(row) 
 	table.sort_custom(MyCustomSorter, "sort")
