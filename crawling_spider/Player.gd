@@ -136,7 +136,7 @@ func control_loop():
 		motion = Vector2.ZERO
 		return
 
-	is_grabbing = Input.is_action_pressed("ui_select")
+	is_grabbing = Input.is_action_pressed("grab")
 
 	motion.x =  Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	motion.y =  Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
@@ -173,7 +173,7 @@ func movement_loop() -> void:
 
 	if not is_alive:
 		free_fall = true
-		
+
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
 #	$Ceiling.visible = is_on_ceiling()
