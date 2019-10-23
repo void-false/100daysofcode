@@ -150,6 +150,8 @@ func movement_loop() -> void:
 	if is_on_ceiling() and is_alive:
 		free_fall = false
 		gravity = Vector2.UP
+		if is_grabbing:
+			motion.y = clamp(motion.y, -1, 0)
 	elif is_on_wall():
 		free_fall = false
 		if test_move(transform, Vector2.LEFT):
