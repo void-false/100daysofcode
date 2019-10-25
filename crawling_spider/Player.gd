@@ -156,8 +156,12 @@ func movement_loop() -> void:
 		free_fall = false
 		if test_move(transform, Vector2.LEFT):
 			gravity = Vector2.LEFT
+			if is_grabbing:
+				motion.x = clamp(motion.x, -1, 0)
 		elif test_move(transform, Vector2.RIGHT):
 			gravity = Vector2.RIGHT
+			if is_grabbing:
+				motion.x = clamp(motion.x, 0, 1)
 	elif is_on_floor():
 		free_fall = false
 		motion.y = 0
