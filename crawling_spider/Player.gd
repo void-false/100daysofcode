@@ -180,6 +180,10 @@ func movement_loop() -> void:
 	if not is_alive:
 		free_fall = true
 
+	if is_grabbing:
+		if not test_move(transform, motion * SPEED + gravity):
+			print(motion * SPEED + gravity, randi())
+			return
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 	
 #	$Ceiling.visible = is_on_ceiling()
