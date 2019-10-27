@@ -175,17 +175,19 @@ func movement_loop() -> void:
 	elif free_fall and previous_plane == "wall_left" and motion.x == 0:
 		motion.x = -boost
 			
+			
+	if is_grabbing and free_fall and previous_plane == "ceiling":
+		gravity = Vector2(0, -30)
+		motion.x = -motion.x
+		print("HERE")
+		
 	previous_plane = get_previous_plane()
 
 	if not is_alive:
 		free_fall = true
 
-	if is_grabbing:
-		if not test_move(transform, motion * SPEED + gravity):
-			print(motion * SPEED + gravity, randi())
-			return
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
-	
+
 #	$Ceiling.visible = is_on_ceiling()
 #	$WallLeft.visible = is_on_wall() and gravity == Vector2.LEFT
 #	$WallRight.visible = is_on_wall() and gravity == Vector2.RIGHT
