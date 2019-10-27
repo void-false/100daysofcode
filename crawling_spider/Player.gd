@@ -177,7 +177,7 @@ func movement_loop() -> void:
 			
 			
 	if is_grabbing and free_fall and previous_plane == "ceiling":
-		gravity = Vector2(0, -30)
+		gravity = Vector2(0, -40)
 		motion.x = -motion.x
 		print("HERE")
 		
