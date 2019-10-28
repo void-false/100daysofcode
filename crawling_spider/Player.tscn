@@ -96,7 +96,6 @@ __meta__ = {
 }
 
 [node name="Ceiling" type="Label" parent="."]
-visible = false
 margin_left = -22.8398
 margin_top = -67.5263
 margin_right = 19.1602
@@ -104,7 +103,6 @@ margin_bottom = -53.5263
 text = "ceiling"
 
 [node name="WallLeft" type="Label" parent="."]
-visible = false
 margin_left = -111.22
 margin_top = 1.98607
 margin_right = -61.2198
@@ -112,7 +110,6 @@ margin_bottom = 15.9861
 text = "wall left"
 
 [node name="WallRight" type="Label" parent="."]
-visible = false
 margin_left = 79.4427
 margin_top = 14.8955
 margin_right = 137.443
@@ -120,7 +117,6 @@ margin_bottom = 28.8955
 text = "wall right"
 
 [node name="Floor" type="Label" parent="."]
-visible = false
 margin_left = -15.392
 margin_top = 75.9671
 margin_right = 24.608
@@ -128,9 +124,8 @@ margin_bottom = 89.9671
 text = "floor"
 
 [node name="Grabbing" type="Label" parent="."]
-visible = false
-margin_left = -15.392
-margin_top = 75.9671
-margin_right = 24.608
-margin_bottom = 89.9671
+margin_left = -27.892
+margin_top = 49.7171
+margin_right = 29.108
+margin_bottom = 63.7171
 text = "Grabbing"
