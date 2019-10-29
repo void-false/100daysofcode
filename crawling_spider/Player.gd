@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+onready var web = preload("res://web.tscn")
+
 const JUMP_HEIGHT = -600
 const SPEED = 150
 
@@ -141,6 +143,21 @@ func control_loop():
 	motion.x =  Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	motion.y =  Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 
+	if Input.is_action_just_pressed("fire"):
+		var web_instance = web.instance()
+		if movedir == "left":
+			web_instance.position = Vector2(position.x - 64, position.y)
+			web_instance.webdir = Vector2.LEFT
+		elif movedir == "right":
+			web_instance.position = Vector2(position.x + 64, position.y)
+			web_instance.webdir = Vector2.RIGHT
+		elif movedir == "up":
+			web_instance.position = Vector2(position.x, position.y - 64)
+			web_instance.webdir = Vector2.UP
+		elif movedir == "down":
+			web_instance.position = Vector2(position.x, position.y + 64)
+			web_instance.webdir = Vector2.DOWN
+		get_tree().get_root().add_child(web_instance)
 
 func movement_loop() -> void:
 	
