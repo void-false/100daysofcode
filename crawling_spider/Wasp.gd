@@ -23,7 +23,7 @@ func move_loop():
 		var collision = get_slide_collision(i)
 		if collision.collider.name == "Player":
 			emit_signal("hit_player")
-	if test_move(transform, motion):
+	if is_on_wall():
 		motion.x *= -1
 
 func spritedir_loop():
