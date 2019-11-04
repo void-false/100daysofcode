@@ -129,3 +129,7 @@ margin_top = 49.7171
 margin_right = 29.108
 margin_bottom = 63.7171
 text = "Grabbing"
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( 25.0505, -12.9831 )
+enabled = true

@@ -55,7 +55,7 @@ position = Vector2( 1307, 1375 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 6 )]
-position = Vector2( -93.4344, 412.633 )
+position = Vector2( -225.363, 285.324 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 visible = false
