@@ -131,5 +131,6 @@ margin_bottom = 63.7171
 text = "Grabbing"
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
-position = Vector2( 25.0505, -12.9831 )
+position = Vector2( 25, 0 )
 enabled = true
+cast_to = Vector2( 0, -35 )
