@@ -20,32 +20,40 @@ shape = SubResource( 1 )
 
 [node name="NorthLeft" type="RayCast2D" parent="."]
 position = Vector2( -30.3479, -8.00732 )
+enabled = true
 cast_to = Vector2( 0, -25 )
 
 [node name="NorthRight" type="RayCast2D" parent="."]
 position = Vector2( 30.1969, -7.5507 )
+enabled = true
 cast_to = Vector2( 0, -25 )
 
 [node name="EastUp" type="RayCast2D" parent="."]
 position = Vector2( 7.97174, -29.4498 )
+enabled = true
 cast_to = Vector2( 25, 0 )
 
 [node name="EastDown" type="RayCast2D" parent="."]
 position = Vector2( 8.55048, 30.5675 )
+enabled = true
 cast_to = Vector2( 25, 0 )
 
 [node name="SouthLeft" type="RayCast2D" parent="."]
 position = Vector2( 30.1833, 8.84805 )
+enabled = true
 cast_to = Vector2( 0, 25 )
 
-[node name="SouthRIght" type="RayCast2D" parent="."]
+[node name="SouthRight" type="RayCast2D" parent="."]
 position = Vector2( -30.2732, 9.75264 )
+enabled = true
 cast_to = Vector2( 0, 25 )
 
 [node name="WestUp" type="RayCast2D" parent="."]
 position = Vector2( -9.0459, -29.7528 )
+enabled = true
 cast_to = Vector2( -25, 0 )
 
 [node name="WestDown" type="RayCast2D" parent="."]
-position = Vector2( -7.10989, 31.2142 )
+position = Vector2( -8.92422, 30.9216 )
+enabled = true
 cast_to = Vector2( -25, 0 )
