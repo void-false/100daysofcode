@@ -201,13 +201,9 @@ func movement_loop() -> void:
 	if not is_alive:
 		free_fall = true
 		
-	if is_on_ceiling() and not $RayCast2D.is_colliding():
-		if movedir == "left" and motion.x < 0:
-			$RayCast2D.position.x = -25
-			motion.x = 0
-		elif movedir == "right" and motion.x > 0:
-			$RayCast2D.position.x = 25
-			motion.x = 0
+	if $RayCast1.is_colliding() or $RayCast2.is_colliding():
+		free_fall = false
+#		gravity *= 5
 
 	move_and_slide(motion * SPEED + gravity, Vector2.UP)
 

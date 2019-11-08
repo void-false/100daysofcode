@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Player.gd" type="Script" id=1]
+[ext_resource path="res://ball.png" type="Texture" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 32.0
+
+[node name="Player" type="KinematicBody2D"]
+position = Vector2( 415.3, 148.841 )
+script = ExtResource( 1 )
+
+[node name="icon" type="Sprite" parent="."]
+position = Vector2( -0.123932, 0.780975 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.124634, 0.790253 )
+shape = SubResource( 1 )
+
+[node name="NorthLeft" type="RayCast2D" parent="."]
+position = Vector2( -30.3479, -8.00732 )
+cast_to = Vector2( 0, -25 )
+
+[node name="NorthRight" type="RayCast2D" parent="."]
+position = Vector2( 30.1969, -7.5507 )
+cast_to = Vector2( 0, -25 )
+
+[node name="EastUp" type="RayCast2D" parent="."]
+position = Vector2( 7.97174, -29.4498 )
+cast_to = Vector2( 25, 0 )
+
+[node name="EastDown" type="RayCast2D" parent="."]
+position = Vector2( 8.55048, 30.5675 )
+cast_to = Vector2( 25, 0 )
+
+[node name="SouthLeft" type="RayCast2D" parent="."]
+position = Vector2( 30.1833, 8.84805 )
+cast_to = Vector2( 0, 25 )
+
+[node name="SouthRIght" type="RayCast2D" parent="."]
+position = Vector2( -30.2732, 9.75264 )
+cast_to = Vector2( 0, 25 )
+
+[node name="WestUp" type="RayCast2D" parent="."]
+position = Vector2( -9.0459, -29.7528 )
+cast_to = Vector2( -25, 0 )
+
+[node name="WestDown" type="RayCast2D" parent="."]
+position = Vector2( -7.10989, 31.2142 )
+cast_to = Vector2( -25, 0 )
