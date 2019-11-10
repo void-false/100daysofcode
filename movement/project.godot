@@ -21,9 +21,12 @@ config/icon="res://icon.png"
 
 [display]
 
+window/size/test_width=1536
+window/size/test_height=900
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
 [rendering]
 
+environment/default_clear_color=Color( 0.0392157, 0.145098, 0.227451, 1 )
 environment/default_environment="res://default_env.tres"
