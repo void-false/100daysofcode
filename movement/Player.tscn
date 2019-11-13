@@ -9,6 +9,10 @@ radius = 32.0
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 415.3, 148.841 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 186.626 ],
+"_edit_vertical_guides_": [ 452.232, 377.495 ]
+}
 
 [node name="icon" type="Sprite" parent="."]
 position = Vector2( -0.123932, 0.780975 )
@@ -19,12 +23,12 @@ position = Vector2( -0.124634, 0.790253 )
 shape = SubResource( 1 )
 
 [node name="NorthLeft" type="RayCast2D" parent="."]
-position = Vector2( -30.3479, -8.00732 )
+position = Vector2( -31.0122, -7.67515 )
 enabled = true
 cast_to = Vector2( 0, -25 )
 
 [node name="NorthRight" type="RayCast2D" parent="."]
-position = Vector2( 30.1969, -7.5507 )
+position = Vector2( 30.1969, -7.88287 )
 enabled = true
 cast_to = Vector2( 0, -25 )
 
@@ -34,17 +38,17 @@ enabled = true
 cast_to = Vector2( 25, 0 )
 
 [node name="EastDown" type="RayCast2D" parent="."]
-position = Vector2( 8.55048, 30.5675 )
+position = Vector2( 7.7201, 31.3979 )
 enabled = true
 cast_to = Vector2( 25, 0 )
 
 [node name="SouthLeft" type="RayCast2D" parent="."]
-position = Vector2( 30.1833, 8.84805 )
+position = Vector2( -30.9354, 9.18022 )
 enabled = true
 cast_to = Vector2( 0, 25 )
 
 [node name="SouthRight" type="RayCast2D" parent="."]
-position = Vector2( -30.2732, 9.75264 )
+position = Vector2( 30.1812, 9.0883 )
 enabled = true
 cast_to = Vector2( 0, 25 )
 
@@ -54,6 +58,6 @@ enabled = true
 cast_to = Vector2( -25, 0 )
 
 [node name="WestDown" type="RayCast2D" parent="."]
-position = Vector2( -8.92422, 30.9216 )
+position = Vector2( -9.0903, 31.586 )
 enabled = true
 cast_to = Vector2( -25, 0 )
