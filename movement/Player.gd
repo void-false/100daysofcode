@@ -3,9 +3,10 @@ extends KinematicBody2D
 var movement : Vector2 = Vector2.ZERO
 onready var raycast_list : Array = [$NorthLeft, $NorthRight, $EastUp, $EastDown, $SouthLeft, $SouthRight, $WestUp, $WestDown]
 var free_fall : bool = false
-var gravity : Vector2 = Vector2.DOWN
+var gravity : Vector2 = Vector2.ZERO
 
 const SPEED : int = 200
+const ACCEL : int = 100
 
 func _physics_process(delta: float) -> void:
 	control_loop()
@@ -18,28 +19,34 @@ func control_loop() -> void:
 	
 func collision_loop() -> void:
 	free_fall = false
-
-	if $NorthLeft.is_colliding() and $NorthRight.is_colliding(): # ceiling
-		gravity = Vector2.ZERO
-	elif $NorthLeft.is_colliding() or $NorthRight.is_colliding(): # up right or left cliff
-		gravity = Vector2.UP * SPEED
-	elif $EastDown.is_colliding() or $EastUp.is_colliding(): # right wall
-		gravity = Vector2.ZERO
-
-	elif $WestDown.is_colliding() or $WestUp.is_colliding(): # left wall
-		gravity = Vector2.ZERO
-
-	elif $SouthLeft.is_colliding() or $SouthRight.is_colliding(): # floor
-		gravity = Vector2.ZERO
-		movement.y = clamp(movement.y, 0, 1)
+	if $NorthLeft.is_colliding() and $WestUp.is_colliding() and not $WestDown.is_colliding():
+		gravity = (Vector2.UP + Vector2.LEFT) * ACCEL
+	elif $NorthRight.is_colliding() and $EastUp.is_colliding() and not $EastDown.is_colliding():
+		gravity = (Vector2.UP + Vector2.RIGHT) * ACCEL
+	elif $SouthRight.is_colliding() and $EastDown.is_colliding() and not $SouthLeft.is_colliding():
+		gravity = (Vector2.DOWN + Vector2.RIGHT) * ACCEL
+	elif $SouthLeft.is_colliding() and $WestDown.is_colliding() and not $SouthRight.is_colliding():
+		gravity = (Vector2.DOWN + Vector2.LEFT) * ACCEL
+	
+	elif $NorthLeft.is_colliding() or $NorthRight.is_colliding():
+		gravity = Vector2.UP * ACCEL
+	elif $EastDown.is_colliding() or $EastUp.is_colliding():
+		gravity = Vector2.RIGHT * ACCEL
+	elif $SouthRight.is_colliding() or $SouthLeft.is_colliding():
+		gravity = Vector2.DOWN * ACCEL
+	elif $WestUp.is_colliding() or $WestDown.is_colliding():
+		gravity = Vector2.LEFT * ACCEL
 	else:
 		free_fall = true
-	
+		
 	if free_fall:
+		gravity = Vector2.DOWN * ACCEL
 		movement.y = 0
-		gravity.y += 10
 
 func movement_loop(delta: float) -> void:
-	move_and_slide(movement * SPEED + gravity)
 
+	if free_fall or not is_on_wall():
+		move_and_slide(movement * SPEED + gravity)
+	elif movement.length() > 0:
+		move_and_slide(movement * SPEED + gravity)
 
