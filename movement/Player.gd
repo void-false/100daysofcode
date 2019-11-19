@@ -6,7 +6,7 @@ var free_fall : bool = false
 var gravity : Vector2 = Vector2.ZERO
 
 const SPEED : int = 200
-const ACCEL : int = 100
+const ACCEL : int = 140
 
 func _physics_process(delta: float) -> void:
 	control_loop()
@@ -32,19 +32,20 @@ func collision_loop() -> void:
 		gravity = Vector2.UP * ACCEL
 	elif $EastDown.is_colliding() or $EastUp.is_colliding():
 		gravity = Vector2.RIGHT * ACCEL
-	elif $SouthRight.is_colliding() or $SouthLeft.is_colliding():
-		gravity = Vector2.DOWN * ACCEL
 	elif $WestUp.is_colliding() or $WestDown.is_colliding():
 		gravity = Vector2.LEFT * ACCEL
+	elif $SouthRight.is_colliding() or $SouthLeft.is_colliding():
+		gravity = Vector2.DOWN * ACCEL
+		movement.y = clamp(movement.y, 0, 1)
 	else:
 		free_fall = true
 		
 	if free_fall:
-		gravity = Vector2.DOWN * ACCEL
+		gravity.x = 0
+		gravity.y = abs(gravity.y) + 20
 		movement.y = 0
 
 func movement_loop(delta: float) -> void:
-
 	if free_fall or not is_on_wall():
 		move_and_slide(movement * SPEED + gravity)
 	elif movement.length() > 0:
