@@ -80,3 +80,7 @@ func movement_loop(delta: float) -> void:
 	elif movement.length() > 0:
 		move_and_slide(movement * SPEED + gravity)
 
+
+func _on_Area2D_body_entered(body: PhysicsBody2D) -> void:
+	position = Vector2(856.107971, 103.336464)
+
