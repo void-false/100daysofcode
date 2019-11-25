@@ -52,14 +52,17 @@ tracks/0/keys = {
 "values": [ 14, 15, 16, 17, 18, 19 ]
 }
 
-[sub_resource type="CapsuleShape2D" id=4]
-radius = 29.9708
-height = 7.48932
+[sub_resource type="CircleShape2D" id=4]
+radius = 34.8347
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 17.9596, 17.3865 )
 scale = Vector2( 0.8, 0.8 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [  ],
+"_edit_vertical_guides_": [ 192.0, 177.0, 276.0 ]
+}
 
 [node name="Sprite" type="Sprite" parent="."]
 scale = Vector2( 2, 2 )
@@ -95,47 +98,42 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Ceiling" type="Label" parent="."]
-margin_left = -22.8398
-margin_top = -67.5263
-margin_right = 19.1602
-margin_bottom = -53.5263
-text = "ceiling"
-
-[node name="WallLeft" type="Label" parent="."]
-margin_left = -111.22
-margin_top = 1.98607
-margin_right = -61.2198
-margin_bottom = 15.9861
-text = "wall left"
-
-[node name="WallRight" type="Label" parent="."]
-margin_left = 79.4427
-margin_top = 14.8955
-margin_right = 137.443
-margin_bottom = 28.8955
-text = "wall right"
-
-[node name="Floor" type="Label" parent="."]
-margin_left = -15.392
-margin_top = 75.9671
-margin_right = 24.608
-margin_bottom = 89.9671
-text = "floor"
-
-[node name="Grabbing" type="Label" parent="."]
-margin_left = -27.892
-margin_top = 49.7171
-margin_right = 29.108
-margin_bottom = 63.7171
-text = "Grabbing"
-
-[node name="RayCast1" type="RayCast2D" parent="."]
-position = Vector2( 32.5505, 4.51688 )
+[node name="WestUp" type="RayCast2D" parent="."]
+position = Vector2( -9.9495, -27.9831 )
 enabled = true
-cast_to = Vector2( 0, -35 )
+cast_to = Vector2( -25, 0 )
 
-[node name="RayCast2" type="RayCast2D" parent="."]
-position = Vector2( -31.1995, 3.26688 )
+[node name="EastUp" type="RayCast2D" parent="."]
+position = Vector2( 11.3005, -27.9831 )
 enabled = true
-cast_to = Vector2( 0, -35 )
+cast_to = Vector2( 25, 0 )
+
+[node name="NorthRight" type="RayCast2D" parent="."]
+position = Vector2( 33.8005, -5.48313 )
+enabled = true
+cast_to = Vector2( 0, -25 )
+
+[node name="SouthRight" type="RayCast2D" parent="."]
+position = Vector2( 33.8005, 15.7669 )
+enabled = true
+cast_to = Vector2( 0, 25 )
+
+[node name="WestDown" type="RayCast2D" parent="."]
+position = Vector2( -9.9495, 38.2669 )
+enabled = true
+cast_to = Vector2( -25, 0 )
+
+[node name="EastDown" type="RayCast2D" parent="."]
+position = Vector2( 11.3005, 38.2669 )
+enabled = true
+cast_to = Vector2( 25, 0 )
+
+[node name="SouthLeft" type="RayCast2D" parent="."]
+position = Vector2( -32.4495, 15.7669 )
+enabled = true
+cast_to = Vector2( 0, 25 )
+
+[node name="NorthLeft" type="RayCast2D" parent="."]
+position = Vector2( -32.4495, -5.48313 )
+enabled = true
+cast_to = Vector2( 0, -25 )
