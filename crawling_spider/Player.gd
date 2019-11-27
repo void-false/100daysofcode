@@ -6,6 +6,8 @@ const JUMP_HEIGHT = -600
 const SPEED : int = 200
 const ACCEL : int = 130
 
+enum Surface {CEILING, WALL_RIGHT, FLOOR, WALL_LEFT}
+
 var gravity : Vector2 = Vector2.ZERO
 var movement : Vector2 = Vector2.ZERO
 var movedir = "right"
@@ -13,6 +15,7 @@ var free_fall : bool = false
 var previous_plane
 var is_alive = true
 var is_dead_anim_playing = false
+var current_surface = Surface.FLOOR
 
 func _physics_process(delta):
 	control_loop()
@@ -69,16 +72,21 @@ func collision_loop() -> void:
 	
 	
 	elif $NorthLeft.is_colliding() or $NorthRight.is_colliding():
+		current_surface = Surface.CEILING
 		gravity = Vector2.UP * ACCEL
 	elif $EastDown.is_colliding() or $EastUp.is_colliding():
+		current_surface = Surface.WALL_RIGHT
 		gravity = Vector2.RIGHT * ACCEL
 	elif $WestUp.is_colliding() or $WestDown.is_colliding():
+		current_surface = Surface.WALL_LEFT
 		gravity = Vector2.LEFT * ACCEL
 	elif $SouthRight.is_colliding() or $SouthLeft.is_colliding():
+		current_surface = Surface.FLOOR
 		gravity = Vector2.DOWN * ACCEL
 		movement.y = clamp(movement.y, 0, 1)
 	else:
 		free_fall = true
+		current_surface = null
 		
 	if free_fall:
 		gravity.x = 0
@@ -100,81 +108,67 @@ func spritedir_loop():
 			is_dead_anim_playing = true
 			movement = Vector2.ZERO
 		return
-	var gravity_normalize : Vector2 = gravity.normalized()
-	match movement.normalized():
+
+	match movement:
 		Vector2.LEFT:
-
-			$Sprite.flip_h = false
-			$Sprite.rotation_degrees = 0
-			$Sprite/AnimationPlayer.play("Walking")
+			if current_surface == Surface.FLOOR:
+				movedir = "left"
+				$Sprite.flip_h = false
+				$Sprite.flip_v = false
+				$Sprite.rotation_degrees = 0
+				$Sprite/AnimationPlayer.play("Walking")
+			elif current_surface  == Surface.CEILING:
+				movedir = "left"
+				$Sprite.flip_h = false
+				$Sprite.flip_v = true
+				$Sprite.rotation_degrees = 0
+				$Sprite/AnimationPlayer.play("Walking")
+			else:
+				$Sprite/AnimationPlayer.play("Idle")
+				$Sprite.rotation_degrees = +90
 		Vector2.RIGHT:
+			if current_surface == Surface.FLOOR:
+				movedir = "right"
+				$Sprite.flip_h = true
+				$Sprite.flip_v = false
+				$Sprite.rotation_degrees = 0
+				$Sprite/AnimationPlayer.play("Walking")
+			elif current_surface  == Surface.CEILING:
+				movedir = "right"
+				$Sprite.flip_h = true
+				$Sprite.flip_v = true
+				$Sprite.rotation_degrees = 0
+				$Sprite/AnimationPlayer.play("Walking")
+			else:
+				$Sprite/AnimationPlayer.play("Idle")
+				$Sprite.rotation_degrees = -90
 
-			$Sprite.flip_h = true
-			$Sprite.rotation_degrees = 0
-			$Sprite/AnimationPlayer.play("Walking")
 		Vector2.UP:
-
-			if gravity_normalize == Vector2.LEFT:
+			movedir = "up"	
+			if current_surface == Surface.WALL_LEFT:
 				$Sprite.flip_h = false
+				$Sprite.flip_v = false
 				$Sprite.rotation_degrees = 90
-			elif gravity_normalize == Vector2.RIGHT:
+			elif current_surface == Surface.WALL_RIGHT:
 				$Sprite.flip_h = true
+				$Sprite.flip_v = false
 				$Sprite.rotation_degrees = -90
 			$Sprite/AnimationPlayer.play("Walking")
-		Vector2.DOWN:
-
-			if gravity_normalize == Vector2.LEFT:
-				$Sprite.flip_h = true
-				$Sprite.rotation_degrees = 90
-			elif gravity_normalize == Vector2.RIGHT:
-				$Sprite.flip_h = false
-				$Sprite.rotation_degrees = -90
-			$Sprite/AnimationPlayer.play("Walking")
-			
-			
-			
-		_: # Idle not moving
-			$Sprite/AnimationPlayer.play("Idle")
-#	match movement:
-#		Vector2.LEFT:
-#			if not is_on_wall():
-#				movedir = "left"
-#				$Sprite.flip_h = false
-#				$Sprite.rotation_degrees = 0
-#				$Sprite/AnimationPlayer.play("Walking")
-#			else:
-#				$Sprite/AnimationPlayer.play("Idle")
-#				$Sprite.rotation_degrees = +90
-#		Vector2.RIGHT:
-#			if not is_on_wall():
-#				movedir = "right"
-#				$Sprite.flip_h = true
-#				$Sprite.rotation_degrees = 0
-#				$Sprite/AnimationPlayer.play("Walking")
-#			else:
-#				$Sprite/AnimationPlayer.play("Idle")
-#				$Sprite.rotation_degrees = -90
+			if current_surface == Surface.CEILING:
+				$Sprite/AnimationPlayer.play("Idle")
 		
-#		Vector2.UP:
-#			movedir = "up"	
-#			if gravity == Vector2.LEFT:
-#				$Sprite.flip_h = false
-#				$Sprite.rotation_degrees = 90
-#			elif gravity == Vector2.RIGHT:
-#				$Sprite.flip_h = true
-#				$Sprite.rotation_degrees = -90
-#			$Sprite/AnimationPlayer.play("Walking")
-#			if is_on_ceiling():
-#				$Sprite/AnimationPlayer.play("Idle")
-#		Vector2.DOWN:
-#			movedir = "down"
-#			if gravity == Vector2.LEFT:
-#				$Sprite.flip_h = true
-#				$Sprite.rotation_degrees = 90
-#			elif gravity == Vector2.RIGHT:
-#				$Sprite.flip_h = false
-#				$Sprite.rotation_degrees = -90
-#			$Sprite/AnimationPlayer.play("Walking")
+		Vector2.DOWN:
+			movedir = "down"
+			if current_surface == Surface.WALL_LEFT:
+				$Sprite.flip_h = true
+				$Sprite.flip_v = false
+				$Sprite.rotation_degrees = 90
+			elif current_surface == Surface.WALL_RIGHT:
+				$Sprite.flip_h = false
+				$Sprite.flip_v = false
+				$Sprite.rotation_degrees = -90
+			$Sprite/AnimationPlayer.play("Walking")
+
 #		(Vector2.LEFT + Vector2.UP):
 #			movedir = "up"	
 #			if gravity == Vector2.LEFT:
@@ -216,8 +210,8 @@ func spritedir_loop():
 #				$Sprite.flip_h = false
 #				$Sprite.rotation_degrees = -90
 #			$Sprite/AnimationPlayer.play("Walking")
-#		Vector2.ZERO:
-#			$Sprite/AnimationPlayer.play("Idle")
+		Vector2.ZERO:
+			$Sprite/AnimationPlayer.play("Idle")
 #
 #
 #	if is_on_ceiling(): # and (movedir == "left" or movedir == "right"):
