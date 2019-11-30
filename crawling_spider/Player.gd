@@ -19,9 +19,13 @@ var current_surface = Surface.FLOOR
 
 func _physics_process(delta):
 	control_loop()
-	collision_loop()
-	movement_loop()
+	
 	spritedir_loop()
+	
+	collision_loop()
+	
+	movement_loop()
+	
 	#check_collisions_loop()
 	
 func control_loop():
@@ -108,7 +112,8 @@ func spritedir_loop():
 			is_dead_anim_playing = true
 			movement = Vector2.ZERO
 		return
-
+	
+	print(current_surface)
 	match movement:
 		Vector2.LEFT:
 			if current_surface == Surface.FLOOR:
@@ -117,7 +122,7 @@ func spritedir_loop():
 				$Sprite.flip_v = false
 				$Sprite.rotation_degrees = 0
 				$Sprite/AnimationPlayer.play("Walking")
-			elif current_surface  == Surface.CEILING:
+			elif current_surface == Surface.CEILING:
 				movedir = "left"
 				$Sprite.flip_h = false
 				$Sprite.flip_v = true
@@ -154,7 +159,8 @@ func spritedir_loop():
 				$Sprite.flip_v = false
 				$Sprite.rotation_degrees = -90
 			$Sprite/AnimationPlayer.play("Walking")
-			if current_surface == Surface.CEILING:
+			if current_surface == Surface.CEILING or current_surface == Surface.FLOOR:
+				$Sprite.rotation_degrees = 0
 				$Sprite/AnimationPlayer.play("Idle")
 		
 		Vector2.DOWN:
@@ -212,8 +218,15 @@ func spritedir_loop():
 #			$Sprite/AnimationPlayer.play("Walking")
 		Vector2.ZERO:
 			$Sprite/AnimationPlayer.play("Idle")
-#
-#
+	
+	if free_fall:
+		$Sprite.rotation_degrees = 0
+		$Sprite.flip_v = false
+		if movement.x < 0:
+			$Sprite.flip_h = false
+		if movement.x > 0:
+			$Sprite.flip_h = true
+#		
 #	if is_on_ceiling(): # and (movedir == "left" or movedir == "right"):
 #		if previous_plane == "wall_left":
 #			$Sprite.flip_h = true
