@@ -105,7 +105,7 @@ func movement_loop() -> void:
 		move_and_slide(movement * SPEED + gravity)
 
 	
-func spritedir_loop():
+func spritedir_loop() -> void:
 	if not is_alive:
 		if not is_dead_anim_playing:
 			$Sprite/AnimationPlayer.play("Dead")
@@ -114,66 +114,109 @@ func spritedir_loop():
 		return
 	
 	print(current_surface)
-	match movement:
-		Vector2.LEFT:
-			if current_surface == Surface.FLOOR:
-				movedir = "left"
-				$Sprite.flip_h = false
-				$Sprite.flip_v = false
-				$Sprite.rotation_degrees = 0
-				$Sprite/AnimationPlayer.play("Walking")
-			elif current_surface == Surface.CEILING:
-				movedir = "left"
-				$Sprite.flip_h = false
-				$Sprite.flip_v = true
-				$Sprite.rotation_degrees = 0
-				$Sprite/AnimationPlayer.play("Walking")
-			else:
-				$Sprite/AnimationPlayer.play("Idle")
-				$Sprite.rotation_degrees = +90
-		Vector2.RIGHT:
-			if current_surface == Surface.FLOOR:
-				movedir = "right"
-				$Sprite.flip_h = true
-				$Sprite.flip_v = false
-				$Sprite.rotation_degrees = 0
-				$Sprite/AnimationPlayer.play("Walking")
-			elif current_surface  == Surface.CEILING:
-				movedir = "right"
-				$Sprite.flip_h = true
-				$Sprite.flip_v = true
-				$Sprite.rotation_degrees = 0
-				$Sprite/AnimationPlayer.play("Walking")
-			else:
-				$Sprite/AnimationPlayer.play("Idle")
-				$Sprite.rotation_degrees = -90
 
-		Vector2.UP:
-			movedir = "up"	
-			if current_surface == Surface.WALL_LEFT:
+	$Sprite/AnimationPlayer.play("Walking")
+
+	match current_surface:
+		Surface.CEILING:
+			$Sprite.rotation_degrees = 0
+			$Sprite.flip_v = true
+			if movement.x < 0.0:
 				$Sprite.flip_h = false
-				$Sprite.flip_v = false
-				$Sprite.rotation_degrees = 90
-			elif current_surface == Surface.WALL_RIGHT:
+			elif movement.x > 0.0:
 				$Sprite.flip_h = true
-				$Sprite.flip_v = false
-				$Sprite.rotation_degrees = -90
-			$Sprite/AnimationPlayer.play("Walking")
-			if current_surface == Surface.CEILING or current_surface == Surface.FLOOR:
-				$Sprite.rotation_degrees = 0
+			else:
+				$Sprite/AnimationPlayer.play("Idle")	
+		Surface.WALL_LEFT:
+			$Sprite.flip_v = false
+			$Sprite.rotation_degrees = 90
+			if movement.y < 0.0:
+				$Sprite.flip_h = false
+			elif movement.y > 0.0:
+				$Sprite.flip_h = true
+			else:
 				$Sprite/AnimationPlayer.play("Idle")
-		
-		Vector2.DOWN:
-			movedir = "down"
-			if current_surface == Surface.WALL_LEFT:
-				$Sprite.flip_h = true
-				$Sprite.flip_v = false
-				$Sprite.rotation_degrees = 90
-			elif current_surface == Surface.WALL_RIGHT:
+		Surface.FLOOR:
+			$Sprite.rotation_degrees = 0
+			$Sprite.flip_v = false
+			if movement.x < 0.0:
 				$Sprite.flip_h = false
-				$Sprite.flip_v = false
-				$Sprite.rotation_degrees = -90
-			$Sprite/AnimationPlayer.play("Walking")
+			elif movement.x > 0.0:
+				$Sprite.flip_h = true
+			else:
+				$Sprite/AnimationPlayer.play("Idle")	
+		Surface.WALL_RIGHT:
+			$Sprite.flip_v = false
+			$Sprite.rotation_degrees = -90
+			if movement.y < 0.0:
+				$Sprite.flip_h = true
+			elif movement.y > 0.0:
+				$Sprite.flip_h = false
+			else:
+				$Sprite/AnimationPlayer.play("Idle")
+				
+				
+#	match movement:
+#		Vector2.LEFT:
+#			if current_surface == Surface.FLOOR:
+#				movedir = "left"
+#				$Sprite.flip_h = false
+#				$Sprite.flip_v = false
+#				$Sprite.rotation_degrees = 0
+#				$Sprite/AnimationPlayer.play("Walking")
+#			elif current_surface == Surface.CEILING:
+#				movedir = "left"
+#				$Sprite.flip_h = false
+#				$Sprite.flip_v = true
+#				$Sprite.rotation_degrees = 0
+#				$Sprite/AnimationPlayer.play("Walking")
+#			else:
+#				$Sprite/AnimationPlayer.play("Idle")
+#				$Sprite.rotation_degrees = +90
+#		Vector2.RIGHT:
+#			if current_surface == Surface.FLOOR:
+#				movedir = "right"
+#				$Sprite.flip_h = true
+#				$Sprite.flip_v = false
+#				$Sprite.rotation_degrees = 0
+#				$Sprite/AnimationPlayer.play("Walking")
+#			elif current_surface  == Surface.CEILING:
+#				movedir = "right"
+#				$Sprite.flip_h = true
+#				$Sprite.flip_v = true
+#				$Sprite.rotation_degrees = 0
+#				$Sprite/AnimationPlayer.play("Walking")
+#			else:
+#				$Sprite/AnimationPlayer.play("Idle")
+#				$Sprite.rotation_degrees = -90
+#
+#		Vector2.UP:
+#			movedir = "up"	
+#			if current_surface == Surface.WALL_LEFT:
+#				$Sprite.flip_h = false
+#				$Sprite.flip_v = false
+#				$Sprite.rotation_degrees = 90
+#			elif current_surface == Surface.WALL_RIGHT:
+#				$Sprite.flip_h = true
+#				$Sprite.flip_v = false
+#				$Sprite.rotation_degrees = -90
+#			$Sprite/AnimationPlayer.play("Walking")
+#			if current_surface == Surface.CEILING or current_surface == Surface.FLOOR:
+#				$Sprite/AnimationPlayer.play("Idle")
+#
+#		Vector2.DOWN:
+#			movedir = "down"
+#			if current_surface == Surface.WALL_LEFT:
+#				$Sprite.flip_h = true
+#				$Sprite.flip_v = false
+#				$Sprite.rotation_degrees = 90
+#			elif current_surface == Surface.WALL_RIGHT:
+#				$Sprite.flip_h = false
+#				$Sprite.flip_v = false
+#				$Sprite.rotation_degrees = -90
+#			$Sprite/AnimationPlayer.play("Walking")
+#			if current_surface == Surface.FLOOR:
+#				$Sprite/AnimationPlayer.play("Idle")
 
 #		(Vector2.LEFT + Vector2.UP):
 #			movedir = "up"	
@@ -216,10 +259,11 @@ func spritedir_loop():
 #				$Sprite.flip_h = false
 #				$Sprite.rotation_degrees = -90
 #			$Sprite/AnimationPlayer.play("Walking")
-		Vector2.ZERO:
-			$Sprite/AnimationPlayer.play("Idle")
+#		Vector2.ZERO:
+#			$Sprite/AnimationPlayer.play("Idle")
 	
 	if free_fall:
+		$Sprite/AnimationPlayer.play("Idle")
 		$Sprite.rotation_degrees = 0
 		$Sprite.flip_v = false
 		if movement.x < 0:
