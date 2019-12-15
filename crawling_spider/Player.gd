@@ -16,6 +16,8 @@ var previous_plane
 var is_alive = true
 var is_dead_anim_playing = false
 var current_surface = Surface.FLOOR
+var prev_position = Vector2.ZERO
+var new_position = Vector2.ZERO
 
 func _physics_process(delta):
 	control_loop()
@@ -98,12 +100,15 @@ func collision_loop() -> void:
 		movement.y = 0
 
 func movement_loop() -> void:
+	
+	prev_position = position.round()
 
 	if free_fall or not is_on_wall():
 		move_and_slide(movement * SPEED + gravity)
 	elif movement.length() > 0:
 		move_and_slide(movement * SPEED + gravity)
 
+	new_position = position.round()
 	
 func spritedir_loop() -> void:
 	if not is_alive:
@@ -113,10 +118,12 @@ func spritedir_loop() -> void:
 			movement = Vector2.ZERO
 		return
 	
-	print(current_surface)
-
-	$Sprite/AnimationPlayer.play("Walking")
-
+	if prev_position != new_position:
+		$Sprite/AnimationPlayer.play("Walking")
+		print(prev_position, new_position)
+	else:
+		$Sprite/AnimationPlayer.play("Idle")
+		
 	match current_surface:
 		Surface.CEILING:
 			$Sprite.rotation_degrees = 0
@@ -125,8 +132,6 @@ func spritedir_loop() -> void:
 				$Sprite.flip_h = false
 			elif movement.x > 0.0:
 				$Sprite.flip_h = true
-			else:
-				$Sprite/AnimationPlayer.play("Idle")	
 		Surface.WALL_LEFT:
 			$Sprite.flip_v = false
 			$Sprite.rotation_degrees = 90
@@ -134,8 +139,6 @@ func spritedir_loop() -> void:
 				$Sprite.flip_h = false
 			elif movement.y > 0.0:
 				$Sprite.flip_h = true
-			else:
-				$Sprite/AnimationPlayer.play("Idle")
 		Surface.FLOOR:
 			$Sprite.rotation_degrees = 0
 			$Sprite.flip_v = false
@@ -143,8 +146,6 @@ func spritedir_loop() -> void:
 				$Sprite.flip_h = false
 			elif movement.x > 0.0:
 				$Sprite.flip_h = true
-			else:
-				$Sprite/AnimationPlayer.play("Idle")	
 		Surface.WALL_RIGHT:
 			$Sprite.flip_v = false
 			$Sprite.rotation_degrees = -90
@@ -152,8 +153,6 @@ func spritedir_loop() -> void:
 				$Sprite.flip_h = true
 			elif movement.y > 0.0:
 				$Sprite.flip_h = false
-			else:
-				$Sprite/AnimationPlayer.play("Idle")
 				
 				
 #	match movement:
