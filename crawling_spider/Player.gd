@@ -73,9 +73,12 @@ func collision_loop() -> void:
 
 	elif $SouthLeft.is_colliding() and $WestDown.is_colliding() and not $SouthRight.is_colliding():
 		if movement.y > 0:
-			gravity = Vector2.DOWN  * ACCEL + Vector2.LEFT
+			gravity = Vector2.DOWN * ACCEL + Vector2.LEFT
 		elif movement.x < 0:
-			gravity = Vector2.LEFT  * ACCEL + Vector2.DOWN
+			gravity = Vector2.LEFT * ACCEL + Vector2.DOWN
+		elif movement.x > 0:
+			print("HERE###############################################")
+			gravity = Vector2.DOWN * ACCEL
 		else:
 			gravity = (Vector2.DOWN + Vector2.LEFT) * ACCEL
 	
@@ -105,12 +108,12 @@ func collision_loop() -> void:
 func movement_loop() -> void:
 	
 	prev_position = position.round()
-
+	
 	if free_fall or not is_on_wall():
 		move_and_slide(movement * SPEED + gravity)
 	elif movement.length() > 0:
 		move_and_slide(movement * SPEED + gravity)
-
+	print(movement * SPEED + gravity)
 	new_position = position.round()
 	
 func spritedir_loop() -> void:
