@@ -68,6 +68,8 @@ func collision_loop() -> void:
 			gravity = Vector2.DOWN * ACCEL + Vector2.RIGHT
 		elif movement.x > 0:
 			gravity = Vector2.RIGHT * ACCEL + Vector2.DOWN
+		elif movement.x < 0:
+			gravity = Vector2.DOWN * ACCEL
 		else:
 			gravity = (Vector2.DOWN + Vector2.RIGHT) * ACCEL
 
@@ -77,11 +79,9 @@ func collision_loop() -> void:
 		elif movement.x < 0:
 			gravity = Vector2.LEFT * ACCEL + Vector2.DOWN
 		elif movement.x > 0:
-			print("HERE###############################################")
 			gravity = Vector2.DOWN * ACCEL
 		else:
 			gravity = (Vector2.DOWN + Vector2.LEFT) * ACCEL
-	
 	
 	elif $NorthLeft.is_colliding() or $NorthRight.is_colliding():
 		current_surface = Surface.CEILING
@@ -113,7 +113,6 @@ func movement_loop() -> void:
 		move_and_slide(movement * SPEED + gravity)
 	elif movement.length() > 0:
 		move_and_slide(movement * SPEED + gravity)
-	print(movement * SPEED + gravity)
 	new_position = position.round()
 	
 func spritedir_loop() -> void:
@@ -143,6 +142,8 @@ func spritedir_loop() -> void:
 				elif prev_surface == Surface.WALL_RIGHT:
 					$Sprite.flip_h = false
 		Surface.WALL_LEFT:
+			if prev_surface == Surface.FLOOR:
+				continue
 			$Sprite.flip_v = false
 			$Sprite.rotation_degrees = 90
 			if movement.y < 0.0:
@@ -157,6 +158,8 @@ func spritedir_loop() -> void:
 			elif movement.x > 0.0:
 				$Sprite.flip_h = true
 		Surface.WALL_RIGHT:
+			if prev_surface == Surface.FLOOR:
+				continue
 			$Sprite.flip_v = false
 			$Sprite.rotation_degrees = -90
 			if movement.y < 0.0:
