@@ -20,6 +20,7 @@ var prev_position = Vector2.ZERO
 var new_position = Vector2.ZERO
 
 func _physics_process(delta):
+
 	control_loop()
 	
 	spritedir_loop()
@@ -108,11 +109,14 @@ func collision_loop() -> void:
 func movement_loop() -> void:
 	
 	prev_position = position.round()
-	
+ 
+	if not is_alive:
+		return
 	if free_fall or not is_on_wall():
 		move_and_slide(movement * SPEED + gravity)
 	elif movement.length() > 0:
 		move_and_slide(movement * SPEED + gravity)
+
 	new_position = position.round()
 	
 func spritedir_loop() -> void:
@@ -121,6 +125,7 @@ func spritedir_loop() -> void:
 			$Sprite/AnimationPlayer.play("Dead")
 			is_dead_anim_playing = true
 			movement = Vector2.ZERO
+			gravity = Vector2.ZERO
 		return
 	
 	if prev_position != new_position:
@@ -175,37 +180,7 @@ func spritedir_loop() -> void:
 			$Sprite.flip_h = false
 		if movement.x > 0:
 			$Sprite.flip_h = true
-#		
-#	if is_on_ceiling(): # and (movedir == "left" or movedir == "right"):
-#		if previous_plane == "wall_left":
-#			$Sprite.flip_h = true
-#		elif previous_plane == "wall_right":
-#			$Sprite.flip_h = false
-#		$Sprite.flip_v = true
-#		$Sprite.rotation_degrees = 0
-#	elif is_on_wall(): # and (movedir == "up" or movedir == "down"):
-#		$Sprite.flip_v = false
-#		if previous_plane == "ceiling":
-#			if movement.x > 0:
-#				$Sprite.flip_h = false
-#			elif movement.x < 0:
-#				$Sprite.flip_h = true
-#	elif is_on_floor() or free_fall:
-#		$Sprite.flip_v = false
-#		$Sprite.rotation_degrees = 0
-	
-func get_prev_surface():
-	if is_on_ceiling():
-		return "ceiling"
-	elif is_on_floor():
-		return "floor"
-	elif is_on_wall() and gravity == Vector2.RIGHT:
-		return "wall_right"
-	elif is_on_wall() and gravity == Vector2.LEFT:
-		return "wall_left"
-	return "none"
-	
-	
+#			
 func check_collisions_loop():
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
