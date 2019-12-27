@@ -28,16 +28,13 @@ func _physics_process(delta):
 	collision_loop()
 	
 	movement_loop()
-	
-	#check_collisions_loop()
-	
+
 func control_loop():
 	if not is_alive:
 		return
 	if not visible:
 		movement = Vector2.ZERO
 		return
-
 	movement.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	movement.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 		
@@ -180,12 +177,6 @@ func spritedir_loop() -> void:
 			$Sprite.flip_h = false
 		if movement.x > 0:
 			$Sprite.flip_h = true
-#			
-func check_collisions_loop():
-	for i in get_slide_count():
-		var collision = get_slide_collision(i)
-		if collision.collider.name == "Wasp":
-			_on_Wasp_hit_player()
 
 func _on_Wasp_hit_player():
 	$"../BackToMenuTimer".start()
