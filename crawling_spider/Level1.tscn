@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Level1.gd" type="Script" id=1]
 [ext_resource path="res://DirtTileset.tres" type="TileSet" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Player.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Fonts/Boxy-Bold.ttf" type="DynamicFontData" id=7]
 [ext_resource path="res://Fireworks.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Fonts/font15.tres" type="DynamicFont" id=9]
 
 [sub_resource type="Theme" id=1]
 
@@ -55,7 +56,7 @@ position = Vector2( 1307, 1375 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 6 )]
-position = Vector2( -280.795, 288.163 )
+position = Vector2( 1156.59, 988.92 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 anchor_left = 1.0
@@ -113,6 +114,14 @@ emitting = false
 [node name="Fireworks2" parent="CanvasLayer" instance=ExtResource( 8 )]
 position = Vector2( 507.311, 110.625 )
 emitting = false
+
+[node name="LivesLabel" type="Label" parent="CanvasLayer"]
+margin_left = 6.93475
+margin_top = 8.87649
+margin_right = 96.9348
+margin_bottom = 26.8765
+custom_fonts/font = ExtResource( 9 )
+text = "LIVES: "
 
 [node name="BackToMenuTimer" type="Timer" parent="."]
 wait_time = 3.0

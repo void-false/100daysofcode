@@ -19,6 +19,9 @@ var current_surface = Surface.FLOOR
 var prev_position = Vector2.ZERO
 var new_position = Vector2.ZERO
 
+func _ready() -> void:
+	update_lives(0)
+
 func _physics_process(delta):
 
 	control_loop()
@@ -179,11 +182,19 @@ func spritedir_loop() -> void:
 			$Sprite.flip_h = true
 
 func _on_Wasp_hit_player():
+	if not is_alive:
+		return
 	$"../BackToMenuTimer".start()
 	is_alive = false
+	update_lives(-1)
 	$Camera2D.current = false
 	$CollisionShape2D.disabled = true
 	
+
+func update_lives(by_number: int) -> void:
+	Globals.lives += by_number
+	$"../CanvasLayer/LivesLabel".text = "LIVES: " + str(Globals.lives)
+
 
 func _on_ExitDoor_body_entered(body):
 	$"../HighScoreTimer".start()
