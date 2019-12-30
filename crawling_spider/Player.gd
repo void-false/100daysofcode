@@ -18,9 +18,11 @@ var prev_surface = null
 var current_surface = Surface.FLOOR
 var prev_position = Vector2.ZERO
 var new_position = Vector2.ZERO
+var start_position : Vector2
 
 func _ready() -> void:
 	update_lives(0)
+	start_position = transform.get_origin()
 
 func _physics_process(delta):
 
@@ -181,19 +183,23 @@ func spritedir_loop() -> void:
 		if movement.x > 0:
 			$Sprite.flip_h = true
 
-func _on_Wasp_hit_player():
-	if not is_alive:
-		return
-	$"../BackToMenuTimer".start()
-	is_alive = false
-	update_lives(-1)
-	$Camera2D.current = false
-	$CollisionShape2D.disabled = true
-	
 
 func update_lives(by_number: int) -> void:
 	Globals.lives += by_number
 	$"../CanvasLayer/LivesLabel".text = "LIVES: " + str(Globals.lives)
+
+
+func _on_Wasp_hit_player():
+	if not is_alive:
+		return
+	is_alive = false
+	update_lives(-1)
+	$Camera2D.current = false
+	$CollisionShape2D.disabled = true
+	if Globals.lives <= 0:
+		$"../BackToMenuTimer".start()
+	else:
+		$"../PlayerRespawnTimer".start()
 
 
 func _on_ExitDoor_body_entered(body):
@@ -205,3 +211,9 @@ func _on_ExitDoor_body_entered(body):
 	Globals.end_time = OS.get_ticks_msec()
 	
 	
+func _on_PlayerRespawnTimer_timeout() -> void:
+	transform.origin = start_position
+	is_dead_anim_playing = false
+	$Camera2D.current = true
+	$CollisionShape2D.disabled = false
+	is_alive = true
