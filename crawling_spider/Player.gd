@@ -200,7 +200,7 @@ func _on_Wasp_hit_player():
 		$"../BackToMenuTimer".start()
 	else:
 		$"../PlayerRespawnTimer".start()
-
+	
 
 func _on_ExitDoor_body_entered(body):
 	$"../HighScoreTimer".start()
