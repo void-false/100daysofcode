@@ -190,8 +190,6 @@ func update_lives(by_number: int) -> void:
 
 
 func _on_Wasp_hit_player():
-	if not is_alive:
-		return
 	is_alive = false
 	update_lives(-1)
 	$Camera2D.current = false
@@ -200,7 +198,15 @@ func _on_Wasp_hit_player():
 		$"../BackToMenuTimer".start()
 	else:
 		$"../PlayerRespawnTimer".start()
+
 	
+func _on_PlayerRespawnTimer_timeout() -> void:
+	transform.origin = start_position
+	is_dead_anim_playing = false
+	$Camera2D.current = true
+	$CollisionShape2D.disabled = false
+	is_alive = true
+
 
 func _on_ExitDoor_body_entered(body):
 	$"../HighScoreTimer".start()
@@ -209,11 +215,3 @@ func _on_ExitDoor_body_entered(body):
 	$"../CanvasLayer/Fireworks1".emitting = true
 	$"../CanvasLayer/Fireworks2".emitting = true
 	Globals.end_time = OS.get_ticks_msec()
-	
-	
-func _on_PlayerRespawnTimer_timeout() -> void:
-	transform.origin = start_position
-	is_dead_anim_playing = false
-	$Camera2D.current = true
-	$CollisionShape2D.disabled = false
-	is_alive = true
