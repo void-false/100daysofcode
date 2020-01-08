@@ -13,12 +13,13 @@ var movement : Vector2 = Vector2.ZERO
 var movedir = "right"
 var free_fall : bool = false
 var is_alive = true
-var is_dead_anim_playing = false
+var is_dead_anim_playing : bool = false
 var prev_surface = null
 var current_surface = Surface.FLOOR
 var prev_position = Vector2.ZERO
 var new_position = Vector2.ZERO
 var start_position : Vector2
+var will_respawn_player : bool = false
 
 func _ready() -> void:
 	update_lives(0)
@@ -33,6 +34,9 @@ func _physics_process(delta):
 	collision_loop()
 	
 	movement_loop()
+	
+	if will_respawn_player:
+		respawn_player()
 
 func control_loop():
 	if not is_alive:
@@ -201,11 +205,19 @@ func _on_Wasp_hit_player():
 
 	
 func _on_PlayerRespawnTimer_timeout() -> void:
+	will_respawn_player = true
+	
+	
+func respawn_player() -> void:
+	self.visible = false
 	transform.origin = start_position
 	is_dead_anim_playing = false
 	$Camera2D.current = true
 	$CollisionShape2D.disabled = false
 	is_alive = true
+	will_respawn_player = false
+	yield(get_tree().create_timer(0.07), "timeout")
+	self.visible = true
 
 
 func _on_ExitDoor_body_entered(body):
