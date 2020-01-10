@@ -3,7 +3,6 @@ extends Node
 
 func _ready() -> void:
 	$"Control/MenuItems/Play".grab_focus()
-	Globals.lives = 30
 
 
 func _on_Play_pressed() -> void:

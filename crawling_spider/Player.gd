@@ -22,7 +22,7 @@ var start_position : Vector2
 var will_respawn_player : bool = false
 
 func _ready() -> void:
-	update_lives(0)
+	update_lives(3)
 	start_position = transform.get_origin()
 
 func _physics_process(delta):
@@ -227,3 +227,7 @@ func _on_ExitDoor_body_entered(body):
 	$"../CanvasLayer/Fireworks1".emitting = true
 	$"../CanvasLayer/Fireworks2".emitting = true
 	Globals.end_time = OS.get_ticks_msec()
+	
+
+func _exit_tree():
+	Globals.lives = 0
