@@ -4,7 +4,7 @@ class MyCustomSorter:
 	static func sort(a, b):
 		return a[0] > b[0]
 
-var lives : int = 0
+
 var score : int = 0
 var start_time : int = 0
 var end_time : int = 1000

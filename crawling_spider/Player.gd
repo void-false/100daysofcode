@@ -20,6 +20,7 @@ var prev_position = Vector2.ZERO
 var new_position = Vector2.ZERO
 var start_position : Vector2
 var will_respawn_player : bool = false
+var lives : int = 0
 
 func _ready() -> void:
 	update_lives(3)
@@ -189,8 +190,8 @@ func spritedir_loop() -> void:
 
 
 func update_lives(by_number: int) -> void:
-	Globals.lives += by_number
-	$"../CanvasLayer/LivesLabel".text = "LIVES: " + str(Globals.lives)
+	lives += by_number
+	$"../CanvasLayer/LivesLabel".text = "LIVES: " + str(lives)
 
 
 func _on_Wasp_hit_player():
@@ -198,7 +199,7 @@ func _on_Wasp_hit_player():
 	update_lives(-1)
 	$Camera2D.current = false
 	$CollisionShape2D.disabled = true
-	if Globals.lives <= 0:
+	if lives <= 0:
 		$"../BackToMenuTimer".start()
 	else:
 		$"../PlayerRespawnTimer".start()
@@ -228,6 +229,3 @@ func _on_ExitDoor_body_entered(body):
 	$"../CanvasLayer/Fireworks2".emitting = true
 	Globals.end_time = OS.get_ticks_msec()
 	
-
-func _exit_tree():
-	Globals.lives = 0
