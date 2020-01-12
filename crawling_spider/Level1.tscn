@@ -1,20 +1,21 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Level1.gd" type="Script" id=1]
 [ext_resource path="res://DirtTileset.tres" type="TileSet" id=2]
-[ext_resource path="res://Fly.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Wasp.tscn" type="PackedScene" id=4]
-[ext_resource path="res://ExitDoor.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Player.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Fonts/Boxy-Bold.ttf" type="DynamicFontData" id=7]
-[ext_resource path="res://Fireworks.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Fonts/font15.tres" type="DynamicFont" id=9]
+[ext_resource path="res://checkpoint.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Fly.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Wasp.tscn" type="PackedScene" id=5]
+[ext_resource path="res://ExitDoor.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Fonts/Boxy-Bold.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://Fireworks.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Fonts/font15.tres" type="DynamicFont" id=10]
 
 [sub_resource type="Theme" id=1]
 
 [sub_resource type="DynamicFont" id=2]
 size = 23
-font_data = ExtResource( 7 )
+font_data = ExtResource( 8 )
 
 [node name="Level1" type="Node"]
 script = ExtResource( 1 )
@@ -28,34 +29,37 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Fly" parent="." instance=ExtResource( 3 )]
+[node name="egg" parent="." instance=ExtResource( 3 )]
+position = Vector2( 967.421, 924.985 )
+
+[node name="Fly" parent="." instance=ExtResource( 4 )]
 position = Vector2( 610, 90 )
 scale = Vector2( 0.2, 0.2 )
 
-[node name="Fly2" parent="." instance=ExtResource( 3 )]
+[node name="Fly2" parent="." instance=ExtResource( 4 )]
 position = Vector2( 1319.07, 795.56 )
 scale = Vector2( 0.2, 0.2 )
 
-[node name="Wasp" parent="." instance=ExtResource( 4 )]
+[node name="Wasp" parent="." instance=ExtResource( 5 )]
 position = Vector2( 1550, 1560 )
 
-[node name="Wasp2" parent="." instance=ExtResource( 4 )]
+[node name="Wasp2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 1360.84, 602.509 )
 
-[node name="Wasp3" parent="." instance=ExtResource( 4 )]
+[node name="Wasp3" parent="." instance=ExtResource( 5 )]
 position = Vector2( 160, 1620 )
 
-[node name="Wasp4" parent="." instance=ExtResource( 4 )]
+[node name="Wasp4" parent="." instance=ExtResource( 5 )]
 position = Vector2( 70, 990 )
 
-[node name="Wasp5" parent="." instance=ExtResource( 4 )]
+[node name="Wasp5" parent="." instance=ExtResource( 5 )]
 position = Vector2( 1090, 920 )
 
-[node name="ExitDoor" parent="." instance=ExtResource( 5 )]
+[node name="ExitDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( 1307, 1375 )
 scale = Vector2( 1, 1 )
 
-[node name="Player" parent="." instance=ExtResource( 6 )]
+[node name="Player" parent="." instance=ExtResource( 7 )]
 position = Vector2( 1156.59, 988.92 )
 
 [node name="MovementLabel1" type="Label" parent="."]
@@ -107,11 +111,11 @@ text = "THE WINNER IS YOU!!!"
 align = 3
 valign = 3
 
-[node name="Fireworks1" parent="CanvasLayer" instance=ExtResource( 8 )]
+[node name="Fireworks1" parent="CanvasLayer" instance=ExtResource( 9 )]
 position = Vector2( 306.732, 110.323 )
 emitting = false
 
-[node name="Fireworks2" parent="CanvasLayer" instance=ExtResource( 8 )]
+[node name="Fireworks2" parent="CanvasLayer" instance=ExtResource( 9 )]
 position = Vector2( 507.311, 110.625 )
 emitting = false
 
@@ -120,7 +124,7 @@ margin_left = 6.93475
 margin_top = 8.87649
 margin_right = 96.9348
 margin_bottom = 26.8765
-custom_fonts/font = ExtResource( 9 )
+custom_fonts/font = ExtResource( 10 )
 text = "LIVES: "
 
 [node name="BackToMenuTimer" type="Timer" parent="."]
@@ -134,6 +138,7 @@ one_shot = true
 [node name="PlayerRespawnTimer" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
+[connection signal="activate_checkpoint" from="egg" to="Player" method="_on_egg_activate_checkpoint"]
 [connection signal="hit_player" from="Wasp" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="hit_player" from="Wasp2" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="hit_player" from="Wasp3" to="Player" method="_on_Wasp_hit_player"]

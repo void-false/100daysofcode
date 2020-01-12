@@ -229,3 +229,6 @@ func _on_ExitDoor_body_entered(body):
 	$"../CanvasLayer/Fireworks2".emitting = true
 	Globals.end_time = OS.get_ticks_msec()
 	
+
+func _on_egg_activate_checkpoint(checkpoint_pos : Vector2) -> void:
+	start_position = checkpoint_pos.round()
