@@ -12,5 +12,5 @@ func _ready() -> void:
 
 
 func _on_Area2D_body_entered(body: PhysicsBody2D) -> void:
-	if body.name == "Player":
+	if body and body.name == "Player":
 		emit_signal("activate_checkpoint", transform.origin)

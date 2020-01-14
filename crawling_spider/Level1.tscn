@@ -29,8 +29,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="egg" parent="." instance=ExtResource( 3 )]
-position = Vector2( 967.421, 924.985 )
+[node name="Checkpoint2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 684.146, 1233.34 )
+rotation = 3.14159
+
+[node name="Checkpoint3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1055.17, 38.8544 )
 
 [node name="Fly" parent="." instance=ExtResource( 4 )]
 position = Vector2( 610, 90 )
@@ -60,7 +64,7 @@ position = Vector2( 1307, 1375 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( 1156.59, 988.92 )
+position = Vector2( -339.898, 281.3 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 anchor_left = 1.0
@@ -138,7 +142,8 @@ one_shot = true
 [node name="PlayerRespawnTimer" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
-[connection signal="activate_checkpoint" from="egg" to="Player" method="_on_egg_activate_checkpoint"]
+[connection signal="activate_checkpoint" from="Checkpoint2" to="Player" method="_on_egg_activate_checkpoint"]
+[connection signal="activate_checkpoint" from="Checkpoint3" to="Player" method="_on_egg_activate_checkpoint"]
 [connection signal="hit_player" from="Wasp" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="hit_player" from="Wasp2" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="hit_player" from="Wasp3" to="Player" method="_on_Wasp_hit_player"]
