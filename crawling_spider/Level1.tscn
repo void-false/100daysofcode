@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Level1.gd" type="Script" id=1]
 [ext_resource path="res://DirtTileset.tres" type="TileSet" id=2]
-[ext_resource path="res://checkpoint.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Checkpoint.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Fly.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Wasp.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ExitDoor.tscn" type="PackedScene" id=6]
@@ -30,11 +30,18 @@ __meta__ = {
 }
 
 [node name="Checkpoint2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 684.146, 1233.34 )
+position = Vector2( 684.79, 1235.7 )
 rotation = 3.14159
 
+[node name="Checkpoint4" parent="." instance=ExtResource( 3 )]
+position = Vector2( 862.363, 1065.78 )
+
+[node name="Checkpoint5" parent="." instance=ExtResource( 3 )]
+position = Vector2( 533.102, 1154.44 )
+rotation = 1.5708
+
 [node name="Checkpoint3" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1055.17, 38.8544 )
+position = Vector2( 1040, 41.2645 )
 
 [node name="Fly" parent="." instance=ExtResource( 4 )]
 position = Vector2( 610, 90 )
@@ -64,7 +71,7 @@ position = Vector2( 1307, 1375 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( -339.898, 281.3 )
+position = Vector2( 703.053, 1121.2 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 anchor_left = 1.0
@@ -143,6 +150,8 @@ one_shot = true
 wait_time = 3.0
 one_shot = true
 [connection signal="activate_checkpoint" from="Checkpoint2" to="Player" method="_on_egg_activate_checkpoint"]
+[connection signal="activate_checkpoint" from="Checkpoint4" to="Player" method="_on_egg_activate_checkpoint"]
+[connection signal="activate_checkpoint" from="Checkpoint5" to="Player" method="_on_egg_activate_checkpoint"]
 [connection signal="activate_checkpoint" from="Checkpoint3" to="Player" method="_on_egg_activate_checkpoint"]
 [connection signal="hit_player" from="Wasp" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="hit_player" from="Wasp2" to="Player" method="_on_Wasp_hit_player"]

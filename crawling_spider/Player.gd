@@ -23,7 +23,7 @@ var will_respawn_player : bool = false
 var lives : int = 0
 
 func _ready() -> void:
-	update_lives(3)
+	update_lives(30)
 	start_position = transform.get_origin()
 
 func _physics_process(delta):
@@ -217,6 +217,7 @@ func respawn_player() -> void:
 	$CollisionShape2D.disabled = false
 	is_alive = true
 	will_respawn_player = false
+	move_and_slide(Vector2.UP)
 	yield(get_tree().create_timer(0.07), "timeout")
 	self.visible = true
 
