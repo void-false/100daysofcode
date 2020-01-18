@@ -211,13 +211,13 @@ func _on_PlayerRespawnTimer_timeout() -> void:
 	
 func respawn_player() -> void:
 	self.visible = false
-	transform.origin = start_position
+	transform.origin = Vector2(start_position.x, start_position.y - 10)
 	is_dead_anim_playing = false
 	$Camera2D.current = true
 	$CollisionShape2D.disabled = false
 	is_alive = true
 	will_respawn_player = false
-	move_and_slide(Vector2.UP)
+	move_and_slide(Vector2.UP * ACCEL)
 	yield(get_tree().create_timer(0.07), "timeout")
 	self.visible = true
 
