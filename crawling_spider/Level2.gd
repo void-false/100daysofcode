@@ -16,4 +16,4 @@ func _on_BackToMenuTimer_timeout() -> void:
 
 
 func _on_HighScoreTimer_timeout() -> void:
-	get_tree().change_scene("res://Level2.tscn")
+	get_tree().change_scene("res://EnterYourName.tscn")
