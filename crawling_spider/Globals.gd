@@ -14,6 +14,14 @@ func _ready() -> void:
 	high_score = generate_high_score()
 
 
+func _process(delta: float) -> void:
+	if Input.is_action_pressed("ui_cancel"):
+		get_tree().reload_current_scene()
+		
+	elif Input.is_action_pressed("quit"):
+		get_tree().quit()
+		
+
 func update_score(name : String) -> void:
 	high_score.append([score, name])
 	high_score.sort_custom(MyCustomSorter, "sort")
