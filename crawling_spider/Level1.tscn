@@ -35,8 +35,19 @@ __meta__ = {
 [node name="checkpoint" parent="." groups=[
 "Checkpoints",
 ] instance=ExtResource( 3 )]
-position = Vector2( 1108.74, 100.706 )
+position = Vector2( 1497.08, 425.507 )
 rotation = 1.5708
+
+[node name="checkpoint3" parent="." groups=[
+"Checkpoints",
+] instance=ExtResource( 3 )]
+position = Vector2( 1431.12, 486.722 )
+
+[node name="checkpoint4" parent="." groups=[
+"Checkpoints",
+] instance=ExtResource( 3 )]
+position = Vector2( 1332.91, 472.281 )
+rotation = 3.14159
 
 [node name="checkpoint2" parent="." groups=[
 "Checkpoints",
@@ -72,7 +83,7 @@ position = Vector2( 1307, 1375 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( 1376.39, 1371.64 )
+position = Vector2( 1499.23, 481.21 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 anchor_left = 1.0
@@ -151,6 +162,8 @@ one_shot = true
 wait_time = 3.0
 one_shot = true
 [connection signal="checkpoint_activated" from="checkpoint" to="Player" method="_on_checkpoint_activated"]
+[connection signal="checkpoint_activated" from="checkpoint3" to="Player" method="_on_checkpoint_activated"]
+[connection signal="checkpoint_activated" from="checkpoint4" to="Player" method="_on_checkpoint_activated"]
 [connection signal="checkpoint_activated" from="checkpoint2" to="Player" method="_on_checkpoint_activated"]
 [connection signal="hit_player" from="Wasp" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="hit_player" from="Wasp2" to="Player" method="_on_Wasp_hit_player"]

@@ -211,7 +211,7 @@ func _on_PlayerRespawnTimer_timeout() -> void:
 	
 func respawn_player() -> void:
 	self.visible = false
-	transform.origin = Vector2(start_position.x, start_position.y - 10)
+	transform.origin = Vector2(start_position.x, start_position.y)
 	is_dead_anim_playing = false
 	$Camera2D.current = true
 	$CollisionShape2D.disabled = false
