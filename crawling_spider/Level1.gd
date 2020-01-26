@@ -8,5 +8,9 @@ func _on_BackToMenuTimer_timeout() -> void:
 	get_tree().change_scene("res://MainMenu.tscn")
 
 
-func _on_HighScoreTimer_timeout() -> void:
+func _on_NextLevelTimer_timeout() -> void:
 	get_tree().change_scene("res://Level2.tscn")
+
+
+func _on_RestartLevelTimer_timeout() -> void:
+	get_tree().reload_current_scene()

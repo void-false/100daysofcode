@@ -23,7 +23,7 @@ var will_respawn_player : bool = false
 var lives : int = 0
 
 func _ready() -> void:
-	update_lives(30)
+	update_lives(3)
 	start_position = transform.get_origin()
 
 func _physics_process(delta):
@@ -200,7 +200,7 @@ func _on_Wasp_hit_player():
 	$Camera2D.current = false
 	$CollisionShape2D.disabled = true
 	if lives <= 0:
-		$"../BackToMenuTimer".start()
+		$"../RestartLevelTimer".start()
 	else:
 		$"../PlayerRespawnTimer".start()
 
@@ -223,7 +223,7 @@ func respawn_player() -> void:
 
 
 func _on_ExitDoor_body_entered(body):
-	$"../HighScoreTimer".start()
+	$"../NextLevelTimer".start()
 	self.visible = false
 	$"../CanvasLayer/WinLabel".visible = true
 	$"../CanvasLayer/Fireworks1".emitting = true

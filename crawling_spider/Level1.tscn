@@ -41,7 +41,7 @@ rotation = 1.5708
 [node name="checkpoint3" parent="." groups=[
 "Checkpoints",
 ] instance=ExtResource( 3 )]
-position = Vector2( 1431.12, 486.722 )
+position = Vector2( 1418.19, 1382.16 )
 
 [node name="checkpoint4" parent="." groups=[
 "Checkpoints",
@@ -83,7 +83,7 @@ position = Vector2( 1307, 1375 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( 1499.23, 481.21 )
+position = Vector2( 1389, 1239.47 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 anchor_left = 1.0
@@ -150,11 +150,11 @@ margin_bottom = 26.8765
 custom_fonts/font = ExtResource( 10 )
 text = "LIVES: "
 
-[node name="BackToMenuTimer" type="Timer" parent="."]
+[node name="RestartLevelTimer" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
 
-[node name="HighScoreTimer" type="Timer" parent="."]
+[node name="NextLevelTimer" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
 
@@ -171,6 +171,6 @@ one_shot = true
 [connection signal="hit_player" from="Wasp4" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="hit_player" from="Wasp5" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="body_entered" from="ExitDoor" to="Player" method="_on_ExitDoor_body_entered"]
-[connection signal="timeout" from="BackToMenuTimer" to="." method="_on_BackToMenuTimer_timeout"]
-[connection signal="timeout" from="HighScoreTimer" to="." method="_on_HighScoreTimer_timeout"]
+[connection signal="timeout" from="RestartLevelTimer" to="." method="_on_RestartLevelTimer_timeout"]
+[connection signal="timeout" from="NextLevelTimer" to="." method="_on_NextLevelTimer_timeout"]
 [connection signal="timeout" from="PlayerRespawnTimer" to="Player" method="_on_PlayerRespawnTimer_timeout"]
