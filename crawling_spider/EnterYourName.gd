@@ -2,7 +2,7 @@ extends MarginContainer
 
 
 func _ready() -> void:
-	Globals.score = 10000 / ((Globals.end_time - Globals.start_time) / 1000)
+	# Globals.score += 10000 / ((Globals.end_time - Globals.start_time) / 1000)
 	$"VBoxContainer/HBoxContainer/PointsLabel".text = String(Globals.score)
 	$"VBoxContainer/NameLineEdit".grab_focus()
 

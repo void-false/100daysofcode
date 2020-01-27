@@ -229,6 +229,7 @@ func _on_ExitDoor_body_entered(body):
 	$"../CanvasLayer/Fireworks1".emitting = true
 	$"../CanvasLayer/Fireworks2".emitting = true
 	Globals.end_time = OS.get_ticks_msec()
+	Globals.score += 10000 / ((Globals.end_time - Globals.start_time) / 1000)
 
 
 func _on_checkpoint_activated(checkpoint_pos : Vector2) -> void:
