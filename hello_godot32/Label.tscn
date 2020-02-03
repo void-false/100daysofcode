@@ -12,3 +12,4 @@ autostart = true
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 80, 70 )
 texture = ExtResource( 2 )
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
