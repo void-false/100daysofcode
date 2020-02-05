@@ -38,8 +38,6 @@ func _process(delta: float) -> void:
 		$AnimatedSprite.animation = "up"
 		$AnimatedSprite.flip_v = velocity.y > 0
 
-	hide()
-
 
 func _on_Player_body_entered(body: Node) -> void:
 	hide()
