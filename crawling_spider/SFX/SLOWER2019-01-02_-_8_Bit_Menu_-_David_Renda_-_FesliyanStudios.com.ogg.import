@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg-2423af0a9c8794559ac2adfd16b292ec.oggstr"
+
+[deps]
+
+source_file="res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg"
+dest_files=[ "res://.import/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg-2423af0a9c8794559ac2adfd16b292ec.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
