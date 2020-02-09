@@ -5,6 +5,9 @@ class MyCustomSorter:
 		return a[0] > b[0]
 
 
+enum GameState {Menu, Level}
+
+var current_gamestate = GameState.Menu
 var score : int = 0
 var start_time : int = 0
 var end_time : int = 1000
@@ -12,6 +15,7 @@ var high_score : Array
 
 func _ready() -> void:
 	high_score = generate_high_score()
+	MusicPlayer.get_node("MainMenuMusic").play(1)
 
 
 func _process(delta: float) -> void:

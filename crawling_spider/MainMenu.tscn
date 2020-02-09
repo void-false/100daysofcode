@@ -1,9 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://MainMenu.gd" type="Script" id=1]
 [ext_resource path="res://Fonts/Boxy-Bold.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg" type="AudioStream" id=3]
-[ext_resource path="res://MainMenuMusic.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 26
@@ -77,10 +75,6 @@ text = "EXIT"
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 399.584, 225.335 )
 current = true
-
-[node name="MainMenuMusic" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 3 )
-script = ExtResource( 4 )
 [connection signal="pressed" from="Control/MenuItems/Play" to="." method="_on_Play_pressed"]
 [connection signal="pressed" from="Control/MenuItems/HighScore" to="." method="_on_HighScore_pressed"]
 [connection signal="pressed" from="Control/MenuItems/Exit" to="." method="_on_Exit_pressed"]

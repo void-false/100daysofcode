@@ -26,6 +26,7 @@ default_bus_layout=""
 [autoload]
 
 Globals="*res://Globals.gd"
+MusicPlayer="*res://MusicPlayer.tscn"
 
 [display]
 

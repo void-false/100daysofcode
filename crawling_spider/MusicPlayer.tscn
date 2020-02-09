@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg" type="AudioStream" id=1]
+[ext_resource path="res://SFX/rolemu_-_04_-_The_Black_Kitty.ogg" type="AudioStream" id=2]
+
+[node name="MusicPlayer" type="Node"]
+
+[node name="LevelMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="MainMenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
