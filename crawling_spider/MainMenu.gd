@@ -6,10 +6,9 @@ func _ready() -> void:
 
 
 func _on_Play_pressed() -> void:
+	Globals.set_gamestate(Globals.GameState.LEVEL)
 	get_tree().change_scene("res://Level1.tscn")
-	MusicPlayer.get_node("MainMenuMusic").stop()
-	MusicPlayer.get_node("LevelMusic").play()
-
+	
 
 func _on_HighScore_pressed() -> void:
 	get_tree().change_scene("res://HighScore.tscn")
