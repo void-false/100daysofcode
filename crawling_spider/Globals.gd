@@ -12,11 +12,14 @@ var score : int = 0
 var start_time : int = 0
 var end_time : int = 1000
 var high_score : Array
+var audio_stream: AudioStream
 
 func _ready() -> void:
 	high_score = generate_high_score()
-	MusicPlayer.get_node("MainMenuMusic").play(1)
-
+	audio_stream = load("res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg")
+	MusicPlayer.set_stream(audio_stream)
+	MusicPlayer.play()
+	
 
 func _process(delta: float) -> void:
 	if Input.is_action_pressed("ui_cancel"):
@@ -31,15 +34,15 @@ func _process(delta: float) -> void:
 func set_gamestate(new_gamestate) -> void:
 	if current_gamestate == new_gamestate:
 		return
-	MusicPlayer.get_node("MainMenuMusic").stop()
-	MusicPlayer.get_node("LevelMusic").stop()
+	MusicPlayer.stop()
 	current_gamestate = new_gamestate
 	match current_gamestate:
 		GameState.MENU:
-			MusicPlayer.get_node("MainMenuMusic").play(1)
+			audio_stream = load("res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg")
 		GameState.LEVEL:
-			MusicPlayer.get_node("LevelMusic").play()
-	
+			audio_stream = load("res://SFX/rolemu_-_04_-_The_Black_Kitty.ogg")
+	MusicPlayer.set_stream(audio_stream)
+	MusicPlayer.play()
 	
 func update_score(name : String) -> void:
 	high_score.append([score, name])
