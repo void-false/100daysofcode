@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Checking_Manifest.ogg-ecf1cd66445a663f17f116785153ca7f.oggstr"
+
+[deps]
+
+source_file="res://SFX/Checking_Manifest.ogg"
+dest_files=[ "res://.import/Checking_Manifest.ogg-ecf1cd66445a663f17f116785153ca7f.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

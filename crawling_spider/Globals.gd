@@ -40,7 +40,7 @@ func set_gamestate(new_gamestate) -> void:
 		GameState.MENU:
 			audio_stream = load("res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg")
 		GameState.LEVEL:
-			audio_stream = load("res://SFX/rolemu_-_04_-_The_Black_Kitty.ogg")
+			audio_stream = load("res://SFX/Checking_Manifest.ogg")
 	MusicPlayer.set_stream(audio_stream)
 	MusicPlayer.play()
 	

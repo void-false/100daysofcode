@@ -195,6 +195,7 @@ func update_lives(by_number: int) -> void:
 
 
 func _on_Wasp_hit_player():
+	$SFXPlayer.play()
 	is_alive = false
 	update_lives(-1)
 	$Camera2D.current = false
