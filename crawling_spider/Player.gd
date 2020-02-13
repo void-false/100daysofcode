@@ -195,7 +195,7 @@ func update_lives(by_number: int) -> void:
 
 
 func _on_Wasp_hit_player():
-	$SFXPlayer.play()
+	$DeathSFXPlayer.play()
 	is_alive = false
 	update_lives(-1)
 	$Camera2D.current = false
@@ -211,6 +211,7 @@ func _on_PlayerRespawnTimer_timeout() -> void:
 	
 	
 func respawn_player() -> void:
+	$RespawnSFXPlayer.play()
 	self.visible = false
 	transform.origin = Vector2(start_position.x, start_position.y)
 	is_dead_anim_playing = false
@@ -224,6 +225,7 @@ func respawn_player() -> void:
 
 
 func _on_ExitDoor_body_entered(body):
+	$WinSFXPlayer.play()
 	$"../NextLevelTimer".start()
 	self.visible = false
 	$"../CanvasLayer/WinLabel".visible = true

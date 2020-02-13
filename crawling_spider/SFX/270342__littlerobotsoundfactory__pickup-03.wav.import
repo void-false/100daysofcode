@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/270342__littlerobotsoundfactory__pickup-03.wav-a4e90e7d6b00e3089be98f04020a8770.sample"
+
+[deps]
+
+source_file="res://SFX/270342__littlerobotsoundfactory__pickup-03.wav"
+dest_files=[ "res://.import/270342__littlerobotsoundfactory__pickup-03.wav-a4e90e7d6b00e3089be98f04020a8770.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
