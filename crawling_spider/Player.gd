@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 onready var web = preload("res://web.tscn")
 
+signal hit_player
+
 const JUMP_HEIGHT = -600
 const SPEED : int = 200
 const ACCEL : int = 130
@@ -23,7 +25,7 @@ var will_respawn_player : bool = false
 var lives : int = 0
 
 func _ready() -> void:
-	update_lives(3)
+	update_lives(30)
 	start_position = transform.get_origin()
 
 func _physics_process(delta):
@@ -49,6 +51,8 @@ func control_loop():
 	movement.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 		
 func collision_loop() -> void:
+	
+	check_enemy_collision()
 	
 	prev_surface = current_surface
 	
@@ -194,7 +198,17 @@ func update_lives(by_number: int) -> void:
 	$"../CanvasLayer/LivesLabel".text = "LIVES: " + str(lives)
 
 
+func check_enemy_collision() -> void:
+	for i in get_slide_count():
+		var collision: KinematicCollision2D = get_slide_collision(i)
+		if "Wasp" in collision.collider.name:
+			emit_signal("hit_player")
+			return
+	
+
 func _on_Wasp_hit_player():
+	if not is_alive:
+		return
 	$DeathSFXPlayer.play()
 	is_alive = false
 	update_lives(-1)
