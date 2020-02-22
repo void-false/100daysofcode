@@ -1,0 +1,129 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Tile.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Enemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Coin.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Camera2D.gd" type="Script" id=5]
+[ext_resource path="res://UI.tscn" type="PackedScene" id=6]
+
+[node name="MainScene" type="Node2D"]
+
+[node name="Tile" parent="." instance=ExtResource( 2 )]
+position = Vector2( 32, 568 )
+
+[node name="Tile20" parent="." instance=ExtResource( 2 )]
+position = Vector2( 573, 320 )
+
+[node name="Tile24" parent="." instance=ExtResource( 2 )]
+position = Vector2( 32, 233 )
+
+[node name="Tile2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 479, 568 )
+
+[node name="Tile3" parent="." instance=ExtResource( 2 )]
+position = Vector2( 415, 568 )
+
+[node name="Tile4" parent="." instance=ExtResource( 2 )]
+position = Vector2( 351, 568 )
+
+[node name="Tile5" parent="." instance=ExtResource( 2 )]
+position = Vector2( 287, 568 )
+
+[node name="Tile6" parent="." instance=ExtResource( 2 )]
+position = Vector2( 223, 568 )
+
+[node name="Tile7" parent="." instance=ExtResource( 2 )]
+position = Vector2( 159, 568 )
+
+[node name="Tile8" parent="." instance=ExtResource( 2 )]
+position = Vector2( 95, 568 )
+
+[node name="Tile19" parent="." instance=ExtResource( 2 )]
+position = Vector2( 764, 320 )
+
+[node name="Tile18" parent="." instance=ExtResource( 2 )]
+position = Vector2( 700, 320 )
+
+[node name="Tile17" parent="." instance=ExtResource( 2 )]
+position = Vector2( 636, 320 )
+
+[node name="Tile23" parent="." instance=ExtResource( 2 )]
+position = Vector2( 223, 233 )
+
+[node name="Tile25" parent="." instance=ExtResource( 2 )]
+position = Vector2( 287, 505 )
+
+[node name="Tile26" parent="." instance=ExtResource( 2 )]
+position = Vector2( 438, 396 )
+
+[node name="Tile27" parent="." instance=ExtResource( 2 )]
+position = Vector2( 989, 396 )
+
+[node name="Tile28" parent="." instance=ExtResource( 2 )]
+position = Vector2( 861, 505 )
+
+[node name="Tile22" parent="." instance=ExtResource( 2 )]
+position = Vector2( 159, 233 )
+
+[node name="Tile21" parent="." instance=ExtResource( 2 )]
+position = Vector2( 95, 233 )
+
+[node name="Tile16" parent="." instance=ExtResource( 2 )]
+position = Vector2( 542, 568 )
+
+[node name="Tile15" parent="." instance=ExtResource( 2 )]
+position = Vector2( 989, 568 )
+
+[node name="Tile14" parent="." instance=ExtResource( 2 )]
+position = Vector2( 925, 568 )
+
+[node name="Tile13" parent="." instance=ExtResource( 2 )]
+position = Vector2( 861, 568 )
+
+[node name="Tile12" parent="." instance=ExtResource( 2 )]
+position = Vector2( 797, 568 )
+
+[node name="Tile11" parent="." instance=ExtResource( 2 )]
+position = Vector2( 733, 568 )
+
+[node name="Tile10" parent="." instance=ExtResource( 2 )]
+position = Vector2( 669, 568 )
+
+[node name="Tile9" parent="." instance=ExtResource( 2 )]
+position = Vector2( 605, 568 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 470, 74 )
+
+[node name="Coin" parent="." instance=ExtResource( 4 )]
+position = Vector2( 223, 159 )
+
+[node name="Coin2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 574, 233 )
+
+[node name="Coin3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 765, 233 )
+
+[node name="Coin4" parent="." instance=ExtResource( 4 )]
+position = Vector2( 989, 505 )
+
+[node name="Enemy" parent="." instance=ExtResource( 3 )]
+position = Vector2( 361, 494 )
+speed = 250
+move_dist = 425
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 511, 300 )
+current = true
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+drag_margin_left = 0.0
+drag_margin_top = 0.0
+drag_margin_right = 0.0
+drag_margin_bottom = 0.0
+script = ExtResource( 5 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" parent="CanvasLayer" instance=ExtResource( 6 )]
