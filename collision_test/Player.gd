@@ -16,3 +16,6 @@ func _process(delta: float) -> void:
 	movement = Vector2(0, speed)
 	move_and_slide(movement, Vector2.UP)
 	speed += accel
+
+func kill() -> void:
+	queue_free()

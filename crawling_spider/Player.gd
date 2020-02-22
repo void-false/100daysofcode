@@ -52,8 +52,6 @@ func control_loop():
 		
 func collision_loop() -> void:
 	
-	check_enemy_collision()
-	
 	prev_surface = current_surface
 	
 	if is_alive:
@@ -196,17 +194,9 @@ func spritedir_loop() -> void:
 func update_lives(by_number: int) -> void:
 	lives += by_number
 	$"../CanvasLayer/LivesLabel".text = "LIVES: " + str(lives)
-
-
-func check_enemy_collision() -> void:
-	for i in get_slide_count():
-		var collision: KinematicCollision2D = get_slide_collision(i)
-		if "Wasp" in collision.collider.name:
-			emit_signal("hit_player")
-			return
 	
 
-func _on_Wasp_hit_player():
+func kill():
 	if not is_alive:
 		return
 	$DeathSFXPlayer.play()
@@ -251,3 +241,4 @@ func _on_ExitDoor_body_entered(body):
 
 func _on_checkpoint_activated(checkpoint_pos : Vector2) -> void:
 	start_position = checkpoint_pos.round()
+

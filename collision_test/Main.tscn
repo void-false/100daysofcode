@@ -29,8 +29,8 @@ texture = ExtResource( 1 )
 position = Vector2( 3.05176e-05, 0 )
 shape = SubResource( 1 )
 
-[node name="Enemy" type="KinematicBody2D" parent="."]
-position = Vector2( 288, 288 )
+[node name="Enemy" type="Area2D" parent="."]
+position = Vector2( 288.92, 287.545 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
@@ -172,3 +172,4 @@ texture = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall7"]
 shape = SubResource( 3 )
+[connection signal="body_entered" from="Enemy" to="Enemy" method="_on_Enemy_body_entered"]

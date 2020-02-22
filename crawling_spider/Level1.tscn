@@ -59,7 +59,7 @@ position = Vector2( 1434.18, 479.437 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( -316.14, 286.319 )
+position = Vector2( 1310.98, 344.62 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 anchor_left = 1.0
@@ -154,9 +154,7 @@ wait_time = 3.0
 one_shot = true
 [connection signal="checkpoint_activated" from="checkpoint3" to="Player" method="_on_checkpoint_activated"]
 [connection signal="checkpoint_activated" from="checkpoint2" to="Player" method="_on_checkpoint_activated"]
-[connection signal="hit_player" from="Wasp2" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="body_entered" from="ExitDoor" to="Player" method="_on_ExitDoor_body_entered"]
-[connection signal="hit_player" from="Player" to="Player" method="_on_Wasp_hit_player"]
 [connection signal="timeout" from="RestartLevelTimer" to="." method="_on_RestartLevelTimer_timeout"]
 [connection signal="timeout" from="NextLevelTimer" to="." method="_on_NextLevelTimer_timeout"]
 [connection signal="timeout" from="PlayerRespawnTimer" to="Player" method="_on_PlayerRespawnTimer_timeout"]

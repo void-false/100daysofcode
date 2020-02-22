@@ -40,13 +40,10 @@ tracks/0/keys = {
 radius = 11.5198
 height = 16.4344
 
-[node name="Wasp" type="KinematicBody2D"]
+[node name="Wasp" type="Area2D"]
 position = Vector2( 495.507, 306.85 )
 scale = Vector2( 2, 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
@@ -62,3 +59,4 @@ anims/Idle = SubResource( 2 )
 position = Vector2( -2.59989, 5.02625 )
 rotation = 1.57079
 shape = SubResource( 3 )
+[connection signal="body_entered" from="." to="." method="_on_Wasp_body_entered"]
