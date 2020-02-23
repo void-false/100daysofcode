@@ -52,14 +52,14 @@ position = Vector2( 1319.07, 795.56 )
 scale = Vector2( 0.2, 0.2 )
 
 [node name="Wasp2" parent="." instance=ExtResource( 5 )]
-position = Vector2( 1355.4, 284.293 )
+position = Vector2( 1552.63, 280.51 )
 
 [node name="ExitDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( 1434.18, 479.437 )
 scale = Vector2( 1, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( 1310.98, 344.62 )
+position = Vector2( -277.742, 288.086 )
 
 [node name="MovementLabel1" type="Label" parent="."]
 anchor_left = 1.0

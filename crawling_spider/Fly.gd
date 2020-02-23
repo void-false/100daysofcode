@@ -8,10 +8,7 @@ func _ready():
 	$Sprite.flip_h = randi() % 2
 
 
-func _process(delta):
-	var bodies = get_overlapping_bodies()
-	for body in bodies:
-		if body.name == "Player":
+func _on_Fly_body_entered(body: Node) -> void:
+	if "Player" in body.name:
 			emit_signal("eaten")
 			queue_free()
-
