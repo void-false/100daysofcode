@@ -14,5 +14,9 @@ func _on_HighScore_pressed() -> void:
 	get_tree().change_scene("res://HighScore.tscn")
 
 
+func _on_Options_pressed() -> void:
+	get_tree().change_scene("res://Options.tscn")
+
+
 func _on_Exit_pressed() -> void:
 	get_tree().quit()
