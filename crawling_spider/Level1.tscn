@@ -140,6 +140,9 @@ margin_right = 96.9348
 margin_bottom = 26.8765
 custom_fonts/font = ExtResource( 10 )
 text = "LIVES: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="RestartLevelTimer" type="Timer" parent="."]
 wait_time = 3.0

@@ -18,7 +18,7 @@ func _ready() -> void:
 	high_score = generate_high_score()
 	audio_stream = load("res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg")
 	MusicPlayer.set_stream(audio_stream)
-	MusicPlayer.play()
+	# MusicPlayer.play()
 	
 
 func _process(delta: float) -> void:
