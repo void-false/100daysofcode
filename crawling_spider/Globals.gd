@@ -19,6 +19,7 @@ func _ready() -> void:
 	audio_stream = load("res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg")
 	MusicPlayer.set_stream(audio_stream)
 	# MusicPlayer.play()
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), true)
 	
 
 func _process(delta: float) -> void:

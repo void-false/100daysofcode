@@ -9,7 +9,8 @@ func _on_BackToMenuTimer_timeout() -> void:
 
 
 func _on_NextLevelTimer_timeout() -> void:
-	get_tree().change_scene("res://Level3.tscn")
+	Globals.set_gamestate(Globals.GameState.MENU)
+	get_tree().change_scene("res://EnterYourName.tscn")
 
 
 func _on_RestartLevelTimer_timeout() -> void:
