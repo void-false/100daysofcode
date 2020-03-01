@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://EnterYourName.gd" type="Script" id=1]
 [ext_resource path="res://Fonts/font15.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Fonts/font24.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Fonts/font15spacing.tres" type="DynamicFont" id=4]
 
 [node name="EnterYourName" type="MarginContainer"]
 anchor_right = 1.0
@@ -12,12 +13,15 @@ custom_constants/margin_top = 120
 custom_constants/margin_left = 220
 custom_constants/margin_bottom = 150
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 253.0
 margin_top = 120.0
 margin_right = 547.0
-margin_bottom = 307.0
+margin_bottom = 313.0
 size_flags_horizontal = 4
 custom_constants/separation = 27
 
@@ -53,18 +57,18 @@ align = 1
 margin_left = 47.0
 margin_top = 99.0
 margin_right = 247.0
-margin_bottom = 127.0
+margin_bottom = 133.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 4 )
 align = 1
 max_length = 12
 
 [node name="SubmitButton" type="Button" parent="VBoxContainer"]
 margin_left = 87.0
-margin_top = 154.0
+margin_top = 160.0
 margin_right = 207.0
-margin_bottom = 187.0
+margin_bottom = 193.0
 rect_min_size = Vector2( 120, 33 )
 size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 2 )
