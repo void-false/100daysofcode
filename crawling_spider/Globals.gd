@@ -18,18 +18,17 @@ func _ready() -> void:
 	high_score = generate_high_score()
 	audio_stream = load("res://SFX/SLOWER2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.ogg")
 	MusicPlayer.set_stream(audio_stream)
-	# MusicPlayer.play()
-	AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), true)
+	MusicPlayer.play()
 	
 
-func _process(delta: float) -> void:
-	if Input.is_action_pressed("ui_cancel"):
-		get_tree().change_scene("res://MainMenu.tscn")
-		set_gamestate(GameState.MENU)
-	elif Input.is_action_pressed("reset_level"):
-		get_tree().reload_current_scene()
-	elif Input.is_action_pressed("quit"):
-		get_tree().quit()
+#func _process(delta: float) -> void:
+#	if Input.is_action_pressed("ui_cancel"):
+#		get_tree().change_scene("res://MainMenu.tscn")
+#		set_gamestate(GameState.MENU)
+#	elif Input.is_action_pressed("reset_level"):
+#		get_tree().reload_current_scene()
+#	elif Input.is_action_pressed("quit"):
+#		get_tree().quit()
 		
 
 func set_gamestate(new_gamestate) -> void:

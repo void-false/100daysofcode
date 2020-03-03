@@ -20,3 +20,7 @@ func _on_Options_pressed() -> void:
 
 func _on_Exit_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_Credits_pressed() -> void:
+	get_tree().change_scene("res://Credits.tscn")

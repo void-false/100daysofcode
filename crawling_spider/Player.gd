@@ -25,7 +25,7 @@ var will_respawn_player : bool = false
 var lives : int = 0
 
 func _ready() -> void:
-	update_lives(30)
+	update_lives(10)
 	start_position = transform.get_origin()
 
 func _physics_process(delta):
