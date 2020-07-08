@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://app.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TextEdit" type="TextEdit" parent="."]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 441.0
+margin_bottom = 461.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpenFile" type="Button" parent="."]
+margin_left = 456.0
+margin_top = 72.0
+margin_right = 597.0
+margin_bottom = 106.0
+text = "Open File"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaveFile" type="Button" parent="."]
+margin_left = 456.0
+margin_top = 128.0
+margin_right = 597.0
+margin_bottom = 162.0
+text = "Save As File"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Exit" type="Button" parent="."]
+margin_left = 456.0
+margin_top = 424.0
+margin_right = 597.0
+margin_bottom = 458.0
+text = "Quit and Exit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Exit2" type="Button" parent="."]
+margin_left = 456.0
+margin_top = 16.0
+margin_right = 597.0
+margin_bottom = 50.0
+text = "New"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="."]
+margin_left = 71.294
+margin_top = 60.0236
+margin_right = 562.294
+margin_bottom = 420.024
+window_title = "Open a File"
+mode = 0
+access = 2
+current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
+current_file = "Control.tscn"
+current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/Control.tscn"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaveFileDialog" type="FileDialog" parent="."]
+margin_left = 67.0
+margin_top = 55.0
+margin_right = 571.0
+margin_bottom = 420.0
+access = 2
+current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
+current_file = "Control.tscn"
+current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/Control.tscn"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="OpenFile" to="." method="_on_OpenFile_pressed"]
+[connection signal="pressed" from="SaveFile" to="." method="_on_SaveFile_pressed"]
+[connection signal="pressed" from="Exit" to="." method="_on_Exit_pressed"]
+[connection signal="pressed" from="Exit2" to="." method="_on_Exit2_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="file_selected" from="SaveFileDialog" to="." method="_on_SaveFileDialog_file_selected"]
