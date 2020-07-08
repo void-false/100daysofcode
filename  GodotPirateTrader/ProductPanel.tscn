@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ProductPanel.gd" type="Script" id=1]
+
+[node name="ProductPanel" type="Panel"]
+margin_right = 447.0
+margin_bottom = 44.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProductName" type="Label" parent="."]
+margin_left = 2.83778
+margin_top = 11.8108
+margin_right = 117.838
+margin_bottom = 31.8108
+text = "[product name]"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Price" type="Label" parent="."]
+margin_left = 372.056
+margin_top = 14.0
+margin_right = 436.056
+margin_bottom = 30.0
+text = "[price]"
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Store.gd" type="Script" id=1]
+
+[node name="Store" type="Panel"]
+margin_left = 68.0
+margin_top = 53.0
+margin_right = 958.0
+margin_bottom = 531.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MoneyLabel" type="Label" parent="."]
+margin_left = 345.0
+margin_top = 63.0
+margin_right = 546.0
+margin_bottom = 157.0
+text = "[money]"
+align = 1
+
+[node name="ClickButton" type="Button" parent="."]
+margin_left = 407.654
+margin_top = 100.413
+margin_right = 485.654
+margin_bottom = 131.413
+text = "Click Me!"
+
+[node name="StoreCountLabel" type="Label" parent="."]
+margin_left = 424.63
+margin_top = 153.978
+margin_right = 464.63
+margin_bottom = 167.978
+text = "[0]"
+
+[node name="BuyButton" type="Button" parent="."]
+margin_left = 409.241
+margin_top = 180.576
+margin_right = 487.241
+margin_bottom = 211.576
+text = "Buy"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="ClickButton" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="BuyButton" to="." method="_on_BuyButton_pressed"]
