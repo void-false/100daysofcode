@@ -1,3 +1,1 @@
-This is unbloated and fast text editor
-
-Bye bye!
+Nothing here

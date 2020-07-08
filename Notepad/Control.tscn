@@ -12,18 +12,18 @@ __meta__ = {
 
 [node name="TextEdit" type="TextEdit" parent="."]
 margin_left = 16.0
-margin_top = 16.0
+margin_top = 32.0
 margin_right = 441.0
-margin_bottom = 461.0
+margin_bottom = 464.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="OpenFile" type="Button" parent="."]
 margin_left = 456.0
-margin_top = 72.0
+margin_top = 88.0
 margin_right = 597.0
-margin_bottom = 106.0
+margin_bottom = 122.0
 text = "Open File"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -31,9 +31,9 @@ __meta__ = {
 
 [node name="SaveFile" type="Button" parent="."]
 margin_left = 456.0
-margin_top = 128.0
+margin_top = 144.0
 margin_right = 597.0
-margin_bottom = 162.0
+margin_bottom = 178.0
 text = "Save As File"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -49,11 +49,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Exit2" type="Button" parent="."]
+[node name="New" type="Button" parent="."]
 margin_left = 456.0
-margin_top = 16.0
+margin_top = 32.0
 margin_right = 597.0
-margin_bottom = 50.0
+margin_bottom = 66.0
 text = "New"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -67,9 +67,9 @@ margin_bottom = 420.024
 window_title = "Open a File"
 mode = 0
 access = 2
-current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
+current_dir = "/100daysofcode/Notepad"
 current_file = "Control.tscn"
-current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/Control.tscn"
+current_path = "/100daysofcode/Notepad/Control.tscn"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -80,15 +80,65 @@ margin_top = 55.0
 margin_right = 571.0
 margin_bottom = 420.0
 access = 2
-current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
+current_dir = "/100daysofcode/Notepad"
 current_file = "Control.tscn"
-current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/Control.tscn"
+current_path = "/100daysofcode/Notepad/Control.tscn"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MenuButtonFile" type="MenuButton" parent="."]
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 62.0
+margin_bottom = 28.0
+text = "File"
+align = 0
+switch_on_hover = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MenuButtonEdit" type="MenuButton" parent="."]
+margin_left = 90.39
+margin_top = 8.0
+margin_right = 136.39
+margin_bottom = 28.0
+text = "Edit"
+align = 0
+switch_on_hover = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MenuButtonHelp" type="MenuButton" parent="."]
+margin_left = 172.208
+margin_top = 8.44545
+margin_right = 214.208
+margin_bottom = 28.4454
+text = "Help"
+align = 0
+switch_on_hover = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AboutDialog" type="WindowDialog" parent="."]
+margin_left = 71.0
+margin_top = 137.0
+margin_right = 356.0
+margin_bottom = 274.0
+window_title = "About"
+
+[node name="Label" type="Label" parent="AboutDialog"]
+margin_left = 47.6189
+margin_top = 56.3811
+margin_right = 241.619
+margin_bottom = 73.3811
+text = "Fast and unbloated text editor"
 [connection signal="pressed" from="OpenFile" to="." method="_on_OpenFile_pressed"]
 [connection signal="pressed" from="SaveFile" to="." method="_on_SaveFile_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_Exit_pressed"]
-[connection signal="pressed" from="Exit2" to="." method="_on_Exit2_pressed"]
+[connection signal="pressed" from="New" to="." method="_on_New_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="file_selected" from="SaveFileDialog" to="." method="_on_SaveFileDialog_file_selected"]
