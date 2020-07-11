@@ -31,10 +31,20 @@ __meta__ = {
 
 [node name="SaveFile" type="Button" parent="."]
 margin_left = 456.0
+margin_top = 200.0
+margin_right = 597.0
+margin_bottom = 234.0
+text = "Save As File"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaveFileInplace" type="Button" parent="."]
+margin_left = 456.0
 margin_top = 144.0
 margin_right = 597.0
 margin_bottom = 178.0
-text = "Save As File"
+text = "Save"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -67,9 +77,8 @@ margin_bottom = 420.024
 window_title = "Open a File"
 mode = 0
 access = 2
-current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
-current_file = "Control.tscn"
-current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/Control.tscn"
+current_dir = "/100daysofcode/Notepad"
+current_path = "/100daysofcode/Notepad/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -80,9 +89,8 @@ margin_top = 55.0
 margin_right = 571.0
 margin_bottom = 420.0
 access = 2
-current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
-current_file = "Control.tscn"
-current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/Control.tscn"
+current_dir = "/100daysofcode/Notepad"
+current_path = "/100daysofcode/Notepad/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -138,6 +146,7 @@ margin_bottom = 73.3811
 text = "Fast and unbloated text editor"
 [connection signal="pressed" from="OpenFile" to="." method="_on_OpenFile_pressed"]
 [connection signal="pressed" from="SaveFile" to="." method="_on_SaveFile_pressed"]
+[connection signal="pressed" from="SaveFileInplace" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_Exit_pressed"]
 [connection signal="pressed" from="New" to="." method="_on_New_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]

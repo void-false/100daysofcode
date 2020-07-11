@@ -1,8 +1,14 @@
 extends Control
 
+var app_name = "Unbloated"
+var current_file = "Untitled"
+
 
 func _ready():
+	update_window_title()
+	$MenuButtonFile.get_popup().add_item("New")
 	$MenuButtonFile.get_popup().add_item("Open File")
+	$MenuButtonFile.get_popup().add_item("Save")
 	$MenuButtonFile.get_popup().add_item("Save as File")
 	$MenuButtonFile.get_popup().add_item("Exit and Quit")
 	$MenuButtonFile.get_popup().connect("id_pressed", self, "_on_item_file_pressed")
@@ -15,6 +21,9 @@ func _ready():
 	$MenuButtonHelp.get_popup().add_item("About")
 	$MenuButtonHelp.get_popup().connect("id_pressed", self, "_on_item_help_pressed")
 	
+	
+func update_window_title():
+	OS.set_window_title(app_name + " - " + current_file)
 	
 func on_item_edit_pressed(id):
 	match id:
@@ -30,10 +39,14 @@ func on_item_edit_pressed(id):
 func _on_item_file_pressed(id):
 	match id:
 		0:
-			_on_OpenFile_pressed()
+			_on_New_pressed()
 		1:
-			_on_SaveFile_pressed()
+			_on_OpenFile_pressed()
 		2:
+			_on_save_pressed()
+		3:
+			_on_SaveFile_pressed()
+		4:
 			_on_Exit_pressed()
 		_:
 			print("WFT")
@@ -46,10 +59,18 @@ func _on_item_help_pressed(id):
 			print("WFT")
 
 func _on_OpenFile_pressed():
+	$FileDialog.invalidate()
 	$FileDialog.popup()
 
-
+func _on_save_pressed():
+	var path = current_file
+	if path == "Untitled":
+		_on_SaveFile_pressed()
+	else:
+		_on_SaveFileDialog_file_selected(path)
+	
 func _on_SaveFile_pressed():
+	$SaveFileDialog.invalidate()
 	$SaveFileDialog.popup()
 
 
@@ -58,6 +79,8 @@ func _on_FileDialog_file_selected(path):
 	f.open(path, File.READ)
 	$TextEdit.text = f.get_as_text()
 	f.close()
+	current_file = path
+	update_window_title()
 
 
 func _on_SaveFileDialog_file_selected(path):
@@ -65,6 +88,8 @@ func _on_SaveFileDialog_file_selected(path):
 	f.open(path, File.WRITE)
 	f.store_string($TextEdit.text)
 	f.close()
+	current_file = path
+	update_window_title()
 
 
 func _on_Exit_pressed():
@@ -72,4 +97,6 @@ func _on_Exit_pressed():
 
 
 func _on_New_pressed():
+	current_file = "Untitled"
+	update_window_title()
 	$TextEdit.text = ""
