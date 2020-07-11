@@ -6,16 +6,16 @@ var current_file = "Untitled"
 
 func _ready():
 	update_window_title()
-	$MenuButtonFile.get_popup().add_item("New")
-	$MenuButtonFile.get_popup().add_item("Open File")
-	$MenuButtonFile.get_popup().add_item("Save")
-	$MenuButtonFile.get_popup().add_item("Save as File")
-	$MenuButtonFile.get_popup().add_item("Exit and Quit")
+	$MenuButtonFile.get_popup().add_item("New", 0, KEY_N | KEY_MASK_CTRL)
+	$MenuButtonFile.get_popup().add_item("Open File", 1, KEY_O | KEY_MASK_CTRL)
+	$MenuButtonFile.get_popup().add_item("Save", 2, KEY_S | KEY_MASK_CTRL)
+	$MenuButtonFile.get_popup().add_item("Save as File", 3, KEY_S | KEY_MASK_CTRL | KEY_MASK_SHIFT)
+	$MenuButtonFile.get_popup().add_item("Exit and Quit", 4, KEY_Q | KEY_MASK_CTRL)
 	$MenuButtonFile.get_popup().connect("id_pressed", self, "_on_item_file_pressed")
 	
-	$MenuButtonEdit.get_popup().add_item("Cut")
-	$MenuButtonEdit.get_popup().add_item("Copy")
-	$MenuButtonEdit.get_popup().add_item("Paste")
+	$MenuButtonEdit.get_popup().add_item("Cut", 0, KEY_X | KEY_MASK_CTRL)
+	$MenuButtonEdit.get_popup().add_item("Copy", 1, KEY_C | KEY_MASK_CTRL)
+	$MenuButtonEdit.get_popup().add_item("Paste", 2, KEY_V | KEY_MASK_CTRL)
 	$MenuButtonEdit.get_popup().connect("id_pressed", self, "on_item_edit_pressed")
 	
 	$MenuButtonHelp.get_popup().add_item("About")
