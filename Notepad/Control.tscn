@@ -167,6 +167,30 @@ margin_top = 56.3811
 margin_right = 241.619
 margin_bottom = 73.3811
 text = "Fast and unbloated text editor"
+
+[node name="WindowButtons" type="HBoxContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -58.9722
+margin_top = 4.30926
+margin_right = -4.97217
+margin_bottom = 31.3093
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Minimize" type="Button" parent="WindowButtons"]
+margin_right = 25.0
+margin_bottom = 27.0
+rect_min_size = Vector2( 25, 0 )
+text = "_"
+
+[node name="Close" type="Button" parent="WindowButtons"]
+margin_left = 29.0
+margin_right = 54.0
+margin_bottom = 27.0
+rect_min_size = Vector2( 25, 0 )
+text = "x"
 [connection signal="gui_input" from="ColorRect" to="ColorRect" method="_on_ColorRect_gui_input"]
 [connection signal="pressed" from="VBoxContainer/New" to="." method="_on_New_pressed"]
 [connection signal="pressed" from="VBoxContainer/OpenFile" to="." method="_on_OpenFile_pressed"]
@@ -175,3 +199,5 @@ text = "Fast and unbloated text editor"
 [connection signal="pressed" from="VBoxContainer/Exit" to="." method="_on_Exit_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="file_selected" from="SaveFileDialog" to="." method="_on_SaveFileDialog_file_selected"]
+[connection signal="pressed" from="WindowButtons/Minimize" to="." method="_on_Minimize_pressed"]
+[connection signal="pressed" from="WindowButtons/Close" to="." method="_on_Exit_pressed"]

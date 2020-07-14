@@ -100,3 +100,7 @@ func _on_New_pressed():
 	current_file = "Untitled"
 	update_window_title()
 	$TextEdit.text = ""
+
+
+func _on_Minimize_pressed() -> void:
+	OS.set_window_minimized(true)
