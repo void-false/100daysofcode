@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Main.vs" type="Script" id=1]
+
+[node name="Main" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+
+[node name="Button" type="Button" parent="."]
+margin_left = 56.5874
+margin_top = 39.8961
+margin_right = 68.5874
+margin_bottom = 59.8961
+text = "Click Me"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 56.1803
+margin_top = 15.4699
+margin_right = 96.1803
+margin_bottom = 29.4699
+text = "[0]"
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

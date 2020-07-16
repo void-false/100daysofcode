@@ -100,8 +100,8 @@ margin_bottom = 420.024
 window_title = "Open a File"
 mode = 0
 access = 2
-current_dir = "/100daysofcode/Notepad"
-current_path = "/100daysofcode/Notepad/"
+current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
+current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -112,8 +112,8 @@ margin_top = 55.0
 margin_right = 571.0
 margin_bottom = 420.0
 access = 2
-current_dir = "/100daysofcode/Notepad"
-current_path = "/100daysofcode/Notepad/"
+current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
+current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
