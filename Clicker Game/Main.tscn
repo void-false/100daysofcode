@@ -23,4 +23,29 @@ margin_top = 15.4699
 margin_right = 96.1803
 margin_bottom = 29.4699
 text = "[0]"
+
+[node name="AutoClickers" type="HBoxContainer" parent="."]
+margin_left = 60.0
+margin_top = 70.5
+margin_right = 209.0
+margin_bottom = 99.5
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="AutoClickers"]
+margin_right = 95.0
+margin_bottom = 29.0
+text = "Auto Clicking"
+
+[node name="Label" type="Label" parent="AutoClickers"]
+margin_left = 99.0
+margin_top = 7.0
+margin_right = 149.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 50, 0 )
+text = "[0]"
+align = 2
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="AutoClickers/Button" to="." method="_on_autoclicker_pressed"]
