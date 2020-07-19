@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://app.gd" type="Script" id=1]
 [ext_resource path="res://cool_theme.tres" type="Theme" id=2]
 [ext_resource path="res://cool_font.tres" type="DynamicFont" id=3]
 [ext_resource path="res://ColorRect.gd" type="Script" id=4]
+[ext_resource path="res://ResizeHandler.gd" type="Script" id=5]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -100,8 +101,8 @@ margin_bottom = 420.024
 window_title = "Open a File"
 mode = 0
 access = 2
-current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
-current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/"
+current_dir = "/100daysofcode/Notepad"
+current_path = "/100daysofcode/Notepad/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -112,8 +113,8 @@ margin_top = 55.0
 margin_right = 571.0
 margin_bottom = 420.0
 access = 2
-current_dir = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad"
-current_path = "/Users/arteomb/Documents/scripts/100daysofcode/Notepad/"
+current_dir = "/100daysofcode/Notepad"
+current_path = "/100daysofcode/Notepad/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -191,6 +192,14 @@ margin_right = 54.0
 margin_bottom = 27.0
 rect_min_size = Vector2( 25, 0 )
 text = "x"
+
+[node name="BorderBottom" type="ColorRect" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -5.0
+mouse_default_cursor_shape = 9
+script = ExtResource( 5 )
 [connection signal="gui_input" from="ColorRect" to="ColorRect" method="_on_ColorRect_gui_input"]
 [connection signal="pressed" from="VBoxContainer/New" to="." method="_on_New_pressed"]
 [connection signal="pressed" from="VBoxContainer/OpenFile" to="." method="_on_OpenFile_pressed"]
@@ -201,3 +210,4 @@ text = "x"
 [connection signal="file_selected" from="SaveFileDialog" to="." method="_on_SaveFileDialog_file_selected"]
 [connection signal="pressed" from="WindowButtons/Minimize" to="." method="_on_Minimize_pressed"]
 [connection signal="pressed" from="WindowButtons/Close" to="." method="_on_Exit_pressed"]
+[connection signal="gui_input" from="BorderBottom" to="BorderBottom" method="_on_BorderBottom_gui_input"]
